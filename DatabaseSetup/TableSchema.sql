@@ -10,6 +10,7 @@ BEGIN TRY
         [IsEmailConfirmed] BIT            NOT NULL DEFAULT 0,
         [PasswordHash]     NVARCHAR (128) NOT NULL,
         [PasswordSalt]     NVARCHAR (128) NOT NULL,
+        [JoinDateTime]  DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC)
     );
 
@@ -60,7 +61,8 @@ BEGIN TRY
         [Description]        NVARCHAR (1024) NULL,
         [VisibilityId]       INT             NOT NULL,
         [JoinRestrictionId]  INT             NOT NULL,
-        [IsActive]           BIT             NOT NULL DEFAULT 1, 
+        [IsActive]           BIT             NOT NULL DEFAULT 1,
+        [CreationDateTime]  DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC),
         CONSTRAINT FK_GroupVisibility FOREIGN KEY (VisibilityId) REFERENCES Visibility(Id),
         CONSTRAINT FK_JoinRestriction FOREIGN KEY (JoinRestrictionId) REFERENCES GroupJoinRestrictions(Id)
