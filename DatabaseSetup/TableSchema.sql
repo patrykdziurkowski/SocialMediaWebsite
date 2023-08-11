@@ -1,6 +1,6 @@
 
 CREATE TABLE [dbo].[Users] (
-    [Id]               INT            NOT NULL,
+    [Id]               INT            NOT NULL IDENTITY(1,1),
     [UserName]         NVARCHAR (50)  NOT NULL,
     [FirstName]        NVARCHAR (50)  NULL,
     [LastName]         NVARCHAR (50)  NULL,
@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[Users] (
 );
 
 CREATE TABLE [dbo].[BlockedUsers] (
-    [Id]             INT                NOT NULL,
+    [Id]             INT                NOT NULL IDENTITY(1,1),
     [BlockingUserId] INT                NOT NULL,
     [BlockedUserId]  INT                NOT NULL,
     [BlockDateTime]  DATETIMEOFFSET (7) NOT NULL,
@@ -23,13 +23,13 @@ CREATE TABLE [dbo].[BlockedUsers] (
 
 CREATE TABLE [dbo].[Visibility]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [Visibility] NVARCHAR(20) NOT NULL
 )
 
 CREATE TABLE [dbo].[Profiles]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[UserId] INT NOT NULL PRIMARY KEY, 
     [Description] NVARCHAR(255) NULL, 
     [ProfilePicture] IMAGE NULL, 
     [ProfileVisibilityId] INT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE [dbo].[Profiles]
 
 CREATE TABLE [dbo].[ProfileLikes]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [LikingUserId] INT NOT NULL, 
     [LikedProfileId] INT NOT NULL, 
     [LikeDateTime] DATETIMEOFFSET NOT NULL,
@@ -47,13 +47,13 @@ CREATE TABLE [dbo].[ProfileLikes]
 )
 
 CREATE TABLE [dbo].[GroupJoinRestrictions] (
-    [Id]     INT           NOT NULL,
+    [Id]     INT           NOT NULL IDENTITY(1,1),
     [Restriction] NVARCHAR (20) NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 CREATE TABLE [dbo].[Groups] (
-    [Id]                 INT             NOT NULL,
+    [Id]                 INT             NOT NULL IDENTITY(1,1),
     [Name]               NVARCHAR (128)  NOT NULL,
     [Description]        NVARCHAR (1024) NULL,
     [VisibilityId]       INT             NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE [dbo].[Groups] (
 );
 
 CREATE TABLE [dbo].[GroupInvitations] (
-    [Id]             INT                NOT NULL,
+    [Id]             INT                NOT NULL IDENTITY(1,1),
     [InvitingUserId] INT                NOT NULL,
     [InvitedUserId]  INT                NOT NULL,
     [GroupId]        INT                NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE [dbo].[GroupInvitations] (
 
 CREATE TABLE [dbo].[GroupApplications]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [ApplyingUserId] INT NOT NULL, 
     [GroupId] INT NOT NULL, 
     [Message] NVARCHAR(1024) NULL, 
@@ -91,7 +91,7 @@ CREATE TABLE [dbo].[GroupApplications]
 
 CREATE TABLE [dbo].[UserGroupMemberships]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [UserId] INT NOT NULL, 
     [GroupId] INT NOT NULL, 
     [JoinDateTime] DATETIMEOFFSET NOT NULL, 
@@ -101,7 +101,7 @@ CREATE TABLE [dbo].[UserGroupMemberships]
 )
 
 CREATE TABLE [dbo].[Posts] (
-    [Id]                  INT                NOT NULL,
+    [Id]                  INT                NOT NULL IDENTITY(1,1),
     [Title]               NVARCHAR (40)      NOT NULL,
     [Description]         NVARCHAR (1024)    NULL,
     [PostDateTime]        DATETIMEOFFSET (7) NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE [dbo].[Posts] (
 
 CREATE TABLE [dbo].[PostLikes]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [LikingUserId] INT NOT NULL, 
     [LikedPostId] INT NOT NULL, 
     [LikeDateTime] DATETIMEOFFSET NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE [dbo].[PostLikes]
 )
 
 CREATE TABLE [dbo].[Comments] (
-    [Id]              INT                NOT NULL,
+    [Id]              INT                NOT NULL IDENTITY(1,1),
     [Text]            NVARCHAR (1024)    NOT NULL,
     [CommentDateTime] DATETIMEOFFSET (7) NOT NULL,
     [ParentPostId]    INT                NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE [dbo].[Comments] (
 );
 
 CREATE TABLE [dbo].[CommentLikes] (
-    [Id]             INT                NOT NULL,
+    [Id]             INT                NOT NULL IDENTITY(1,1),
     [LikingUserId]   INT                NOT NULL,
     [LikedCommentId] INT                NOT NULL,
     [LikeDateTime]   DATETIMEOFFSET (7) NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE [dbo].[CommentLikes] (
 
 CREATE TABLE [dbo].[Conversations]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [Title] NVARCHAR(20) NOT NULL, 
     [Description] NVARCHAR(256) NULL, 
     [OwnerUserId] INT NOT NULL, 
@@ -157,7 +157,7 @@ CREATE TABLE [dbo].[Conversations]
 )
 
 CREATE TABLE [dbo].[ConversationUsers] (
-    [Id]             INT NOT NULL,
+    [Id]             INT NOT NULL IDENTITY(1,1),
     [UserId]         INT NOT NULL,
     [ConversationId] INT NOT NULL,
     [ConversationIsHidden] BIT NOT NULL DEFAULT 0, 
@@ -168,7 +168,7 @@ CREATE TABLE [dbo].[ConversationUsers] (
 
 CREATE TABLE [dbo].[Messages]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [AuthorUserId] INT NOT NULL, 
     [Text] NVARCHAR(256) NOT NULL, 
     [MessageDateTime] DATETIMEOFFSET NOT NULL, 
@@ -181,7 +181,7 @@ CREATE TABLE [dbo].[Messages]
 
 CREATE TABLE [dbo].[MessageLikes]
 (
-	[Id] INT NOT NULL PRIMARY KEY, 
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
     [LikingUserId] INT NOT NULL, 
     [LikedMessageId] INT NOT NULL, 
     [LikeDateTime] DATETIMEOFFSET NOT NULL,
