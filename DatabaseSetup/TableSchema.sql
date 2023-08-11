@@ -17,7 +17,7 @@ BEGIN TRY
         [Id]             INT                NOT NULL IDENTITY(1,1),
         [BlockingUserId] INT                NOT NULL,
         [BlockedUserId]  INT                NOT NULL,
-        [BlockDateTime]  DATETIMEOFFSET (7) NOT NULL,
+        [BlockDateTime]  DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_BlockingUser FOREIGN KEY (BlockingUserId) REFERENCES Users(Id),
 	    CONSTRAINT FK_BlockedUser FOREIGN KEY (BlockedUserId) REFERENCES Users(Id)
@@ -43,7 +43,7 @@ BEGIN TRY
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
         [LikedProfileId] INT NOT NULL, 
-        [LikeDateTime] DATETIMEOFFSET NOT NULL,
+        [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ProfileLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedProfile FOREIGN KEY (LikedProfileId) REFERENCES Profiles(UserId)
     );
@@ -72,7 +72,7 @@ BEGIN TRY
         [InvitedUserId]  INT                NOT NULL,
         [GroupId]        INT                NOT NULL,
         [Message]        NVARCHAR (1024)    NULL,
-        [InviteDateTime] DATETIMEOFFSET (7) NOT NULL,
+        [InviteDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         [IsActive]       BIT                NOT NULL DEFAULT 1, 
         PRIMARY KEY CLUSTERED ([Id] ASC),
         CONSTRAINT FK_GroupInvitingUser FOREIGN KEY (InvitingUserId) REFERENCES Users(Id),
@@ -86,7 +86,7 @@ BEGIN TRY
         [ApplyingUserId] INT NOT NULL, 
         [GroupId] INT NOT NULL, 
         [Message] NVARCHAR(1024) NULL, 
-        [AppliedDateTime] DATETIMEOFFSET NOT NULL,
+        [AppliedDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ApplyingUser FOREIGN KEY (ApplyingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_ApplicationGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id)
     );
@@ -96,7 +96,7 @@ BEGIN TRY
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [UserId] INT NOT NULL, 
         [GroupId] INT NOT NULL, 
-        [JoinDateTime] DATETIMEOFFSET NOT NULL, 
+        [JoinDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(), 
         [WasInvited] BIT NOT NULL DEFAULT 0,
         CONSTRAINT FK_MembershipUser FOREIGN KEY (UserId) REFERENCES Users(Id),
         CONSTRAINT FK_MembershipGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id)
@@ -106,7 +106,7 @@ BEGIN TRY
         [Id]                  INT                NOT NULL IDENTITY(1,1),
         [Title]               NVARCHAR (40)      NOT NULL,
         [Description]         NVARCHAR (1024)    NULL,
-        [PostDateTime]        DATETIMEOFFSET (7) NOT NULL,
+        [PostDateTime]        DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         [AuthorUserId]        INT                NOT NULL,
         [GroupId]             INT                NULL,
         [IsCommentingEnabled] BIT                DEFAULT 1 NOT NULL,
@@ -122,7 +122,7 @@ BEGIN TRY
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
         [LikedPostId] INT NOT NULL, 
-        [LikeDateTime] DATETIMEOFFSET NOT NULL,
+        [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_PostLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedPost FOREIGN KEY (LikedPostId) REFERENCES Posts(Id)
     );
@@ -130,7 +130,7 @@ BEGIN TRY
     CREATE TABLE [dbo].[Comments] (
         [Id]              INT                NOT NULL IDENTITY(1,1),
         [Text]            NVARCHAR (1024)    NOT NULL,
-        [CommentDateTime] DATETIMEOFFSET (7) NOT NULL,
+        [CommentDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         [ParentPostId]    INT                NOT NULL,
         [ParentCommentId] INT                NULL,
         PRIMARY KEY CLUSTERED ([Id] ASC),
@@ -142,7 +142,7 @@ BEGIN TRY
         [Id]             INT                NOT NULL IDENTITY(1,1),
         [LikingUserId]   INT                NOT NULL,
         [LikedCommentId] INT                NOT NULL,
-        [LikeDateTime]   DATETIMEOFFSET (7) NOT NULL,
+        [LikeDateTime]   DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_CommentLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
 	    CONSTRAINT FK_LikedComment FOREIGN KEY (LikedCommentId) REFERENCES Comments(Id)
@@ -154,7 +154,7 @@ BEGIN TRY
         [Title] NVARCHAR(20) NOT NULL, 
         [Description] NVARCHAR(256) NULL, 
         [OwnerUserId] INT NOT NULL, 
-        [CreationDateTime] DATETIMEOFFSET NOT NULL,
+        [CreationDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ConversationOwner FOREIGN KEY (OwnerUserId) REFERENCES Users(Id)
     );
 
@@ -173,7 +173,7 @@ BEGIN TRY
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [AuthorUserId] INT NOT NULL, 
         [Text] NVARCHAR(256) NOT NULL, 
-        [MessageDateTime] DATETIMEOFFSET NOT NULL, 
+        [MessageDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(), 
         [ConversationId] INT NOT NULL, 
         [ReplyMessageId] INT NULL,
         CONSTRAINT FK_MessageAuthor FOREIGN KEY (AuthorUserId) REFERENCES Users(Id),
@@ -186,7 +186,7 @@ BEGIN TRY
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
         [LikedMessageId] INT NOT NULL, 
-        [LikeDateTime] DATETIMEOFFSET NOT NULL,
+        [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_MessageLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedMessage FOREIGN KEY (LikedMessageId) REFERENCES [Messages](Id)
     );
