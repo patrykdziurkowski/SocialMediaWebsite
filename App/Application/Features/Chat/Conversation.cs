@@ -8,9 +8,6 @@ namespace Application.Features.Chat
 {
     public class Conversation
     {
-        private readonly List<Message> _loadedMessages;
-        private readonly List<Chatter> _conversationMembers;
-
         public Conversation(
             int id,
             DateTimeOffset creationDateTime,
@@ -25,8 +22,8 @@ namespace Application.Features.Chat
             CreationDateTime = creationDateTime;
             MessageCount = messageCount;
             OwnerChatterId = ownerChatterId;
-            _loadedMessages = messages;
-            _conversationMembers = conversationMembers;
+            LoadedMessages = messages;
+            ConversationMembers = conversationMembers;
             Title = title;
             Description = description;
         }
@@ -41,8 +38,8 @@ namespace Application.Features.Chat
             CreationDateTime = null;
             MessageCount = 0;
             OwnerChatterId = ownerChatterId;
-            _loadedMessages = new List<Message>();
-            _conversationMembers = conversationMembers;
+            LoadedMessages = new List<Message>();
+            ConversationMembers = conversationMembers;
             Title = title;
             Description = description;
         }
@@ -53,7 +50,7 @@ namespace Application.Features.Chat
         public DateTimeOffset? CreationDateTime { get; private set; }
         public int MessageCount { get; private set; }
         public int OwnerChatterId { get; private set; }
-        public IEnumerable<Message> LoadedMessages => _loadedMessages;
-        public IEnumerable<Chatter> ConversationMembers => _conversationMembers;
+        public List<Message> LoadedMessages { get; set; }
+        public List<Chatter> ConversationMembers { get; set; }
     }
 }
