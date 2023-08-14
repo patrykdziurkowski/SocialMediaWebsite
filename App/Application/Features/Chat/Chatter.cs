@@ -19,7 +19,7 @@ namespace Application.Features.Chat
         }
 
         public int Id { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public DateTimeOffset JoinDateTime { get; private set; }
     }
 }

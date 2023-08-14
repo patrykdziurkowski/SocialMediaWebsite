@@ -24,7 +24,7 @@ namespace Application.Features.Chat
 
         public int Id { get; private set; }
         public int AuthorChatterId { get; private set; }
-        public string Text { get; private set; }
+        public string Text { get; set; }
         public DateTimeOffset MessageDateTime { get; private set; }
         public int? ReplyMessageId { get; private set; }
     }
