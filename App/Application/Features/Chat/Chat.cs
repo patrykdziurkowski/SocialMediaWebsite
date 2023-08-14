@@ -78,5 +78,28 @@ namespace Application.Features.Chat
 
             return Result.Ok();
         }
+
+        public Result DeleteMessage(
+            int conversationId,
+            int messageId)
+        {
+            Conversation? conversationToDeleteFrom = Conversations
+                .SingleOrDefault(c => c.Id == conversationId);
+            if (conversationToDeleteFrom is null)
+            {
+                return Result.Fail("No conversation with such id was found.");
+            }
+
+            Message? messageToDelete = conversationToDeleteFrom.LoadedMessages
+                .SingleOrDefault(m => m.Id == messageId);
+            if (messageToDelete is null)
+            {
+                return Result.Fail("No message with such id was found in a given conversation.");
+            }
+
+            conversationToDeleteFrom.LoadedMessages.Remove(messageToDelete);
+            return Result.Ok();
+        }
+
     }
 }

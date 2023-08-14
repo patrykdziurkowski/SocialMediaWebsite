@@ -160,6 +160,105 @@ namespace Tests.Domain
             conversation.LoadedMessages.Should().BeEmpty();
         }
 
+        [Fact]
+        public void DeleteMessage_GivenExistingConversationAndMessage_RemovesMessage()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            List<Conversation> conversations = new()
+            {
+                new Conversation(
+                    50,
+                    new DateTimeOffset(),
+                    0,
+                    2,
+                    new List<Message>(),
+                    GetThreeSampleConversationMembers(),
+                    "Title")
+            };
+            conversations.Single().LoadedMessages.Add(
+                new Message(
+                    600,
+                    CurrentChatterId,
+                    "Text",
+                    new DateTimeOffset()));
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act
+            _subject.DeleteMessage(50, 600);
+
+            //Assert
+            conversation.LoadedMessages.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void DeleteMessage_GivenNonExistantConversation_DoesntRemoveMessage()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            List<Conversation> conversations = new()
+            {
+                new Conversation(
+                    50,
+                    new DateTimeOffset(),
+                    0,
+                    2,
+                    new List<Message>(),
+                    GetThreeSampleConversationMembers(),
+                    "Title")
+            };
+            conversations.Single().LoadedMessages.Add(
+                new Message(
+                    600,
+                    CurrentChatterId,
+                    "Text",
+                    new DateTimeOffset()));
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act
+            _subject.DeleteMessage(70, 600);
+
+            //Assert
+            conversation.LoadedMessages.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void DeleteMessage_GivenNonExistantMessage_DoesntRemoveMessage()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            List<Conversation> conversations = new()
+            {
+                new Conversation(
+                    50,
+                    new DateTimeOffset(),
+                    0,
+                    2,
+                    new List<Message>(),
+                    GetThreeSampleConversationMembers(),
+                    "Title")
+            };
+            conversations.Single().LoadedMessages.Add(
+                new Message(
+                    600,
+                    CurrentChatterId,
+                    "Text",
+                    new DateTimeOffset()));
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act
+            _subject.DeleteMessage(50, 700);
+
+            //Assert
+            conversation.LoadedMessages.Should().HaveCount(1);
+        }
+
 
         private static List<Chatter> GetThreeSampleConversationMembers()
         {
