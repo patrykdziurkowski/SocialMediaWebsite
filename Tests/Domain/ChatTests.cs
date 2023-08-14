@@ -52,14 +52,7 @@ namespace Tests.Domain
 
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    ConversationId,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(ConversationId)
             }; 
 
             _subject = new(LeavingChatterId, conversations);
@@ -81,14 +74,7 @@ namespace Tests.Domain
             const int LeavingChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
 
             _subject = new(LeavingChatterId, conversations);
@@ -110,14 +96,7 @@ namespace Tests.Domain
             const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
 
             _subject = new(CurrentChatterId, conversations);
@@ -139,14 +118,7 @@ namespace Tests.Domain
             const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
 
             _subject = new(CurrentChatterId, conversations);
@@ -167,14 +139,7 @@ namespace Tests.Domain
             const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
             conversations.Single().LoadedMessages.Add(
                 new Message(
@@ -200,14 +165,7 @@ namespace Tests.Domain
             const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
             conversations.Single().LoadedMessages.Add(
                 new Message(
@@ -233,14 +191,7 @@ namespace Tests.Domain
             const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                new Conversation(
-                    50,
-                    new DateTimeOffset(),
-                    0,
-                    2,
-                    new List<Message>(),
-                    GetThreeSampleConversationMembers(),
-                    "Title")
+                CreateSampleConversationWithChattersAndId(50)
             };
             conversations.Single().LoadedMessages.Add(
                 new Message(
@@ -259,6 +210,17 @@ namespace Tests.Domain
             conversation.LoadedMessages.Should().HaveCount(1);
         }
 
+        private static Conversation CreateSampleConversationWithChattersAndId(int id)
+        {
+            return new(
+                id,
+                new DateTimeOffset(),
+                0,
+                2,
+                new List<Message>(),
+                GetThreeSampleConversationMembers(),
+                "Title");
+        }
 
         private static List<Chatter> GetThreeSampleConversationMembers()
         {
