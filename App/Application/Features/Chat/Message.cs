@@ -13,7 +13,7 @@ namespace Application.Features.Chat
             int authorChatterId,
             string text,
             DateTimeOffset messageDateTime,
-            int replyMessageId)
+            int? replyMessageId = null)
         {
             Id = id;
             AuthorChatterId = authorChatterId;
