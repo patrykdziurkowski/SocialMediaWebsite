@@ -9,6 +9,16 @@ namespace Application.Features.Chat
     public class Message
     {
         public Message(
+            int authorChatterId,
+            string text,
+            int? replyMessageId = null)
+        {
+            AuthorChatterId = authorChatterId;
+            Text = text;
+            ReplyMessageId = replyMessageId;
+        }
+
+        public Message(
             int id,
             int authorChatterId,
             string text,
