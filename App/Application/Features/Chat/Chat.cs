@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentResults;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Application.Features.Chat
         public IEnumerable<Conversation> Conversations => _conversations;
 
 
+
         public void CreateConversation(
             List<Chatter> conversationMembers,
             string title,
@@ -36,6 +38,22 @@ namespace Application.Features.Chat
             _conversations.Add(newConversation);
         }
 
+
+
+        public Result LeaveConversation(int conversationId)
+        {
+            Conversation? conversationToLeave = Conversations
+                .SingleOrDefault(c => c.Id == conversationId);
+            if (conversationToLeave is null)
+            {
+                return Result.Fail("No conversation with such id was found.");
+            }
+
+            conversationToLeave.ConversationMembers.RemoveAll(m => m.Id == ChatterId);
+            _conversations.Remove(conversationToLeave);
+
+            return Result.Ok();
+        }
 
     }
 }
