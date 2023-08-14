@@ -50,7 +50,7 @@ namespace Tests.Domain
             const int ConversationId = 50;
             const int LeavingChatterId = 1;
 
-            List<Conversation> conversation = new()
+            List<Conversation> conversations = new()
             {
                 new Conversation(
                     ConversationId,
@@ -62,7 +62,7 @@ namespace Tests.Domain
                     "Title")
             }; 
 
-            _subject = new(LeavingChatterId, conversation);
+            _subject = new(LeavingChatterId, conversations);
             IEnumerable<Chatter> conversationMembers = _subject.Conversations.Single().ConversationMembers;
 
             //Act
@@ -71,7 +71,7 @@ namespace Tests.Domain
             //Assert
             conversationMembers.Should().NotContain(chatter => chatter.Id == LeavingChatterId);
             conversationMembers.Should().HaveCount(2);
-            conversation.Should().BeEmpty();
+            conversations.Should().BeEmpty();
         }
 
         [Fact]
@@ -79,8 +79,7 @@ namespace Tests.Domain
         {
             //Arrange
             const int LeavingChatterId = 1;
-
-            List<Conversation> conversation = new()
+            List<Conversation> conversations = new()
             {
                 new Conversation(
                     50,
@@ -92,7 +91,7 @@ namespace Tests.Domain
                     "Title")
             };
 
-            _subject = new(LeavingChatterId, conversation);
+            _subject = new(LeavingChatterId, conversations);
             IEnumerable<Chatter> conversationMembers = _subject.Conversations.Single().ConversationMembers;
 
             //Act
@@ -101,9 +100,65 @@ namespace Tests.Domain
             //Assert
             conversationMembers.Should().Contain(chatter => chatter.Id == LeavingChatterId);
             conversationMembers.Should().HaveCount(3);
-            conversation.Should().NotBeEmpty();
+            conversations.Should().NotBeEmpty();
         }
 
+        [Fact]
+        public void PostMessage_GivenExistingConversationId_AddsAMessageToConversation()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            List<Conversation> conversations = new()
+            {
+                new Conversation(
+                    50,
+                    new DateTimeOffset(),
+                    0,
+                    2,
+                    new List<Message>(),
+                    GetThreeSampleConversationMembers(),
+                    "Title")
+            };
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act
+            _subject.PostMessage(50, "Text");
+
+            //Assert
+            conversation.TotalMessageCount.Should().Be(1);
+            conversation.LoadedMessages.Should().HaveCount(1);
+            conversation.LoadedMessages.Single().Text.Should().Be("Text");
+        }
+
+        [Fact]
+        public void PostMessage_GivenNonExistantConversationId_DoesntAddAnyMessage()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            List<Conversation> conversations = new()
+            {
+                new Conversation(
+                    50,
+                    new DateTimeOffset(),
+                    0,
+                    2,
+                    new List<Message>(),
+                    GetThreeSampleConversationMembers(),
+                    "Title")
+            };
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act
+            _subject.PostMessage(999, "Text");
+
+            //Assert
+            conversation.TotalMessageCount.Should().Be(0);
+            conversation.LoadedMessages.Should().BeEmpty();
+        }
 
 
         private static List<Chatter> GetThreeSampleConversationMembers()

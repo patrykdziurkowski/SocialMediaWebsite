@@ -55,5 +55,28 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
+
+        public Result PostMessage(
+            int conversationId,
+            string text,
+            int? replyMessageId = null)
+        {
+            Conversation? conversationToPostIn = Conversations
+                .SingleOrDefault(c => c.Id == conversationId);
+            if (conversationToPostIn is null)
+            {
+                return Result.Fail("No conversation with such id was found.");
+            }
+
+            Message message = new(
+                ChatterId,
+                text,
+                replyMessageId);
+
+            conversationToPostIn.LoadedMessages.Add(message);
+            conversationToPostIn.TotalMessageCount++;
+
+            return Result.Ok();
+        }
     }
 }
