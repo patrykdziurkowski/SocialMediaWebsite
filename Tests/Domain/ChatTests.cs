@@ -210,6 +210,40 @@ namespace Tests.Domain
             conversation.LoadedMessages.Should().HaveCount(1);
         }
 
+        [Fact]
+        public void RaiseDomainEvent_AddsEventToList()
+        {
+            //Arrange
+            _subject = new(1, new List<Conversation>());
+
+            //Act
+            _subject.RaiseDomainEvent(new DomainEvent());
+
+            //Assert
+            _subject.DomainEvents.Should().HaveCount(1);
+
+        }
+
+        [Fact]
+        public void ClearDomainEvents_RemovesAllEventsFromList()
+        {
+            //Arrange
+            _subject = new(1, new List<Conversation>());
+            _subject.RaiseDomainEvent(new DomainEvent());
+            _subject.RaiseDomainEvent(new DomainEvent());
+
+            int numberOfEventsBeforeClearing = _subject.DomainEvents.Count();
+
+            //Act
+            _subject.ClearDomainEvents();
+
+            //Assert
+            numberOfEventsBeforeClearing.Should().Be(2);
+            _subject.DomainEvents.Should().BeEmpty();
+        }
+
+
+
         private static Conversation CreateSampleConversationWithChattersAndId(int id)
         {
             return new(

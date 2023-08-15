@@ -10,6 +10,7 @@ namespace Application.Features.Chat
     public class Chat
     {
         private readonly List<Conversation> _conversations;
+        private readonly List<DomainEvent> _domainEvents;
 
         public Chat(
             int chatterId,
@@ -17,10 +18,23 @@ namespace Application.Features.Chat
         {
             ChatterId = chatterId;
             _conversations = conversations;
+            _domainEvents = new List<DomainEvent>();
         }
 
         public int ChatterId { get; private set; }
         public IEnumerable<Conversation> Conversations => _conversations;
+        public IEnumerable<DomainEvent> DomainEvents => _domainEvents;
+
+
+        public void RaiseDomainEvent(DomainEvent domainEvent)
+        {
+            _domainEvents.Add(domainEvent);
+        }
+
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
+        }
 
 
 
