@@ -1,4 +1,5 @@
-﻿using Application.Features.Shared;
+﻿using Application.Features.Chat.Events;
+using Application.Features.Shared;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,7 @@ namespace Application.Features.Chat
 
             conversationToLeave.ConversationMembers.RemoveAll(m => m.Id == ChatterId);
             _conversations.Remove(conversationToLeave);
+            RaiseDomainEvent(new ConversationLeftEvent());
 
             return Result.Ok();
         }
