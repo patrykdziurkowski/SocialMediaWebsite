@@ -4,6 +4,6 @@ namespace Application
 {
     public interface IConnectionFactory
     {
-        IDbConnection GetConnection(Type type);
+        IDbConnection GetConnection(ConnectionType connectionType);
     }
 }

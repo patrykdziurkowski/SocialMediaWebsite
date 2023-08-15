@@ -8,19 +8,25 @@ using System.Threading.Tasks;
 
 namespace Application
 {
+    public enum ConnectionType
+    {
+        SqlConnection
+    }
+
     public class ConnectionFactory : IConnectionFactory
     {
-        private ConnectionStringProvider _connectionStringProvider;
+        private readonly ConnectionStringProvider _connectionStringProvider;
         public ConnectionFactory(ConnectionStringProvider connectionStringProvider)
         {
             _connectionStringProvider = connectionStringProvider;
         }
 
-        public IDbConnection GetConnection(Type type)
+
+        public IDbConnection GetConnection(ConnectionType connectionType)
         {
             string connectionString = _connectionStringProvider.GetConnectionString();
 
-            if (type == typeof(SqlConnection))
+            if (connectionType == ConnectionType.SqlConnection)
             {
                 return new SqlConnection(connectionString);
             }
