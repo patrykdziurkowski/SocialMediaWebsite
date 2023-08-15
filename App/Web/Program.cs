@@ -1,15 +1,20 @@
 using Application;
 using Application.Features;
+using Application.Features.Shared;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Reflection;
+
+Assembly? applicationAssembly = typeof(DomainEvent).Assembly;
 
 var builder = WebApplication.CreateBuilder(args);
+IServiceCollection services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+services
+    .AddControllersWithViews()
+    .AddApplicationPart(applicationAssembly);
 
-
-IServiceCollection services = builder.Services;
 services.AddSingleton<ConnectionStringProvider>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 
