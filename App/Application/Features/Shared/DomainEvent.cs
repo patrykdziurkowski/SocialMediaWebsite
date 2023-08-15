@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Chat
+namespace Application.Features.Shared
 {
-    public class DomainEvent
+    public abstract class DomainEvent
     {
 
     }

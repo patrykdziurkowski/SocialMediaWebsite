@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using Application.Features.Shared;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;

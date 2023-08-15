@@ -1,4 +1,6 @@
 ﻿using Application.Features.Chat;
+using Application.Features.Chat.Events;
+using Application.Features.Shared;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -217,7 +219,7 @@ namespace Tests.Domain
             _subject = new(1, new List<Conversation>());
 
             //Act
-            _subject.RaiseDomainEvent(new DomainEvent());
+            _subject.RaiseDomainEvent(new ConversationLeftEvent());
 
             //Assert
             _subject.DomainEvents.Should().HaveCount(1);
@@ -229,8 +231,8 @@ namespace Tests.Domain
         {
             //Arrange
             _subject = new(1, new List<Conversation>());
-            _subject.RaiseDomainEvent(new DomainEvent());
-            _subject.RaiseDomainEvent(new DomainEvent());
+            _subject.RaiseDomainEvent(new ConversationLeftEvent());
+            _subject.RaiseDomainEvent(new ConversationLeftEvent());
 
             int numberOfEventsBeforeClearing = _subject.DomainEvents.Count();
 
