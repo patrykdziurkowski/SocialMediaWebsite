@@ -8,6 +8,18 @@ namespace Application.Features.Chat
 {
     public class Conversation
     {
+        private Conversation()
+        {
+            Id = default!;
+            Title = default!;
+            Description = default!;
+            CreationDateTime = default!;
+            TotalMessageCount = default!;
+            OwnerChatterId = default!;
+            LoadedMessages = new List<Message>();
+            ConversationMembers = new List<Chatter>();
+        }
+
         public Conversation(
             int id,
             DateTimeOffset creationDateTime,
