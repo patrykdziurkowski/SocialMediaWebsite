@@ -1,5 +1,6 @@
 using Application;
 using Application.Features;
+using Application.Features.Chat;
 using Application.Features.Shared;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -17,6 +18,8 @@ services
 
 services.AddSingleton<ConnectionStringProvider>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
+services.AddSingleton<IDbConnection, SqlConnection>();
+services.AddSingleton<ChatRepository>();
 
 var app = builder.Build();
 

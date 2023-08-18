@@ -9,9 +9,19 @@ namespace Application.Features.Chat
 {
     public class ChatController : Controller
     {
-        public IActionResult Index()
+        private readonly ChatRepository _chatRepository;
+
+        public ChatController(ChatRepository chatRepository)
         {
-            return Ok("Test");
+            _chatRepository = chatRepository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+
+            Chat chat = await _chatRepository.GetAsync(1);
+
+            return Ok(chat.ChatterId);
         }
            
     }
