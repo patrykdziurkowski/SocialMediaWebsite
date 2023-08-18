@@ -8,8 +8,7 @@ BEGIN TRY
         [LastName]         NVARCHAR (50)  NULL,
         [Email]            NVARCHAR (319) NOT NULL,
         [IsEmailConfirmed] BIT            NOT NULL DEFAULT 0,
-        [PasswordHash]     NVARCHAR (128) NOT NULL,
-        [PasswordSalt]     NVARCHAR (128) NOT NULL,
+        [PasswordHash]     NVARCHAR (256) NOT NULL,
         [JoinDateTime]  DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC)
     );
