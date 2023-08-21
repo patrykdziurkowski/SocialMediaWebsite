@@ -4,6 +4,7 @@ namespace Application.Features.Authentication.Interfaces
 {
     public interface IUserRepository
     {
+        Task<Result<User>> GetUserByUserNameAsync(string userName);
         Task<Result> Register(User user);
     }
 }
