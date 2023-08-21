@@ -1,7 +1,10 @@
 using Application;
 using Application.Features;
+using Application.Features.Authentication;
+using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using Application.Features.Shared;
+using FluentValidation;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
@@ -20,6 +23,7 @@ services.AddSingleton<ConnectionStringProvider>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<ChatRepository>();
+services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 
 var app = builder.Build();
 
