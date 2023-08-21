@@ -18,6 +18,7 @@ namespace Application.Features.Chat
         {
            _connectionFactory = connectionFactory;
         }
+
         
         public async Task<Chat> GetAsync(int userId)
         {
@@ -26,8 +27,16 @@ namespace Application.Features.Chat
 
             IEnumerable<Conversation> conversations = await connection
                             .QueryAsync<Conversation>(
-                                "SELECT Id, Title, Description, CreationDateTime, (SELECT COUNT(*) FROM Messages WHERE ConversationId = Conversations.Id) AS TotalMessageCount, OwnerUserId " +
-                                " FROM Conversations");
+                                $"""
+                                SELECT
+                                    Id AS {nameof(Conversation.Id)},
+                                    Title AS {nameof(Conversation.Title)},
+                                    Description AS {nameof(Conversation.Description)},
+                                    CreationDateTime AS {nameof(Conversation.CreationDateTime)},
+                                    (SELECT COUNT(*) FROM Messages WHERE ConversationId = Conversations.Id) AS {nameof(Conversation.TotalMessageCount)},
+                                    OwnerUserId AS {nameof(Conversation.OwnerChatterId)}
+                                FROM Conversations
+                                """);
 
             foreach (Conversation conversation in conversations)
             {
@@ -36,21 +45,47 @@ namespace Application.Features.Chat
             }
 
             return new Chat(userId, conversations.ToList());
-
         }
+        
 
 
+
+        /*
+         * public void Save(Chat chat)
+        {
+            IDbTransaction transaction = _connection.BeginTransaction();
+
+            foreach (DomainEvent domainEvent in chat.DomainEvents)
+            {
+                if (domainEvent is ConversationLeftEvent)
+                {
+                    _connection.Execute(
+                        "spConversations_RemoveUserFromConversation",
+                        domainEvent,
+                        transaction,
+                        commandType: CommandType.StoredProcedure);
+                }
+            }
+
+            transaction.Commit();
+        }
+        */
 
         private async Task LoadConversationMembersAsync(Conversation conversation, IDbConnection connection)
         {
             IEnumerable<Chatter> conversationMembers = await connection
                     .QueryAsync<Chatter>(
-                        "SELECT Id, UserName AS Name, JoinDateTime " +
-                        " FROM Users " +
-                        " WHERE Id IN (" +
-                        "   SELECT UserId " +
-                        "   FROM ConversationUsers " +
-                        "   WHERE ConversationId = @ConversationId) ",
+                        $"""
+                        SELECT
+                            Id AS {nameof(Chatter.Id)},
+                            UserName AS {nameof(Chatter.Name)},
+                            JoinDateTime AS {nameof(Chatter.JoinDateTime)}
+                        FROM Users
+                        WHERE Id IN (
+                            SELECT UserId
+                            FROM ConversationUsers
+                            WHERE ConversationId = @ConversationId)
+                        """,
                         new { ConversationId = conversation.Id });
 
             conversation.ConversationMembers = conversationMembers.ToList();
@@ -60,9 +95,16 @@ namespace Application.Features.Chat
         {
             IEnumerable<Message> conversationMessages = await connection
                 .QueryAsync<Message>(
-                    "SELECT Id, AuthorUserId AS AuthorChatterId, Text, MessageDateTime, ReplyMessageId " +
-                    " FROM Messages " +
-                    " WHERE ConversationId = @ConversationId",
+                    $"""
+                    SELECT 
+                        Id AS {nameof(Message.Id)},
+                        AuthorUserId AS {nameof(Message.AuthorChatterId)},
+                        Text AS {nameof(Message.Text)},
+                        MessageDateTime AS {nameof(Message.MessageDateTime)},
+                        ReplyMessageId AS {nameof(Message.ReplyMessageId)}
+                    FROM Messages
+                    WHERE ConversationId = @ConversationId
+                    """,
                     new { ConversationId = conversation.Id });
 
             conversation.LoadedMessages = conversationMessages.ToList();
