@@ -20,7 +20,6 @@ services
     .AddControllersWithViews()
     .AddApplicationPart(applicationAssembly);
 
-services.AddSingleton<ConnectionStringProvider>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<ChatRepository>();
