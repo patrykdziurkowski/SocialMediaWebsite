@@ -4,20 +4,21 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Features.Authentication.Interfaces;
 
 namespace Application.Features.Authentication
 {
-    public static class SecretHasher
+    public class SecretHasher : ISecretHasher
     {
         // 128 bits
         private const int SaltSize = 16;
         // 256 bits
-        private const int KeySize = 32; 
+        private const int KeySize = 32;
         private const int Iterations = 50000;
         private static readonly HashAlgorithmName _algorithm = HashAlgorithmName.SHA256;
         private const char SegmentDelimiter = ':';
 
-        public static string Hash(string input)
+        public string Hash(string input)
         {
             byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
@@ -36,7 +37,7 @@ namespace Application.Features.Authentication
             );
         }
 
-        public static bool Verify(string input, string hashString)
+        public bool Verify(string input, string hashString)
         {
             string[] segments = hashString.Split(SegmentDelimiter);
             byte[] hash = Convert.FromHexString(segments[0]);

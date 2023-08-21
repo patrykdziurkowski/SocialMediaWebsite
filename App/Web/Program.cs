@@ -21,6 +21,7 @@ services
     .AddControllersWithViews()
     .AddApplicationPart(applicationAssembly);
 
+services.AddSingleton<ISecretHasher, SecretHasher>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<ChatRepository>();
