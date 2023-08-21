@@ -91,5 +91,29 @@ namespace Application
                 });
         }
 
+        public static IRuleBuilderOptions<T, string> MustBeValidUserName<T>(
+            this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .MinimumLength(6)
+                .MaximumLength(20)
+                .MustContainOnlyAlphanumeric()
+                .WithMessage("UserName must be between 6 and 20 alphanumeric characters");
+        }
+
+        public static IRuleBuilderOptions<T, string> MustBeValidPassword<T>(
+            this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .MinimumLength(8)
+                .MustContainADigit()
+                .MustContainAnUppercase()
+                .MustContainALowercase()
+                .MustContainASpecialCharacter()
+                .WithMessage("Password must be a minimum of 8 characters with at least one digit, uppercase letter, lowercase letter, and a special character.");
+        }
+
     }
 }

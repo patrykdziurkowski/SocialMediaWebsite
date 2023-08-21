@@ -1,4 +1,4 @@
-﻿using Application.Features.Authentication;
+﻿using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using FluentAssertions;
 using FluentValidation;
@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Tests
 {
+    //Most password and username validation is found in FluentValidationCustomRulesTests
     public class RegisterValidatorTests
     {
         [Fact]
@@ -33,62 +34,11 @@ namespace Tests
         }
 
         [Fact]
-        public void Validate_Fails_WhenUserNameIsShorterThan6Chars()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnS",
-                "jsmith@email.com",
-                "P@ssword1!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenUserNameIsLongerThan20Chars()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JonathanSmith12345678",
-                "jsmith@email.com",
-                "P@ssword1!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
         public void Validate_Fails_WhenUserNameIsNull()
         {
             //Arrange
             UserRegisterModel user = new(
                 null!,
-                "jsmith@email.com",
-                "P@ssword1!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenUserNameIsNotAlphaNumeric()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSm!th",
                 "jsmith@email.com",
                 "P@ssword1!");
             RegisterValidator subject = new();
@@ -155,23 +105,6 @@ namespace Tests
         }
 
         [Fact]
-        public void Validate_Fails_WhenPasswordIsShorterThan8()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "P@sswor");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
         public void Validate_Fails_WhenPasswordIsNull()
         {
             //Arrange
@@ -179,74 +112,6 @@ namespace Tests
                 "JohnSmith123",
                 "john@smith.com",
                 null!);
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenPasswordHasNoUppercaseLetter()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "p@ssword1!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenPasswordHasNoLowercaseLetter()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "P@SSWORD1!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenPasswordHasNoDigit()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "P@ssword!");
-            RegisterValidator subject = new();
-
-            //Act
-            ValidationResult result = subject.Validate(user);
-
-            //Assert
-            result.IsValid.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Validate_Fails_WhenPasswordHasNoSpecialSymbol()
-        {
-            //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "Password1");
             RegisterValidator subject = new();
 
             //Act

@@ -4,22 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Authentication
+namespace Application.Features.Authentication.Models
 {
-    public class UserRegisterModel
+    public class UserLoginModel
     {
-        public UserRegisterModel(
+        public UserLoginModel(
             string userName,
-            string email,
             string password)
         {
             UserName = userName;
-            Email = email;
             Password = password;
         }
 
         public string UserName { get; set; }
-        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

@@ -309,5 +309,186 @@ namespace Tests
             result.IsValid.Should().BeFalse();
         }
 
+        [Fact]
+        public void MustBeValidUserName_ValidUserName_Passes()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidUserName();
+
+            string validUserName = "JohnSmith123";
+
+            //Act
+            ValidationResult result = validator.Validate(validUserName);
+
+            //Assert
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void MustBeValidUserName_WhenUserNameShorterThan6_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidUserName();
+
+            string tooShortUserName = "JohnS";
+
+            //Act
+            ValidationResult result = validator.Validate(tooShortUserName);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidUserName_WhenUserNameLongerThan20_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidUserName();
+
+            string tooLongUserName = "JonathanSmith12345678";
+
+            //Act
+            ValidationResult result = validator.Validate(tooLongUserName);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidUserName_WhenUserNameIsNotAlphanumeric_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidUserName();
+
+            string? nonAlphanumericUserName = "JohnSmith123@";
+
+            //Act
+            ValidationResult result = validator.Validate(nonAlphanumericUserName);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordIsValid_Passes()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? validPassword = "P@ssword1!";
+
+            //Act
+            ValidationResult result = validator.Validate(validPassword);
+
+            //Assert
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordShorterThan8_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? tooShortPassword = "P@sswor";
+
+            //Act
+            ValidationResult result = validator.Validate(tooShortPassword);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordNoUppercaseLetter_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? noUppercasePassword = "p@ssword1!";
+
+            //Act
+            ValidationResult result = validator.Validate(noUppercasePassword);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordNoLowercaseLetter_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? noLowercasePassword = "P@SSWORD1!";
+
+            //Act
+            ValidationResult result = validator.Validate(noLowercasePassword);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordNoDigit_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? noDigitPassword = "P@SSWORD!!";
+
+            //Act
+            ValidationResult result = validator.Validate(noDigitPassword);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidPassword_WhenPasswordNoSpecialSymbol_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidPassword();
+
+            string? noSpecialSymbolPassword = "PASSWORD11";
+
+            //Act
+            ValidationResult result = validator.Validate(noSpecialSymbolPassword);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
     }
 }

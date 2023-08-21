@@ -2,6 +2,7 @@ using Application;
 using Application.Features;
 using Application.Features.Authentication;
 using Application.Features.Authentication.Interfaces;
+using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using Application.Features.Shared;
