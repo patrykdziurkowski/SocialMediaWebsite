@@ -1,6 +1,7 @@
 ﻿using Application.Features.Authentication.Interfaces;
 using Dapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,6 +17,31 @@ namespace Application.Features.Authentication
         public UserRepository(IConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
+        }
+
+        public async Task<Result<User>> GetUserByUserNameAsync(string userName)
+        {
+            using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
+            connection.Open();
+
+            User? user = await connection.QueryFirstOrDefaultAsync<User>(
+                $"""
+                SELECT
+                    Id AS {nameof(User.Id)},
+                    UserName AS {nameof(User.UserName)},
+                    Email AS {nameof(User.Email)},
+                    PasswordHash AS {nameof(User.PasswordHash)}
+                FROM Users
+                WHERE UserName = @UserName
+                """,
+                new { UserName = userName });
+
+            if (user is null)
+            {
+                return Result.Fail("No user with such username exists");
+            }
+
+            return Result.Ok(user);
         }
 
         public async Task<Result> Register(User user)
