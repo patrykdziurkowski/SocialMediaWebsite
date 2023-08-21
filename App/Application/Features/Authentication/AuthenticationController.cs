@@ -1,5 +1,6 @@
 ﻿using Application.Features.Authentication;
 using Application.Features.Authentication.Interfaces;
+using Application.Features.Authentication.Models;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
@@ -16,27 +17,34 @@ namespace Application.Features.Chat
     public class AuthenticationController : Controller
     {
         private readonly IUserRepository _userRepository;
-        private readonly IValidator<UserRegisterModel> _userRegisterModelValidator;
+        private readonly ISecretHasher _secretHasher;
+
+        private readonly IValidator<UserRegisterModel> _registerValidator;
+        private readonly IValidator<UserLoginModel> _loginValidator;
 
         public AuthenticationController(
             IUserRepository userRepository,
-            IValidator<UserRegisterModel> userRegsiterModelValidator)
+            ISecretHasher secretHasher,
+            IValidator<UserRegisterModel> registerValidator,
+            IValidator<UserLoginModel> loginValidator)
         {
             _userRepository = userRepository;
-            _userRegisterModelValidator = userRegsiterModelValidator;
+            _secretHasher = secretHasher;
+            _registerValidator = registerValidator;
+            _loginValidator = loginValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterModel inputUser)
         {
-            ValidationResult validationResult = _userRegisterModelValidator
+            ValidationResult validationResult = _registerValidator
                 .Validate(inputUser);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            string passwordHash = SecretHasher.Hash(inputUser.Password);
+            string passwordHash = _secretHasher.Hash(inputUser.Password);
             User user = new(
                 inputUser.UserName,
                 inputUser.Email,
@@ -51,5 +59,29 @@ namespace Application.Features.Chat
             return StatusCode(201);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(UserLoginModel inputUser)
+        {
+            ValidationResult validationResult = _loginValidator.Validate(inputUser);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            Result<User> result = await _userRepository.GetUserByUserNameAsync(inputUser.UserName);
+            if (result.IsFailed)
+            {
+                return NotFound("No user with such password and username combination was found.");
+            }
+            User foundUser = result.Value;
+
+            bool passwordIsNotMatching = !_secretHasher.Verify(inputUser.Password, foundUser.PasswordHash);
+            if (passwordIsNotMatching)
+            {
+                return NotFound("No user with such password and username combination was found.");
+            }
+
+            return Ok();
+        }
     }
 }
