@@ -8,6 +8,14 @@ namespace Application.Features.Chat
 {
     public class Message
     {
+        private Message()
+        {
+            Id = default!;
+            AuthorChatterId = default!;
+            Text = default!;
+            MessageDateTime = default!;
+            ReplyMessageId = default;
+        }
         public Message(
             int authorChatterId,
             string text,
