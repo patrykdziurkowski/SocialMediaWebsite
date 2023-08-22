@@ -43,20 +43,20 @@ namespace Application.Features.Authentication
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
 
-            Result<User> result = await _userRepository.GetUserByUserNameAsync(inputUser.UserName);
+            Result<User> result = await _userRepository.GetUserByUserNameAsync(inputUser.UserName!);
             if (result.IsFailed)
             {
                 return Result.Fail(result.Errors.First().Message);
             }
             User foundUser = result.Value;
 
-            bool passwordIsNotMatching = !_secretHasher.Verify(inputUser.Password, foundUser.PasswordHash);
+            bool passwordIsNotMatching = !_secretHasher.Verify(inputUser.Password!, foundUser.PasswordHash);
             if (passwordIsNotMatching)
             {
                 return Result.Fail("No user with such password and username combination was found.");
             }
 
-            ClaimsIdentity identity = new(GetUserClaims(foundUser));
+            ClaimsIdentity identity = new(GetUserClaims(foundUser), /*Explicit*/CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new(identity);
             await httpContext.SignInAsync(principal);
 
@@ -82,6 +82,7 @@ namespace Application.Features.Authentication
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()!),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email)
+
             };
 
             return claims;

@@ -47,10 +47,10 @@ namespace Application.Features.Chat
                 return BadRequest(validationResult.Errors);
             }
 
-            string passwordHash = _secretHasher.Hash(inputUser.Password);
+            string passwordHash = _secretHasher.Hash(inputUser.Password!);
             User user = new(
-                inputUser.UserName,
-                inputUser.Email,
+                inputUser.UserName!,
+                inputUser.Email!,
                 passwordHash);
 
             Result result = await _userRepository.Register(user);

@@ -48,10 +48,13 @@ namespace Tests
         public async Task Register_Post_ShouldReturn201_WhenUserIsValidAndSuccessfulyRegistered()
         {
             //Arrange
-            UserRegisterModel validUser = new(
-                "JohnSmith123",
-                "john@smith.com",
-                "P@ssword1");
+            UserRegisterModel validUser = new()
+            {
+                UserName = "JohnSmith123",
+                Email = "john@smith.com",
+                Password = "P@ssword1"
+            };
+                
             _userRepository.Register(Arg.Any<User>()).Returns(Result.Ok());
 
             //Act
@@ -65,10 +68,12 @@ namespace Tests
         public async Task Register_Post_ShouldReturn400_WhenUserIsInvalid()
         {
             //Arrange
-            UserRegisterModel invalidUser = new(
-                "",
-                "",
-                "");
+            UserRegisterModel invalidUser = new()
+            {
+                UserName = "",
+                Email = "",
+                Password = ""
+            };
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Register(invalidUser);
@@ -81,10 +86,13 @@ namespace Tests
         public async Task Register_Post_ShouldReturn500_WhenDatabaseInsertionUnsuccessful()
         {
             //Arrange
-            UserRegisterModel validUser = new(
-                 "JohnSmith123",
-                 "john@smith.com",
-                 "P@ssword1");
+            UserRegisterModel validUser = new()
+            {
+                UserName = "JohnSmith123",
+                Email = "john@smith.com",
+                Password = "P@ssword1"
+            };     
+                 
             _userRepository.Register(Arg.Any<User>()).Returns(Result.Fail(""));
 
             //Act
@@ -100,9 +108,12 @@ namespace Tests
         public async Task Login_Post_ShouldReturn200_WhenUserIsValidAndSuccessfulyLoggedIn()
         {
             //Arrange
-            UserLoginModel validUser = new(
-                "JohnSmith123",
-                "P@ssword1");
+            UserLoginModel validUser = new()
+            {
+                UserName = "JohnSmith123",
+                Password = "P@ssword1"
+            };
+                
 
             _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Ok());
 
@@ -117,9 +128,12 @@ namespace Tests
         public async Task Login_Post_ShouldReturn400_WhenUserIsInvalid()
         {
             //Arrange
-            UserLoginModel validUser = new(
-                "InvalidUser",
-                "InvalidPassword");
+            UserLoginModel validUser = new()
+            {
+                UserName = "InvalidUser",
+                Password = "InvalidPassword"
+            };
+                
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Login(validUser);
@@ -132,9 +146,12 @@ namespace Tests
         public async Task Login_Post_ShouldReturn404_WhenUserNotLoggedInSuccessfuly()
         {
             //Arrange
-            UserLoginModel validUser = new(
-                "NotFoundUser",
-                "P@ssword1!");
+            UserLoginModel validUser = new()
+            {
+                UserName = "NotFoundUser",
+                Password = "P@ssword1!"
+            };
+                
 
             _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Fail(""));
 

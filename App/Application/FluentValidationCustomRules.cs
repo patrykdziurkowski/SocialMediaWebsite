@@ -91,8 +91,8 @@ namespace Application
                 });
         }
 
-        public static IRuleBuilderOptions<T, string> MustBeValidUserName<T>(
-            this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string?> MustBeValidUserName<T>(
+            this IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
                 .NotEmpty()
@@ -102,8 +102,8 @@ namespace Application
                 .WithMessage("UserName must be between 6 and 20 alphanumeric characters");
         }
 
-        public static IRuleBuilderOptions<T, string> MustBeValidPassword<T>(
-            this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string?> MustBeValidPassword<T>(
+            this IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
                 .NotEmpty()

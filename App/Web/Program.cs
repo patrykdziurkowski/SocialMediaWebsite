@@ -27,6 +27,7 @@ services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<ChatRepository>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
+services.AddSingleton<IValidator<UserLoginModel>, LoginValidator>();
 services.AddSingleton<IUserRepository, UserRepository>();
 services.AddSingleton<ISignInManager, SignInManager>();
 

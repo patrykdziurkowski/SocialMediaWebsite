@@ -20,10 +20,13 @@ namespace Tests
         public void Validate_Passes_WhenUserIsValid()
         {
             //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "jsmith@email.com",
-                "P@ssword1!");
+            UserRegisterModel user = new()
+            {
+                UserName = "JohnSmith123",
+                Email = "jsmith@email.com",
+                Password = "P@ssword1!"
+            };
+                
             RegisterValidator subject = new();
 
             //Act
@@ -37,10 +40,13 @@ namespace Tests
         public void Validate_Fails_WhenUserNameIsNull()
         {
             //Arrange
-            UserRegisterModel user = new(
-                null!,
-                "jsmith@email.com",
-                "P@ssword1!");
+            UserRegisterModel user = new()
+            {
+                UserName = null,
+                Email = "jsmith@email.com",
+                Password = "P@ssword1!"
+            };
+                
             RegisterValidator subject = new();
 
             //Act
@@ -57,10 +63,13 @@ namespace Tests
         public void Validate_Fails_WhenEmailNotInEmailFormat(string email)
         {
             //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                email,
-                "P@ssword1!");
+            UserRegisterModel user = new()
+            {
+                UserName = "JohnSmith123",
+                Email = email,
+                Password = "P@ssword1!"
+            };
+                
             RegisterValidator subject = new();
 
             //Act
@@ -74,10 +83,13 @@ namespace Tests
         public void Validate_Fails_WhenEmailIsNull()
         {
             //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                null!,
-                "P@ssword1!");
+            UserRegisterModel user = new()
+            {
+                UserName = "JohnSmith123",
+                Email = null,
+                Password = "P@ssword1!"
+            };
+
             RegisterValidator subject = new();
 
             //Act
@@ -91,10 +103,13 @@ namespace Tests
         public void Validate_Fails_WhenEmailIsLongerThan319Characters()
         {
             //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                Generate320CharacterString(),
-                "P@ssword1!");
+            UserRegisterModel user = new()
+            {
+                UserName = "JohnSmith123",
+                Email = Generate320CharacterString(),
+                Password = "P@ssword1!"
+            };
+
             RegisterValidator subject = new();
 
             //Act
@@ -108,10 +123,13 @@ namespace Tests
         public void Validate_Fails_WhenPasswordIsNull()
         {
             //Arrange
-            UserRegisterModel user = new(
-                "JohnSmith123",
-                "john@smith.com",
-                null!);
+            UserRegisterModel user = new()
+            {
+                UserName = "JohnSmith123",
+                Email = "john@smith.com",
+                Password = null
+            };
+
             RegisterValidator subject = new();
 
             //Act
