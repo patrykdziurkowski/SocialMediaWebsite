@@ -5,6 +5,7 @@ using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using FluentAssertions;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using System;
@@ -25,6 +26,7 @@ namespace Tests
         private readonly LoginValidator _loginValidator;
         private readonly IUserRepository _userRepository;
         private readonly ISecretHasher _secretHasher;
+        private readonly ISignInManager _signInManager;
 
         public AutheticationControllerTests()
         {
@@ -32,10 +34,12 @@ namespace Tests
             _loginValidator = new();
             _userRepository = Substitute.For<IUserRepository>();
             _secretHasher = Substitute.For<ISecretHasher>();
-            
+            _signInManager = Substitute.For<ISignInManager>();
+
             _subject = new(
                 _userRepository,
                 _secretHasher,
+                _signInManager,
                 _registerValidator,
                 _loginValidator);
         }
@@ -93,19 +97,14 @@ namespace Tests
 
 
         [Fact]
-        public async Task Login_Post_ShouldReturn200_WhenUserIsValid()
+        public async Task Login_Post_ShouldReturn200_WhenUserIsValidAndSuccessfulyLoggedIn()
         {
             //Arrange
             UserLoginModel validUser = new(
                 "JohnSmith123",
                 "P@ssword1");
-            User user = new(
-                "JohnSmith123",
-                "email@email.com",
-                "someHashedPassword");
 
-            _userRepository.GetUserByUserNameAsync("JohnSmith123").Returns(Result.Ok(user));
-            _secretHasher.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+            _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Ok());
 
             //Act
             StatusCodeResult result = (StatusCodeResult) await _subject.Login(validUser);
@@ -120,7 +119,7 @@ namespace Tests
             //Arrange
             UserLoginModel validUser = new(
                 "InvalidUser",
-                "Password");
+                "InvalidPassword");
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Login(validUser);
@@ -130,14 +129,14 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Login_Post_ShouldReturn404_WhenUserNotFoundInDatabase()
+        public async Task Login_Post_ShouldReturn404_WhenUserNotLoggedInSuccessfuly()
         {
             //Arrange
             UserLoginModel validUser = new(
                 "NotFoundUser",
                 "P@ssword1!");
 
-            _userRepository.GetUserByUserNameAsync("NotFoundUser").Returns(Result.Fail(""));
+            _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Fail(""));
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Login(validUser);
@@ -146,27 +145,7 @@ namespace Tests
             result.StatusCode.Should().Be(404);
         }
 
-        [Fact]
-        public async Task Login_Post_ShouldReturn404_WhenUserFoundInDatabaseButPasswordWrong()
-        {
-            //Arrange
-            UserLoginModel validUser = new(
-                "FoundUser",
-                "P@ssword1!");
-            User user = new(
-                "FoundUser",
-                "email@email.com",
-                "someHashedPassword");
-
-            _userRepository.GetUserByUserNameAsync("FoundUser").Returns(Result.Ok(user));
-            _secretHasher.Verify(Arg.Any<string>(), Arg.Any<string>()).Returns(false);
-
-            //Act
-            ObjectResult result = (ObjectResult) await _subject.Login(validUser);
-
-            //Assert
-            result.StatusCode.Should().Be(404);
-        }
+        
 
     }
 }

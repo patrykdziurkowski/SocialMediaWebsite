@@ -7,6 +7,7 @@ using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using Application.Features.Shared;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
@@ -27,6 +28,15 @@ services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<ChatRepository>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 services.AddSingleton<IUserRepository, UserRepository>();
+services.AddSingleton<ISignInManager, SignInManager>();
+
+services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        {
+            options.LoginPath = "/Authentication/Login";
+            options.LogoutPath = "/Authentication/Logout";
+        });
 
 var app = builder.Build();
 
@@ -43,6 +53,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

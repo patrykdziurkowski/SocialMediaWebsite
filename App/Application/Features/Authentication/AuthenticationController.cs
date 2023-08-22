@@ -18,6 +18,7 @@ namespace Application.Features.Chat
     {
         private readonly IUserRepository _userRepository;
         private readonly ISecretHasher _secretHasher;
+        private readonly ISignInManager _signInManager;
 
         private readonly IValidator<UserRegisterModel> _registerValidator;
         private readonly IValidator<UserLoginModel> _loginValidator;
@@ -25,11 +26,13 @@ namespace Application.Features.Chat
         public AuthenticationController(
             IUserRepository userRepository,
             ISecretHasher secretHasher,
+            ISignInManager signInManager,
             IValidator<UserRegisterModel> registerValidator,
             IValidator<UserLoginModel> loginValidator)
         {
             _userRepository = userRepository;
             _secretHasher = secretHasher;
+            _signInManager = signInManager;
             _registerValidator = registerValidator;
             _loginValidator = loginValidator;
         }
@@ -68,17 +71,10 @@ namespace Application.Features.Chat
                 return BadRequest(validationResult.Errors);
             }
 
-            Result<User> result = await _userRepository.GetUserByUserNameAsync(inputUser.UserName);
-            if (result.IsFailed)
+            Result signInResult = await _signInManager.SignIn(HttpContext, inputUser);
+            if (signInResult.IsFailed)
             {
-                return NotFound("No user with such password and username combination was found.");
-            }
-            User foundUser = result.Value;
-
-            bool passwordIsNotMatching = !_secretHasher.Verify(inputUser.Password, foundUser.PasswordHash);
-            if (passwordIsNotMatching)
-            {
-                return NotFound("No user with such password and username combination was found.");
+                return NotFound(signInResult.Errors.First().Message);
             }
 
             return Ok();
