@@ -5,6 +5,7 @@ using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace Application.Features.Chat
                 return BadRequest(validationResult.Errors);
             }
 
-            Result signInResult = await _signInManager.SignIn(HttpContext, inputUser);
+            Result signInResult = await _signInManager.SignIn(inputUser);
             if (signInResult.IsFailed)
             {
                 return NotFound(signInResult.Errors.First().Message);

@@ -20,25 +20,26 @@ namespace Application.Features.Authentication
         private readonly IConnectionFactory _connectionFactory;
         private readonly IUserRepository _userRepository;
         private readonly ISecretHasher _secretHasher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public SignInManager(
             IConnectionFactory connectionFactory,
             IUserRepository userRepository,
-            ISecretHasher secretHasher)
+            ISecretHasher secretHasher,
+            IHttpContextAccessor httpContextAccessor)
         {
             _connectionFactory = connectionFactory;
             _userRepository = userRepository;
             _secretHasher = secretHasher;
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
         /// Attempts to log in the user with given login credentials
         /// </summary>
-        /// <param name="httpContext">HttpContext passed from a controller</param>
         /// <param name="inputUser">User's login information</param>
         /// <returns></returns>
-        public async Task<Result> SignIn(HttpContext httpContext, UserLoginModel inputUser)
+        public async Task<Result> SignIn(UserLoginModel inputUser)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
@@ -58,7 +59,9 @@ namespace Application.Features.Authentication
 
             ClaimsIdentity identity = new(GetUserClaims(foundUser), /*Explicit*/CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new(identity);
-            await httpContext.SignInAsync(principal);
+
+            HttpContext context = _httpContextAccessor.HttpContext!;
+            await context.SignInAsync(principal);
 
             return Result.Ok();
 
@@ -67,11 +70,10 @@ namespace Application.Features.Authentication
         /// <summary>
         /// Signs the user out from a given HttpContext
         /// </summary>
-        /// <param name="httpContext">HttpContext passed down from a controller</param>
-        /// <returns></returns>
-        public async Task SignOut(HttpContext httpContext)
+        public async Task SignOut()
         {
-            await httpContext.SignOutAsync();
+            HttpContext context = _httpContextAccessor.HttpContext!;
+            await context.SignOutAsync();
         }
 
 

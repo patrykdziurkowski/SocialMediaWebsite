@@ -6,7 +6,7 @@ namespace Application.Features.Authentication.Interfaces
 {
     public interface ISignInManager
     {
-        Task<Result> SignIn(HttpContext httpContext, UserLoginModel inputUser);
-        Task SignOut(HttpContext httpContext);
+        Task<Result> SignIn(UserLoginModel inputUser);
+        Task SignOut();
     }
 }

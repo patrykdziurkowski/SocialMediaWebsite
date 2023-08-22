@@ -18,7 +18,7 @@ using Xunit;
 
 namespace Tests
 {
-    public class AutheticationControllerTests
+    public class AuthenticationControllerTests
     {
         private readonly AuthenticationController _subject;
 
@@ -28,7 +28,7 @@ namespace Tests
         private readonly ISecretHasher _secretHasher;
         private readonly ISignInManager _signInManager;
 
-        public AutheticationControllerTests()
+        public AuthenticationControllerTests()
         {
             _registerValidator = new();
             _loginValidator = new();
@@ -115,7 +115,7 @@ namespace Tests
             };
                 
 
-            _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Ok());
+            _signInManager.SignIn(validUser).Returns(Result.Ok());
 
             //Act
             StatusCodeResult result = (StatusCodeResult) await _subject.Login(validUser);
@@ -153,7 +153,7 @@ namespace Tests
             };
                 
 
-            _signInManager.SignIn(Arg.Any<HttpContext>(), validUser).Returns(Result.Fail(""));
+            _signInManager.SignIn(validUser).Returns(Result.Fail(""));
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Login(validUser);
