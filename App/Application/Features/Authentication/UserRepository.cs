@@ -38,7 +38,7 @@ namespace Application.Features.Authentication
 
             if (user is null)
             {
-                return Result.Fail("No user with such username exists");
+                return Result.Fail("No user with such password and username combination was found.");
             }
 
             return Result.Ok(user);
