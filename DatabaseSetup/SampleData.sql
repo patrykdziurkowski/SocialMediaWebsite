@@ -190,4 +190,13 @@ BEGIN
 	(5, 10, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 	(6, 11, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
 	SET IDENTITY_INSERT dbo.MessageLikes OFF;
+
+	SET IDENTITY_INSERT dbo.BlockedUsers ON;
+	INSERT INTO dbo.BlockedUsers
+	(Id, BlockingUserId, BlockedUserId, BlockDateTime)
+	VALUES
+	(1, 1, 13, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(2, 1, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(3, 6, 10, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+	SET IDENTITY_INSERT dbo.BlockedUsers OFF;
 END;
