@@ -218,4 +218,20 @@ BEGIN
 	(12, 'Please don''t contact me unless I know you', NULL, 1),
 	(13, 'Feel free to add me!!!', NULL, 1);
 
+	SET IDENTITY_INSERT dbo.ProfileLikes ON;
+	INSERT INTO dbo.ProfileLikes
+	(Id, LikingUserId, LikedProfileId, LikeDateTime)
+	VALUES
+	(1, 1, 7, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(2, 1, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(3, 6, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(4, 12, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(5, 12, 6, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(6, 6, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(7, 9, 6, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(8, 4, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(9, 9, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(10, 8, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(11, 1, 8, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+	SET IDENTITY_INSERT dbo.ProfileLikes OFF;
 END;
