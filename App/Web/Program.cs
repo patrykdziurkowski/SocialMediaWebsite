@@ -22,6 +22,8 @@ services
     .AddControllersWithViews()
     .AddApplicationPart(applicationAssembly);
 
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 services.AddSingleton<ISecretHasher, SecretHasher>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
@@ -30,6 +32,7 @@ services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 services.AddSingleton<IValidator<UserLoginModel>, LoginValidator>();
 services.AddSingleton<IUserRepository, UserRepository>();
 services.AddSingleton<ISignInManager, SignInManager>();
+
 
 services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
