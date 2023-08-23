@@ -126,15 +126,19 @@ BEGIN
 	(2, 1, 7, 0),
 	(3, 1, 11, 0),
 	(4, 1, 12, 0),
+
 	(5, 2, 13, 0),
 	(6, 2, 12, 0),
 	(7, 2, 11, 0),
 	(8, 2, 10, 0),
 	(9, 2, 6, 0),
+
 	(10, 3, 6, 0),
 	(11, 3, 12, 0),
+
 	(12, 4, 1, 1),
 	(13, 4, 8, 0),
+
 	(14, 5, 6, 0),
 	(15, 5, 9, 0);
 	SET IDENTITY_INSERT dbo.ConversationUsers OFF;
@@ -175,4 +179,15 @@ BEGIN
 	(26, 6, N'👍', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, NULL);
 	SET IDENTITY_INSERT dbo.[Messages] OFF;
 
+	SET IDENTITY_INSERT dbo.MessageLikes ON;
+	INSERT INTO dbo.MessageLikes
+	(Id, LikingUserId, LikedMessageId, LikeDateTime)
+	VALUES
+	(1, 1, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(2, 1, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(3, 11, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(4, 6, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(5, 10, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+	(6, 11, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+	SET IDENTITY_INSERT dbo.MessageLikes OFF;
 END;
