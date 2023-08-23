@@ -199,4 +199,23 @@ BEGIN
 	(2, 1, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 	(3, 6, 10, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
 	SET IDENTITY_INSERT dbo.BlockedUsers OFF;
+
+	--NO IDENTITY
+	INSERT INTO dbo.Profiles
+	(UserId, [Description], ProfilePicture, ProfileVisibilityId)
+	VALUES
+	(1, NULL, NULL, 2),
+	(2, 'My name is Hollie, don''t call me "Holly"', NULL, 1),
+	(3, NULL, NULL, 1),
+	(4, NULL, NULL, 1),
+	(5, NULL, NULL, 1),
+	(6, 'My name is Ricardo, feel free to add me 😊', NULL, 1),
+	(7, 'Employed at [REDACTED]', NULL, 1),
+	(8, NULL, NULL, 1),
+	(9, NULL, NULL, 1),
+	(10, NULL, NULL, 2),
+	(11, NULL, NULL, 1),
+	(12, 'Please don''t contact me unless I know you', NULL, 1),
+	(13, 'Feel free to add me!!!', NULL, 1);
+
 END;
