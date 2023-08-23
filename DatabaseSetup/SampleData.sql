@@ -54,6 +54,30 @@ GO
 CREATE OR ALTER PROCEDURE Tests.InsertSampleData
 AS
 BEGIN
+	
+	DELETE FROM dbo.MessageLikes;
+	DELETE FROM dbo.[Messages];
+	DELETE FROM dbo.ConversationUsers;
+	DELETE FROM dbo.Conversations;
+	DELETE FROM dbo.CommentLikes;
+	DELETE FROM dbo.Comments;
+	DELETE FROM dbo.PostLikes;
+	DELETE FROM dbo.Posts;
+	DELETE FROM dbo.UserGroupMemberships;
+	DELETE FROM dbo.GroupInvitations;
+	DELETE FROM dbo.GroupApplications;
+	DELETE FROM dbo.Groups;
+	DELETE FROM dbo.GroupJoinRestrictions;
+	DELETE FROM dbo.ProfileLikes;
+	DELETE FROM dbo.Profiles;
+	DELETE FROM dbo.Visibility;
+	DELETE FROM dbo.BlockedUsers;
+	DELETE FROM dbo.Users;
+	
+	
+
+
+
 	DECLARE @AppStartDate DATETIMEOFFSET(7) = '2018-06-17 11:25:39';
 
 	INSERT INTO Users 
