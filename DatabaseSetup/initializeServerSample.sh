@@ -1,1 +1,1 @@
-/opt/mssql/bin/sqlservr & /usr/src/databaseSetup/createSchemaAndSampleData.sh
+/opt/mssql/bin/sqlservr & /usr/src/databaseSetup/createSchemaAndSampleData.sh $1

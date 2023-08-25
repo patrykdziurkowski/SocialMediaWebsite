@@ -13,6 +13,8 @@ COPY initializeServerSample.sh /usr/src/databaseSetup
 USER mssql
 
 ENV ACCEPT_EULA Y
-ENV MSSQL_SA_PASSWORD P@ssword1!
+ARG password
+RUN test -n "${password}" || (echo "password not set" && false)
+ENV MSSQL_SA_PASSWORD ${password}
 
-CMD /bin/bash /usr/src/databaseSetup/initializeServerSample.sh
+RUN /bin/bash /usr/src/databaseSetup/initializeServerSample.sh "${password}"
