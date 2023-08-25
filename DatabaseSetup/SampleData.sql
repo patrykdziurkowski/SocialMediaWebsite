@@ -128,6 +128,18 @@ BEGIN
 		(11, N'Heck yes, brother!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 8);
 		SET IDENTITY_INSERT dbo.Comments OFF;
 
+		SET IDENTITY_INSERT dbo.CommentLikes ON;
+		INSERT INTO dbo.CommentLikes
+		(Id, LikingUserId, LikedCommentId, LikeDateTime)
+		VALUES
+		(1, 2, 2, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(2, 10, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(3, 5, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(4, 12, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(5, 1, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(6, 13, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(7, 2, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+		SET IDENTITY_INSERT dbo.CommentLikes OFF;
 
 	DECLARE @AppStartDate DATETIMEOFFSET(7) = '2018-06-17 11:25:39';
 
