@@ -1,6 +1,26 @@
 BEGIN TRANSACTION SchemaSetupTransaction;
 
 BEGIN TRY
+    DROP TABLE dbo.MessageLikes;
+    DROP TABLE dbo.[Messages];
+    DROP TABLE dbo.ConversationUsers;
+    DROP TABLE dbo.Conversations;
+    DROP TABLE dbo.CommentLikes;
+    DROP TABLE dbo.Comments;
+    DROP TABLE dbo.PostLikes;
+    DROP TABLE dbo.Posts;
+    DROP TABLE dbo.UserGroupMemberships;
+    DROP TABLE dbo.GroupApplications;
+    DROP TABLE dbo.GroupInvitations;
+    DROP TABLE dbo.Groups;
+    DROP TABLE dbo.GroupJoinRestrictions;
+    DROP TABLE dbo.ProfileLikes;
+    DROP TABLE dbo.Profiles;
+    DROP TABLE dbo.Visibility;
+    DROP TABLE dbo.BlockedUsers;
+    DROP TABLE dbo.Users;
+
+
     CREATE TABLE [dbo].[Users] (
         [Id]               INT            NOT NULL IDENTITY(1,1),
         [UserName]         NVARCHAR (50)  NOT NULL,
