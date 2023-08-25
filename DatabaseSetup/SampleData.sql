@@ -238,6 +238,71 @@ BEGIN
 		(11, 1, 8, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
 		SET IDENTITY_INSERT dbo.ProfileLikes OFF;
 
+		SET IDENTITY_INSERT dbo.GroupJoinRestrictions ON;
+		INSERT INTO dbo.GroupJoinRestrictions
+		(Id, Restriction)
+		VALUES
+		(1, N'None'),
+		(2, N'InviteOnly'),
+		(3, N'LinkOnly'),
+		(4, N'ApplyOnly');
+		SET IDENTITY_INSERT dbo.GroupJoinRestrictions OFF;
+
+		SET IDENTITY_INSERT dbo.Groups ON;
+		INSERT INTO dbo.Groups
+		(Id, [Name], [Description], VisibilityId, JoinRestrictionId, IsActive, CreationDateTime)
+		VALUES
+		(1, N'Book Discussion', NULL, 1, 2, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(2, N'Local Marketplace', NULL, 1, 4, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(3, N'Some Group', '', 2, 3, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(4, N'[REDACTED] Organization', NULL, 2, 2, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(5, N'Whatever Discussion', NULL, 1, 1, 0, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+		SET IDENTITY_INSERT dbo.Groups OFF;
+
+		SET IDENTITY_INSERT dbo.GroupInvitations ON;
+		INSERT INTO dbo.GroupInvitations
+		(Id, InvitingUserId, InvitedUserId, Groupid, [Message], InviteDateTime, IsActive)
+		VALUES
+		(1, 6, 12, 1, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(2, 6, 12, 1, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(3, 6, 12, 1, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(4, 1, 11, 4, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(5, 1, 7, 4, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1);
+		SET IDENTITY_INSERT dbo.GroupInvitations OFF;
+
+		SET IDENTITY_INSERT dbo.GroupApplications ON;
+		INSERT INTO dbo.GroupApplications
+		(Id, ApplyingUserId, GroupId, [Message], AppliedDateTime)
+		VALUES
+		(1, 6, 2, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(2, 4, 2, N'i wish to sell my washing machine', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(3, 3, 2, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+		SET IDENTITY_INSERT dbo.GroupApplications OFF;
+
+		SET IDENTITY_INSERT dbo.UserGroupMemberships ON;
+		INSERT INTO dbo.UserGroupMemberships
+		(Id, UserId, Groupid, JoinDateTime, WasInvited)
+		VALUES
+		(1, 4, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(2, 3, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(3, 8, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+
+		(4, 1, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(5, 7, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(6, 11, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(7, 12, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+
+		(8, 8, 2, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(9, 5, 2, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+
+		(10, 6, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(11, 12, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(12, 2, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+		(13, 8, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
+		(14, 9, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
+
+		(15, 5, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0);
+		SET IDENTITY_INSERT dbo.UserGroupMemberships OFF;
 
 	
 		SET IDENTITY_INSERT dbo.Posts ON;
