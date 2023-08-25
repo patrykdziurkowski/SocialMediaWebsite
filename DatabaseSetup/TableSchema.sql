@@ -154,9 +154,11 @@ BEGIN TRY
         [CommentDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         [ParentPostId]    INT                NOT NULL,
         [ParentCommentId] INT                NULL,
+        [AuthorUserId] INT NOT NULL, 
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_CommentParentPost FOREIGN KEY (ParentPostId) REFERENCES Posts(Id),
-        CONSTRAINT FK_CommentParentComment FOREIGN KEY (ParentCommentId) REFERENCES Comments(Id)
+        CONSTRAINT FK_CommentParentComment FOREIGN KEY (ParentCommentId) REFERENCES Comments(Id),
+	    CONSTRAINT [FK_CommentAuthorUser] FOREIGN KEY ([AuthorUserId]) REFERENCES [dbo].[Users] ([Id])
     );
 
     CREATE TABLE [dbo].[CommentLikes] (
