@@ -74,6 +74,27 @@ BEGIN
 	DELETE FROM dbo.BlockedUsers;
 	DELETE FROM dbo.Users;
 	
+		SET IDENTITY_INSERT dbo.Posts ON;
+		INSERT INTO dbo.Posts
+		(Id, Title, [Description], PostDateTime, AuthorUserId, GroupId, IsCommentingEnabled, SharedPostId)
+		VALUES
+		(1, N'Great day to work', N'Wowie, today is truly a great day to be working! Like this post if you agree!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1, 4, 1, NULL),
+		(2, N'How''s your day', NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 0, NULL),
+		(3, N'Mistake', N'You forgot to enable the comments! 💬💬💬❗❗', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 2, NULL, 1, 2),
+		(4, N'Is anyone selling', N'selling a hacksaw??', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, 2, 1, NULL),
+		(5, N'Lawn mower', N'I wish to buy a new lawn mower I got $100 to make it happen send me a message', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, 2, 1, NULL),
+		(6, N'❗❗❗Used furtniture❗❗❗', N'Greetings, I wish to sell a lot of used furniture, please send me a message if you''re interested.', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, 2, 1, NULL),
+		(7, N'Group rules:📝', N'Will fill out in the future', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, 5, 0, NULL),
+		(8, N'did u see the news?', N'i saw the news', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 10, NULL, 1, NULL),
+		(9, N'Some people are just clueless', N'Thoughts?', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 2, NULL, 1, NULL),
+		(10, N'Let''s create a chain', N'of quote posts', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 11, 3, 1, NULL),
+		(11, N'adaasdasvcxklxcvvzxcxcvxcvm,xcvz1234#', NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 12, 3, 1, 11),
+		(12, N'Stop spamming', N'Or I''m going to kick you out', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 13, 3, 1, 12),
+		(13, N'Events', N'Is anything planned for tomorrow?', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 3, 1, 1, NULL),
+		(14, N'Invitation to SomeGroup', N'Could someone please invite me to SomeGroup?', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 6, NULL, 1, NULL),
+		(15, N'Boring', N'Man this platform is dead...', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 10, NULL, 1, NULL),
+		(16, N'any1 wanna talk cars', 'i love cars', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 1, NULL);
+		SET IDENTITY_INSERT dbo.Posts OFF;
 	
 
 
