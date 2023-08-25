@@ -219,4 +219,5 @@ END TRY
 BEGIN CATCH
     ROLLBACK TRANSACTION SchemaSetupTransaction;
     PRINT 'Creating tables failed. Transaction rolled back.';
+    THROW;
 END CATCH
