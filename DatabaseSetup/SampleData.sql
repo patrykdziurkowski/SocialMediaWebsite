@@ -96,6 +96,20 @@ BEGIN
 		(16, N'any1 wanna talk cars', 'i love cars', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 1, NULL);
 		SET IDENTITY_INSERT dbo.Posts OFF;
 	
+		SET IDENTITY_INSERT dbo.PostLikes ON;
+		INSERT INTO dbo.PostLikes
+		(Id, LikingUserId, LikedPostId, LikeDateTime)
+		VALUES
+		(1, 1, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(2, 6, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(3, 10, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(4, 12, 10, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(5, 11, 10, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(6, 11, 11, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(7, 8, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(8, 2, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
+		(9, 5, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
+		SET IDENTITY_INSERT dbo.PostLikes OFF;
 
 
 
