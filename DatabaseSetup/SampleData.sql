@@ -111,6 +111,22 @@ BEGIN
 		(9, 5, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
 		SET IDENTITY_INSERT dbo.PostLikes OFF;
 
+		SET IDENTITY_INSERT dbo.Comments ON;
+		INSERT INTO dbo.Comments
+		(Id, [Text], CommentDateTime, ParentPostId, ParentCommentId, AuthorUserId)
+		VALUES
+		(1, N'Agreed ma''am!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 9, NULL, 8),
+		(2, N'i think she was talking about you dude', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 9, 1, 10),
+		(3, N'Oh!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 9, 2, 8),
+		(4, N'omg so true!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 9, NULL, 13),
+		(5, N'Sorry', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 12, NULL, 12),
+		(6, N'not that I know of 😂', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 13, NULL, 4),
+		(7, N'Why I would love to!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 16, NULL, 5),
+		(8, N'Wrong post, apologies.', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 16, NULL, 5),
+		(9, N'Agreed', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 15, NULL, 12),
+		(10, N'Quit being so negative', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 15, NULL, 1),
+		(11, N'Heck yes, brother!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 8);
+		SET IDENTITY_INSERT dbo.Comments OFF;
 
 
 	DECLARE @AppStartDate DATETIMEOFFSET(7) = '2018-06-17 11:25:39';
