@@ -1,24 +1,25 @@
 BEGIN TRANSACTION SchemaSetupTransaction;
 
 BEGIN TRY
-    DROP TABLE dbo.MessageLikes;
-    DROP TABLE dbo.[Messages];
-    DROP TABLE dbo.ConversationUsers;
-    DROP TABLE dbo.Conversations;
-    DROP TABLE dbo.CommentLikes;
-    DROP TABLE dbo.Comments;
-    DROP TABLE dbo.PostLikes;
-    DROP TABLE dbo.Posts;
-    DROP TABLE dbo.UserGroupMemberships;
-    DROP TABLE dbo.GroupApplications;
-    DROP TABLE dbo.GroupInvitations;
-    DROP TABLE dbo.Groups;
-    DROP TABLE dbo.GroupJoinRestrictions;
-    DROP TABLE dbo.ProfileLikes;
-    DROP TABLE dbo.Profiles;
-    DROP TABLE dbo.Visibility;
-    DROP TABLE dbo.BlockedUsers;
-    DROP TABLE dbo.Users;
+
+    DROP TABLE IF EXISTS dbo.MessageLikes;
+    DROP TABLE IF EXISTS dbo.[Messages];
+    DROP TABLE IF EXISTS dbo.ConversationUsers;
+    DROP TABLE IF EXISTS dbo.Conversations;
+    DROP TABLE IF EXISTS dbo.CommentLikes;
+    DROP TABLE IF EXISTS dbo.Comments;
+    DROP TABLE IF EXISTS dbo.PostLikes;
+    DROP TABLE IF EXISTS dbo.Posts;
+    DROP TABLE IF EXISTS dbo.UserGroupMemberships;
+    DROP TABLE IF EXISTS dbo.GroupApplications;
+    DROP TABLE IF EXISTS dbo.GroupInvitations;
+    DROP TABLE IF EXISTS dbo.Groups;
+    DROP TABLE IF EXISTS dbo.GroupJoinRestrictions;
+    DROP TABLE IF EXISTS dbo.ProfileLikes;
+    DROP TABLE IF EXISTS dbo.Profiles;
+    DROP TABLE IF EXISTS dbo.Visibility;
+    DROP TABLE IF EXISTS dbo.BlockedUsers;
+    DROP TABLE IF EXISTS dbo.Users;
 
 
     CREATE TABLE [dbo].[Users] (
