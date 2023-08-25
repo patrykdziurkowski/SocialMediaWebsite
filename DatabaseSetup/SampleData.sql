@@ -1,4 +1,8 @@
-﻿--CREATE SCHEMA Tests;
+﻿IF (NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Tests')) 
+BEGIN
+    EXEC ('CREATE SCHEMA Tests AUTHORIZATION [dbo]')
+END
+
 GO
 CREATE OR ALTER VIEW Tests.ViewWithRandomValue
 AS
