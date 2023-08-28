@@ -1,28 +1,38 @@
-BEGIN TRANSACTION SchemaSetupTransaction;
+USE MASTER;
+IF DB_ID (N'SocialMediaWebsite') IS NOT NULL
+BEGIN
+    
+    ALTER DATABASE SocialMediaWebsite SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE SocialMediaWebsite;
+END
 
+CREATE DATABASE SocialMediaWebsite;
+GO
+
+BEGIN TRANSACTION SchemaSetupTransaction;
 BEGIN TRY
 
-    DROP TABLE IF EXISTS dbo.MessageLikes;
-    DROP TABLE IF EXISTS dbo.[Messages];
-    DROP TABLE IF EXISTS dbo.ConversationUsers;
-    DROP TABLE IF EXISTS dbo.Conversations;
-    DROP TABLE IF EXISTS dbo.CommentLikes;
-    DROP TABLE IF EXISTS dbo.Comments;
-    DROP TABLE IF EXISTS dbo.PostLikes;
-    DROP TABLE IF EXISTS dbo.Posts;
-    DROP TABLE IF EXISTS dbo.UserGroupMemberships;
-    DROP TABLE IF EXISTS dbo.GroupApplications;
-    DROP TABLE IF EXISTS dbo.GroupInvitations;
-    DROP TABLE IF EXISTS dbo.Groups;
-    DROP TABLE IF EXISTS dbo.GroupJoinRestrictions;
-    DROP TABLE IF EXISTS dbo.ProfileLikes;
-    DROP TABLE IF EXISTS dbo.Profiles;
-    DROP TABLE IF EXISTS dbo.Visibility;
-    DROP TABLE IF EXISTS dbo.BlockedUsers;
-    DROP TABLE IF EXISTS dbo.Users;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.MessageLikes;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.[Messages];
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.ConversationUsers;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Conversations;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.CommentLikes;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Comments;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.PostLikes;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Posts;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.UserGroupMemberships;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.GroupApplications;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.GroupInvitations;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Groups;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.GroupJoinRestrictions;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.ProfileLikes;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Profiles;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Visibility;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.BlockedUsers;
+    DROP TABLE IF EXISTS SocialMediaWebsite.dbo.Users;
 
 
-    CREATE TABLE [dbo].[Users] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[Users] (
         [Id]               INT            NOT NULL IDENTITY(1,1),
         [UserName]         NVARCHAR (50)  NOT NULL,
         [FirstName]        NVARCHAR (50)  NULL,
@@ -34,7 +44,7 @@ BEGIN TRY
         PRIMARY KEY CLUSTERED ([Id] ASC)
     );
 
-    CREATE TABLE [dbo].[BlockedUsers] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[BlockedUsers] (
         [Id]             INT                NOT NULL IDENTITY(1,1),
         [BlockingUserId] INT                NOT NULL,
         [BlockedUserId]  INT                NOT NULL,
@@ -44,13 +54,13 @@ BEGIN TRY
 	    CONSTRAINT FK_BlockedUser FOREIGN KEY (BlockedUserId) REFERENCES Users(Id)
     );
 
-    CREATE TABLE [dbo].[Visibility]
+    CREATE TABLE SocialMediaWebsite.[dbo].[Visibility]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [Visibility] NVARCHAR(20) NOT NULL
     );
 
-    CREATE TABLE [dbo].[Profiles]
+    CREATE TABLE SocialMediaWebsite.[dbo].[Profiles]
     (
 	    [UserId] INT NOT NULL PRIMARY KEY, 
         [Description] NVARCHAR(255) NULL, 
@@ -59,7 +69,7 @@ BEGIN TRY
         CONSTRAINT FK_ProfileVisibility FOREIGN KEY (ProfileVisibilityId) REFERENCES Visibility(Id)
     );
 
-    CREATE TABLE [dbo].[ProfileLikes]
+    CREATE TABLE SocialMediaWebsite.[dbo].[ProfileLikes]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
@@ -69,13 +79,13 @@ BEGIN TRY
         CONSTRAINT FK_LikedProfile FOREIGN KEY (LikedProfileId) REFERENCES Profiles(UserId)
     );
 
-    CREATE TABLE [dbo].[GroupJoinRestrictions] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[GroupJoinRestrictions] (
         [Id]     INT           NOT NULL IDENTITY(1,1),
         [Restriction] NVARCHAR (20) NOT NULL,
         PRIMARY KEY CLUSTERED ([Id] ASC)
     );
 
-    CREATE TABLE [dbo].[Groups] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[Groups] (
         [Id]                 INT             NOT NULL IDENTITY(1,1),
         [Name]               NVARCHAR (128)  NOT NULL,
         [Description]        NVARCHAR (1024) NULL,
@@ -88,7 +98,7 @@ BEGIN TRY
         CONSTRAINT FK_JoinRestriction FOREIGN KEY (JoinRestrictionId) REFERENCES GroupJoinRestrictions(Id)
     );
 
-    CREATE TABLE [dbo].[GroupInvitations] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[GroupInvitations] (
         [Id]             INT                NOT NULL IDENTITY(1,1),
         [InvitingUserId] INT                NOT NULL,
         [InvitedUserId]  INT                NOT NULL,
@@ -102,7 +112,7 @@ BEGIN TRY
         CONSTRAINT FK_InvitationGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id)
     );
 
-    CREATE TABLE [dbo].[GroupApplications]
+    CREATE TABLE SocialMediaWebsite.[dbo].[GroupApplications]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [ApplyingUserId] INT NOT NULL, 
@@ -113,7 +123,7 @@ BEGIN TRY
         CONSTRAINT FK_ApplicationGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id)
     );
 
-    CREATE TABLE [dbo].[UserGroupMemberships]
+    CREATE TABLE SocialMediaWebsite.[dbo].[UserGroupMemberships]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [UserId] INT NOT NULL, 
@@ -124,7 +134,7 @@ BEGIN TRY
         CONSTRAINT FK_MembershipGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id)
     );
 
-    CREATE TABLE [dbo].[Posts] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[Posts] (
         [Id]                  INT                NOT NULL IDENTITY(1,1),
         [Title]               NVARCHAR (40)      NOT NULL,
         [Description]         NVARCHAR (1024)    NULL,
@@ -139,7 +149,7 @@ BEGIN TRY
         CONSTRAINT FK_SharedPost FOREIGN KEY (SharedPostId) REFERENCES Posts(Id)
     );
 
-    CREATE TABLE [dbo].[PostLikes]
+    CREATE TABLE SocialMediaWebsite.[dbo].[PostLikes]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
@@ -149,7 +159,7 @@ BEGIN TRY
         CONSTRAINT FK_LikedPost FOREIGN KEY (LikedPostId) REFERENCES Posts(Id)
     );
 
-    CREATE TABLE [dbo].[Comments] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[Comments] (
         [Id]              INT                NOT NULL IDENTITY(1,1),
         [Text]            NVARCHAR (1024)    NOT NULL,
         [CommentDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
@@ -159,10 +169,10 @@ BEGIN TRY
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_CommentParentPost FOREIGN KEY (ParentPostId) REFERENCES Posts(Id),
         CONSTRAINT FK_CommentParentComment FOREIGN KEY (ParentCommentId) REFERENCES Comments(Id),
-	    CONSTRAINT [FK_CommentAuthorUser] FOREIGN KEY ([AuthorUserId]) REFERENCES [dbo].[Users] ([Id])
+	    CONSTRAINT [FK_CommentAuthorUser] FOREIGN KEY ([AuthorUserId]) REFERENCES Users([Id])
     );
 
-    CREATE TABLE [dbo].[CommentLikes] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[CommentLikes] (
         [Id]             INT                NOT NULL IDENTITY(1,1),
         [LikingUserId]   INT                NOT NULL,
         [LikedCommentId] INT                NOT NULL,
@@ -172,7 +182,7 @@ BEGIN TRY
 	    CONSTRAINT FK_LikedComment FOREIGN KEY (LikedCommentId) REFERENCES Comments(Id)
     );
 
-    CREATE TABLE [dbo].[Conversations]
+    CREATE TABLE SocialMediaWebsite.[dbo].[Conversations]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [Title] NVARCHAR(20) NOT NULL, 
@@ -182,7 +192,7 @@ BEGIN TRY
         CONSTRAINT FK_ConversationOwner FOREIGN KEY (OwnerUserId) REFERENCES Users(Id)
     );
 
-    CREATE TABLE [dbo].[ConversationUsers] (
+    CREATE TABLE SocialMediaWebsite.[dbo].[ConversationUsers] (
         [Id]             INT NOT NULL IDENTITY(1,1),
         [UserId]         INT NOT NULL,
         [ConversationId] INT NOT NULL,
@@ -192,7 +202,7 @@ BEGIN TRY
         CONSTRAINT FK_UserConversation FOREIGN KEY (ConversationId) REFERENCES Conversations(Id)
     );
 
-    CREATE TABLE [dbo].[Messages]
+    CREATE TABLE SocialMediaWebsite.[dbo].[Messages]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [AuthorUserId] INT NOT NULL, 
@@ -205,7 +215,7 @@ BEGIN TRY
         CONSTRAINT FK_ReplyMessage FOREIGN KEY (ReplyMessageId) REFERENCES [Messages](Id)
     );
 
-    CREATE TABLE [dbo].[MessageLikes]
+    CREATE TABLE SocialMediaWebsite.[dbo].[MessageLikes]
     (
 	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
         [LikingUserId] INT NOT NULL, 
@@ -216,9 +226,10 @@ BEGIN TRY
     );
 
     COMMIT TRANSACTION SchemaSetupTransaction;
+    PRINT N'Finished creating the tables.';
 END TRY
 BEGIN CATCH
     ROLLBACK TRANSACTION SchemaSetupTransaction;
-    PRINT 'Creating tables failed. Transaction rolled back.';
+    PRINT N'Creating tables failed. Transaction rolled back.';
     THROW;
 END CATCH

@@ -62,24 +62,24 @@ BEGIN
 	BEGIN TRANSACTION SampleDataInsertTransaction;
 
 	BEGIN TRY
-		DELETE FROM dbo.MessageLikes;
-		DELETE FROM dbo.[Messages];
-		DELETE FROM dbo.ConversationUsers;
-		DELETE FROM dbo.Conversations;
-		DELETE FROM dbo.CommentLikes;
-		DELETE FROM dbo.Comments;
-		DELETE FROM dbo.PostLikes;
-		DELETE FROM dbo.Posts;
-		DELETE FROM dbo.UserGroupMemberships;
-		DELETE FROM dbo.GroupInvitations;
-		DELETE FROM dbo.GroupApplications;
-		DELETE FROM dbo.Groups;
-		DELETE FROM dbo.GroupJoinRestrictions;
-		DELETE FROM dbo.ProfileLikes;
-		DELETE FROM dbo.Profiles;
-		DELETE FROM dbo.Visibility;
-		DELETE FROM dbo.BlockedUsers;
-		DELETE FROM dbo.Users;
+		DELETE FROM SocialMediaWebsite.dbo.MessageLikes;
+		DELETE FROM SocialMediaWebsite.dbo.[Messages];
+		DELETE FROM SocialMediaWebsite.dbo.ConversationUsers;
+		DELETE FROM SocialMediaWebsite.dbo.Conversations;
+		DELETE FROM SocialMediaWebsite.dbo.CommentLikes;
+		DELETE FROM SocialMediaWebsite.dbo.Comments;
+		DELETE FROM SocialMediaWebsite.dbo.PostLikes;
+		DELETE FROM SocialMediaWebsite.dbo.Posts;
+		DELETE FROM SocialMediaWebsite.dbo.UserGroupMemberships;
+		DELETE FROM SocialMediaWebsite.dbo.GroupInvitations;
+		DELETE FROM SocialMediaWebsite.dbo.GroupApplications;
+		DELETE FROM SocialMediaWebsite.dbo.Groups;
+		DELETE FROM SocialMediaWebsite.dbo.GroupJoinRestrictions;
+		DELETE FROM SocialMediaWebsite.dbo.ProfileLikes;
+		DELETE FROM SocialMediaWebsite.dbo.Profiles;
+		DELETE FROM SocialMediaWebsite.dbo.Visibility;
+		DELETE FROM SocialMediaWebsite.dbo.BlockedUsers;
+		DELETE FROM SocialMediaWebsite.dbo.Users;
 	
 	
 
@@ -87,16 +87,16 @@ BEGIN
 
 		DECLARE @AppStartDate DATETIMEOFFSET(7) = '2018-06-17 11:25:39';
 
-		SET IDENTITY_INSERT dbo.Visibility ON;
-		INSERT INTO dbo.Visibility
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Visibility ON;
+		INSERT INTO SocialMediaWebsite.dbo.Visibility
 		(Id, Visibility)
 		VALUES
 		(1, 'Public'),
 		(2, 'Hidden');
-		SET IDENTITY_INSERT dbo.Visibility OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Visibility OFF;
 
-		SET IDENTITY_INSERT dbo.Users ON;
-		INSERT INTO dbo.Users 
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Users ON;
+		INSERT INTO SocialMediaWebsite.dbo.Users 
 		(Id, UserName, FirstName, LastName, Email, IsEmailConfirmed, PasswordHash, JoinDateTime)
 		VALUES
 		(1, 'JohnSmith', 'John', 'Smith', 'jsmith@email.com', CONVERT(BIT, ROUND(1 * Tests.GetRand(), 0)), Tests.GenerateSampleFakePasswordHash(), Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -112,10 +112,10 @@ BEGIN
 		(11, 'AleenaM', NULL, 'Morrow', 'aleena.morrow@email.com', CONVERT(BIT, ROUND(1 * Tests.GetRand(), 0)), Tests.GenerateSampleFakePasswordHash(), Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(12, 'JohnSmith1', 'John', 'Smith', 'otherJsmith@email.com', CONVERT(BIT, ROUND(1 * Tests.GetRand(), 0)), Tests.GenerateSampleFakePasswordHash(), Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(13, 'ValentinaDillon1', NULL, NULL, 'valentina.1@email.com', CONVERT(BIT, ROUND(1 * Tests.GetRand(), 0)), Tests.GenerateSampleFakePasswordHash(), Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.Users OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Users OFF;
 
-		SET IDENTITY_INSERT dbo.Conversations ON;
-		INSERT INTO dbo.Conversations
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Conversations ON;
+		INSERT INTO SocialMediaWebsite.dbo.Conversations
 		(Id, Title, [Description], OwnerUserId, CreationDateTime)
 		VALUES
 		(1, 'WorkConversation', 'This is our conversation meant for work purposes only', 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -123,10 +123,10 @@ BEGIN
 		(3, 'GroupConversation1', NULL, 6, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(4, 'FamilyConversation', 'Family@', 8, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(5, 'GroupConversation1', NULL, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.Conversations OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Conversations OFF;
 
-		SET IDENTITY_INSERT dbo.ConversationUsers ON;
-		INSERT INTO dbo.ConversationUsers
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.ConversationUsers ON;
+		INSERT INTO SocialMediaWebsite.dbo.ConversationUsers
 		(Id, ConversationId, UserId, ConversationIsHidden)
 		VALUES
 		(1, 1, 1, 0),
@@ -148,10 +148,10 @@ BEGIN
 
 		(14, 5, 6, 0),
 		(15, 5, 9, 0);
-		SET IDENTITY_INSERT dbo.ConversationUsers OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.ConversationUsers OFF;
 
-		SET IDENTITY_INSERT dbo.[Messages] ON;
-		INSERT INTO dbo.[Messages]
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.[Messages] ON;
+		INSERT INTO SocialMediaWebsite.dbo.[Messages]
 		(Id, AuthorUserId, [Text], MessageDateTime, Conversationid, ReplyMessageId)
 		VALUES
 		(1, 1, N'Hello everyone!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1, NULL),
@@ -184,10 +184,10 @@ BEGIN
 		(24, 6, N'🍔❓', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, NULL),
 		(25, 9, N'👍', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, NULL),
 		(26, 6, N'👍', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 5, NULL);
-		SET IDENTITY_INSERT dbo.[Messages] OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.[Messages] OFF;
 
-		SET IDENTITY_INSERT dbo.MessageLikes ON;
-		INSERT INTO dbo.MessageLikes
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.MessageLikes ON;
+		INSERT INTO SocialMediaWebsite.dbo.MessageLikes
 		(Id, LikingUserId, LikedMessageId, LikeDateTime)
 		VALUES
 		(1, 1, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -196,19 +196,19 @@ BEGIN
 		(4, 6, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(5, 10, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(6, 11, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.MessageLikes OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.MessageLikes OFF;
 
-		SET IDENTITY_INSERT dbo.BlockedUsers ON;
-		INSERT INTO dbo.BlockedUsers
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.BlockedUsers ON;
+		INSERT INTO SocialMediaWebsite.dbo.BlockedUsers
 		(Id, BlockingUserId, BlockedUserId, BlockDateTime)
 		VALUES
 		(1, 1, 13, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(2, 1, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(3, 6, 10, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.BlockedUsers OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.BlockedUsers OFF;
 
 		--NO IDENTITY
-		INSERT INTO dbo.Profiles
+		INSERT INTO SocialMediaWebsite.dbo.Profiles
 		(UserId, [Description], ProfilePicture, ProfileVisibilityId)
 		VALUES
 		(1, NULL, NULL, 2),
@@ -225,8 +225,8 @@ BEGIN
 		(12, N'Please don''t contact me unless I know you', NULL, 1),
 		(13, N'Feel free to add me!!!', NULL, 1);
 
-		SET IDENTITY_INSERT dbo.ProfileLikes ON;
-		INSERT INTO dbo.ProfileLikes
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.ProfileLikes ON;
+		INSERT INTO SocialMediaWebsite.dbo.ProfileLikes
 		(Id, LikingUserId, LikedProfileId, LikeDateTime)
 		VALUES
 		(1, 1, 7, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -240,20 +240,20 @@ BEGIN
 		(9, 9, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(10, 8, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(11, 1, 8, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.ProfileLikes OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.ProfileLikes OFF;
 
-		SET IDENTITY_INSERT dbo.GroupJoinRestrictions ON;
-		INSERT INTO dbo.GroupJoinRestrictions
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupJoinRestrictions ON;
+		INSERT INTO SocialMediaWebsite.dbo.GroupJoinRestrictions
 		(Id, Restriction)
 		VALUES
 		(1, N'None'),
 		(2, N'InviteOnly'),
 		(3, N'LinkOnly'),
 		(4, N'ApplyOnly');
-		SET IDENTITY_INSERT dbo.GroupJoinRestrictions OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupJoinRestrictions OFF;
 
-		SET IDENTITY_INSERT dbo.Groups ON;
-		INSERT INTO dbo.Groups
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Groups ON;
+		INSERT INTO SocialMediaWebsite.dbo.Groups
 		(Id, [Name], [Description], VisibilityId, JoinRestrictionId, IsActive, CreationDateTime)
 		VALUES
 		(1, N'Book Discussion', NULL, 1, 2, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -261,10 +261,10 @@ BEGIN
 		(3, N'Some Group', '', 2, 3, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(4, N'[REDACTED] Organization', NULL, 2, 2, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(5, N'Whatever Discussion', NULL, 1, 1, 0, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.Groups OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Groups OFF;
 
-		SET IDENTITY_INSERT dbo.GroupInvitations ON;
-		INSERT INTO dbo.GroupInvitations
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupInvitations ON;
+		INSERT INTO SocialMediaWebsite.dbo.GroupInvitations
 		(Id, InvitingUserId, InvitedUserId, Groupid, [Message], InviteDateTime, IsActive)
 		VALUES
 		(1, 6, 12, 1, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
@@ -272,19 +272,19 @@ BEGIN
 		(3, 6, 12, 1, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
 		(4, 1, 11, 4, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
 		(5, 1, 7, 4, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1);
-		SET IDENTITY_INSERT dbo.GroupInvitations OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupInvitations OFF;
 
-		SET IDENTITY_INSERT dbo.GroupApplications ON;
-		INSERT INTO dbo.GroupApplications
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupApplications ON;
+		INSERT INTO SocialMediaWebsite.dbo.GroupApplications
 		(Id, ApplyingUserId, GroupId, [Message], AppliedDateTime)
 		VALUES
 		(1, 6, 2, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(2, 4, 2, N'i wish to sell my washing machine', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(3, 3, 2, NULL, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.GroupApplications OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.GroupApplications OFF;
 
-		SET IDENTITY_INSERT dbo.UserGroupMemberships ON;
-		INSERT INTO dbo.UserGroupMemberships
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.UserGroupMemberships ON;
+		INSERT INTO SocialMediaWebsite.dbo.UserGroupMemberships
 		(Id, UserId, Groupid, JoinDateTime, WasInvited)
 		VALUES
 		(1, 4, 1, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1),
@@ -306,11 +306,11 @@ BEGIN
 		(14, 9, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0),
 
 		(15, 5, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 0);
-		SET IDENTITY_INSERT dbo.UserGroupMemberships OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.UserGroupMemberships OFF;
 
 	
-		SET IDENTITY_INSERT dbo.Posts ON;
-		INSERT INTO dbo.Posts
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Posts ON;
+		INSERT INTO SocialMediaWebsite.dbo.Posts
 		(Id, Title, [Description], PostDateTime, AuthorUserId, GroupId, IsCommentingEnabled, SharedPostId)
 		VALUES
 		(1, N'Great day to work', N'Wowie, today is truly a great day to be working! Like this post if you agree!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 1, 4, 1, NULL),
@@ -329,10 +329,10 @@ BEGIN
 		(14, N'Invitation to SomeGroup', N'Could someone please invite me to SomeGroup?', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 6, NULL, 1, NULL),
 		(15, N'Boring', N'Man this platform is dead...', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 10, NULL, 1, NULL),
 		(16, N'any1 wanna talk cars', 'i love cars', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 1, NULL);
-		SET IDENTITY_INSERT dbo.Posts OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Posts OFF;
 	
-		SET IDENTITY_INSERT dbo.PostLikes ON;
-		INSERT INTO dbo.PostLikes
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.PostLikes ON;
+		INSERT INTO SocialMediaWebsite.dbo.PostLikes
 		(Id, LikingUserId, LikedPostId, LikeDateTime)
 		VALUES
 		(1, 1, 12, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -344,10 +344,10 @@ BEGIN
 		(7, 8, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(8, 2, 4, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(9, 5, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.PostLikes OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.PostLikes OFF;
 
-		SET IDENTITY_INSERT dbo.Comments ON;
-		INSERT INTO dbo.Comments
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Comments ON;
+		INSERT INTO SocialMediaWebsite.dbo.Comments
 		(Id, [Text], CommentDateTime, ParentPostId, ParentCommentId, AuthorUserId)
 		VALUES
 		(1, N'Agreed ma''am!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 9, NULL, 8),
@@ -361,10 +361,10 @@ BEGIN
 		(9, N'Agreed', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 15, NULL, 12),
 		(10, N'Quit being so negative', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 15, NULL, 1),
 		(11, N'Heck yes, brother!', Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()), 8, NULL, 8);
-		SET IDENTITY_INSERT dbo.Comments OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.Comments OFF;
 
-		SET IDENTITY_INSERT dbo.CommentLikes ON;
-		INSERT INTO dbo.CommentLikes
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.CommentLikes ON;
+		INSERT INTO SocialMediaWebsite.dbo.CommentLikes
 		(Id, LikingUserId, LikedCommentId, LikeDateTime)
 		VALUES
 		(1, 2, 2, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
@@ -374,7 +374,7 @@ BEGIN
 		(5, 1, 3, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(6, 13, 5, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE())),
 		(7, 2, 9, Tests.GenerateSampleFakeDate(@AppStartDate, GETDATE()));
-		SET IDENTITY_INSERT dbo.CommentLikes OFF;
+		SET IDENTITY_INSERT SocialMediaWebsite.dbo.CommentLikes OFF;
 
 		COMMIT TRANSACTION SchemaSetupTransaction;
 	END TRY
