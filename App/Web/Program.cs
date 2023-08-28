@@ -76,9 +76,8 @@ if (app.Environment.IsDevelopment())
         .DeleteIfExists(force: true)
         .UseImage("sqlsampleserver:1.0.0")
         .WithName("SqlServerSampleContainer")
-        .ExposePort(1433)
+        .ExposePort(1433, 1433)
         .WithEnvironment($"password={builder.Configuration["DockerSamplePassword"]}")
-        .WaitForPort("1433/tcp", 10)
         .Build()
         .Start();
     builder.Configuration["ConnectionStringName"] = "DockerSample";
