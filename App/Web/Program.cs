@@ -6,6 +6,8 @@ using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using Application.Features.Shared;
+using Ductus.FluentDocker.Builders;
+using Ductus.FluentDocker.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
@@ -50,6 +52,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+    builder.Configuration["ConnectionStringName"] = "Local";
 }
 
 app.UseHttpsRedirection();
@@ -64,4 +68,29 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+if (app.Environment.IsDevelopment())
+{
+    IContainerService container = new Builder()
+        .UseContainer()
+        .DeleteIfExists(force: true)
+        .UseImage("sqlsampleserver:1.0.0")
+        .WithName("SqlServerSampleContainer")
+        .ExposePort(1433)
+        .WithEnvironment($"password={builder.Configuration["DockerSamplePassword"]}")
+        .WaitForPort("1433/tcp", 10)
+        .Build()
+        .Start();
+    builder.Configuration["ConnectionStringName"] = "DockerSample";
+
+    app.Lifetime.ApplicationStopping.Register(() =>
+    {
+        container.Dispose();
+    });
+    
+}
+
 app.Run();
+
+
+public partial class Program { }
