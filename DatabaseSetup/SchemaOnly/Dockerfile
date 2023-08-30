@@ -17,3 +17,6 @@ RUN test -n "${password}" || (echo "password not set" && false)
 ENV MSSQL_SA_PASSWORD ${password}
 
 RUN /bin/bash /usr/src/databaseSetup/setupProcesses.sh "${password}"
+
+HEALTHCHECK --interval=5s --timeout=1s --start-period=10s --retries=10 \
+  CMD /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${MSSQL_SA_PASSWORD} -Q "SELECT 1" -b
