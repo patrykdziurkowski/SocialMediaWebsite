@@ -1,5 +1,5 @@
-﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
+﻿using Ductus.FluentDocker.Builders;
+using Ductus.FluentDocker.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -11,10 +11,13 @@ namespace Tests.IntegrationTests
     public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly string _testConnectionString;
-        private readonly IContainer _dbContainer = new ContainerBuilder()
-                .WithImage("smwschemaonly:latest")
-                .WithPortBinding(1433, 1433)
-                .WithName("SqlServerTestContainer")
+        private readonly IContainerService _dbContainer = new Builder()
+                .UseContainer()
+                .DeleteIfExists(force: true)
+                .UseImage("smwschemaonly:latest")
+                .WithName("SmwSqlServer")
+                .WaitForHealthy(TimeSpan.FromSeconds(10))
+                .ExposePort(1433, 1433)
                 .Build();
 
         public IntegrationTestApplicationFactory()
@@ -43,12 +46,17 @@ namespace Tests.IntegrationTests
 
         public async Task InitializeAsync()
         {
-            await _dbContainer.StartAsync();
-            await Task.Delay(5000);
+            await Task.Run(() =>
+            {
+                _dbContainer.Start();
+            });
         }
         public new async Task DisposeAsync()
         {
-            await _dbContainer.StopAsync();
+            await Task.Run(() =>
+            {
+                _dbContainer.Dispose();
+            });
         }
     }
 }
