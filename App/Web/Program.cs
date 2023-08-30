@@ -1,5 +1,4 @@
 using Application;
-using Application.Features;
 using Application.Features.Authentication;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
@@ -71,22 +70,20 @@ app.MapControllerRoute(
 
 if (app.Environment.IsDevelopment())
 {
+    builder.Configuration["ConnectionStringName"] = "DockerSample";
+
     IContainerService container = new Builder()
         .UseContainer()
         .DeleteIfExists(force: true)
-        .UseImage("sqlsampleserver:1.0.0")
+        .UseImage("smwsampledata:latest")
         .WithName("SqlServerSampleContainer")
         .ExposePort(1433, 1433)
-        .WithEnvironment($"password={builder.Configuration["DockerSamplePassword"]}")
         .Build()
         .Start();
-    builder.Configuration["ConnectionStringName"] = "DockerSample";
-
     app.Lifetime.ApplicationStopping.Register(() =>
     {
         container.Dispose();
     });
-    
 }
 
 app.Run();
