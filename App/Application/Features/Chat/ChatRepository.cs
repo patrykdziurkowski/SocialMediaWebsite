@@ -33,9 +33,9 @@ namespace Application.Features.Chat
                                     Title AS {nameof(Conversation.Title)},
                                     Description AS {nameof(Conversation.Description)},
                                     CreationDateTime AS {nameof(Conversation.CreationDateTime)},
-                                    (SELECT COUNT(*) FROM Messages WHERE ConversationId = Conversations.Id) AS {nameof(Conversation.TotalMessageCount)},
+                                    (SELECT COUNT(*) FROM SocialMediaWebsite.dbo.Messages WHERE ConversationId = Conversations.Id) AS {nameof(Conversation.TotalMessageCount)},
                                     OwnerUserId AS {nameof(Conversation.OwnerChatterId)}
-                                FROM Conversations
+                                FROM SocialMediaWebsite.dbo.Conversations
                                 """);
 
             foreach (Conversation conversation in conversations)
@@ -49,28 +49,6 @@ namespace Application.Features.Chat
         
 
 
-
-        /*
-         * public void Save(Chat chat)
-        {
-            IDbTransaction transaction = _connection.BeginTransaction();
-
-            foreach (DomainEvent domainEvent in chat.DomainEvents)
-            {
-                if (domainEvent is ConversationLeftEvent)
-                {
-                    _connection.Execute(
-                        "spConversations_RemoveUserFromConversation",
-                        domainEvent,
-                        transaction,
-                        commandType: CommandType.StoredProcedure);
-                }
-            }
-
-            transaction.Commit();
-        }
-        */
-
         private async Task LoadConversationMembersAsync(Conversation conversation, IDbConnection connection)
         {
             IEnumerable<Chatter> conversationMembers = await connection
@@ -80,10 +58,10 @@ namespace Application.Features.Chat
                             Id AS {nameof(Chatter.Id)},
                             UserName AS {nameof(Chatter.Name)},
                             JoinDateTime AS {nameof(Chatter.JoinDateTime)}
-                        FROM Users
+                        FROM SocialMediaWebsite.dbo.Users
                         WHERE Id IN (
                             SELECT UserId
-                            FROM ConversationUsers
+                            FROM SocialMediaWebsite.dbo.ConversationUsers
                             WHERE ConversationId = @ConversationId)
                         """,
                         new { ConversationId = conversation.Id });
@@ -102,7 +80,7 @@ namespace Application.Features.Chat
                         Text AS {nameof(Message.Text)},
                         MessageDateTime AS {nameof(Message.MessageDateTime)},
                         ReplyMessageId AS {nameof(Message.ReplyMessageId)}
-                    FROM Messages
+                    FROM SocialMediaWebsite.dbo.Messages
                     WHERE ConversationId = @ConversationId
                     """,
                     new { ConversationId = conversation.Id });
