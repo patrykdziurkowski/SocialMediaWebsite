@@ -80,5 +80,12 @@ namespace Application.Features.Chat
 
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOut();
+            return Ok();
+        }
     }
 }
