@@ -38,8 +38,7 @@ namespace Tests.IntegrationTests
                 configBuilder.AddInMemoryCollection(
                     new Dictionary<string, string?>
                     {
-                        ["ConnectionStringName"] = "DockerSample",
-                        ["ConnectionStrings:DockerSample"] = _testConnectionString
+                        ["ConnectionString"] = _testConnectionString
                     });
             });
         }
