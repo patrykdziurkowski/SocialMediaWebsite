@@ -25,9 +25,7 @@ namespace Application
 
         public IDbConnection GetConnection(ConnectionType connectionType)
         {
-            string connectionStringName = _configuration["ConnectionStringName"]
-                ?? throw new ApplicationException("ConnectionStringName not found in configuration.");
-            string connectionString = _configuration.GetConnectionString(connectionStringName)
+            string connectionString = _configuration["ConnectionString"]
                 ?? throw new ApplicationException("ConnectionString not found in configuration. Enter a ConnectionString into appsettings.json or secrets.json");
 
             if (connectionType == ConnectionType.SqlConnection)

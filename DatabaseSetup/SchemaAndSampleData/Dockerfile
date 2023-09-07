@@ -6,10 +6,10 @@ WORKDIR /usr/src/databaseSetup
 
 EXPOSE 1433
 
-COPY Shared/TableSchema.sql /usr/src/databaseSetup
-COPY SchemaAndSampleData/SampleData.sql /usr/src/databaseSetup
-COPY SchemaAndSampleData/setupServer.sh /usr/src/databaseSetup
-COPY Shared/setupProcesses.sh /usr/src/databaseSetup
+COPY ./Shared/TableSchema.sql /usr/src/databaseSetup
+COPY ./SchemaAndSampleData/SampleData.sql /usr/src/databaseSetup
+COPY ./SchemaAndSampleData/setupServer.sh /usr/src/databaseSetup
+COPY ./Shared/setupProcesses.sh /usr/src/databaseSetup
 USER mssql
 
 ENV ACCEPT_EULA Y

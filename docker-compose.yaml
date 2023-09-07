@@ -1,0 +1,18 @@
+services:
+  web:
+    build: ./App
+    container_name: smw-web
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionString=Data Source=database,1433;Initial Catalog=SocialMediaWebsite;User ID=SA;Password=${SA_PASSWORD};Encrypt=False
+  database:
+    build:
+        context: ./DatabaseSetup
+        dockerfile: ./SchemaAndSampleData/Dockerfile
+        args:
+            password: ${SA_PASSWORD}
+    container_name: smw-database
+    ports:
+      - "1433:1433"
