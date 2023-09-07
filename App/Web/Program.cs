@@ -5,8 +5,6 @@ using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using Application.Features.Shared;
-using Ductus.FluentDocker.Builders;
-using Ductus.FluentDocker.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
@@ -19,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 
 // Add services to the container.
+services.AddHealthChecks();
+
 services
     .AddControllersWithViews()
     .AddApplicationPart(applicationAssembly);
@@ -45,14 +45,14 @@ services
 
 var app = builder.Build();
 
+app.MapHealthChecks("/health");
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-
-    builder.Configuration["ConnectionStringName"] = "Local";
 }
 
 app.UseHttpsRedirection();
@@ -66,25 +66,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-if (app.Environment.IsDevelopment())
-{
-    builder.Configuration["ConnectionStringName"] = "DockerSample";
-
-    IContainerService container = new Builder()
-        .UseContainer()
-        .DeleteIfExists(force: true)
-        .UseImage("smwsampledata:latest")
-        .WithName("SqlServerSampleContainer")
-        .ExposePort(1433, 1433)
-        .Build()
-        .Start();
-    app.Lifetime.ApplicationStopping.Register(() =>
-    {
-        container.Dispose();
-    });
-}
 
 app.Run();
 
