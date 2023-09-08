@@ -50,7 +50,76 @@ namespace Application.Features.Chat
             return new Chat(userId, conversations.ToList());
         }
         
+        public async Task SaveAsync(Chat chat)
+        {   
+            using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
+            connection.Open();
+            IDbTransaction transaction = connection.BeginTransaction();
 
+            foreach (DomainEvent domainEvent in chat.DomainEvents)
+            {
+                if (domainEvent is ConversationLeftEvent)
+                {
+                    await HandleConversationLeftEvent(connection, transaction, domainEvent);
+                }
+                else if (domainEvent is ConversationCreatedEvent)
+                {
+                    await HandleConversationCreatedEvent(connection, transaction, domainEvent);
+                }
+            }
+
+            transaction.Commit();
+        }
+
+        private async Task HandleConversationLeftEvent(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            DomainEvent domainEvent)
+        {
+            await connection.ExecuteAsync(
+                $"""
+                DELETE FROM SocialMediaWebsite.dbo.ConversationUsers
+                WHERE
+                    ConversationId = @ConversationId
+                    AND UserId = @UserId
+                """,
+                domainEvent,
+                transaction);
+        }
+
+        private async Task HandleConversationCreatedEvent(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            DomainEvent domainEvent)
+        {
+            int insertedConversationId = await connection.QuerySingleAsync<int>(
+                $"""
+                INSERT INTO SocialMediaWebsite.dbo.Conversations
+                (Title, Description, OwnerUserId)
+                VALUES
+                (@Title, @Description, @OwnerUserId);
+                SELECT CAST(SCOPE_IDENTITY() as int)
+                """,
+                domainEvent,
+                transaction);
+
+            foreach (Chatter chatter in ((ConversationCreatedEvent) domainEvent).ConversationMembers)
+            {
+                await connection.ExecuteAsync(
+                    $"""
+                    INSERT INTO SocialMediaWebsite.dbo.ConversationUsers
+                    (UserId, ConversationId)
+                    VALUES
+                    (@UserId, @ConversationId)
+                    """,
+                    new
+                    {
+                        UserId = chatter.Id,
+                        ConversationId = insertedConversationId
+                    },
+                    transaction);
+            }
+        }
 
         private async Task LoadConversationMembersAsync(Conversation conversation, IDbConnection connection)
         {
