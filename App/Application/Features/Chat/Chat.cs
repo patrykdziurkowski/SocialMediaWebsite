@@ -52,6 +52,12 @@ namespace Application.Features.Chat
                 description);
 
             _conversations.Add(newConversation);
+            RaiseDomainEvent(
+                new ConversationCreatedEvent(
+                    title,
+                    description,
+                    ChatterId,
+                    conversationMembers));
         }
 
 
