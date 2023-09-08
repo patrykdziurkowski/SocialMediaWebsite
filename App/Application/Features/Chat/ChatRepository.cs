@@ -18,8 +18,6 @@ namespace Application.Features.Chat
         {
            _connectionFactory = connectionFactory;
         }
-
-        
         public async Task<Chat> GetAsync(int userId)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
@@ -36,7 +34,12 @@ namespace Application.Features.Chat
                                     (SELECT COUNT(*) FROM SocialMediaWebsite.dbo.Messages WHERE ConversationId = Conversations.Id) AS {nameof(Conversation.TotalMessageCount)},
                                     OwnerUserId AS {nameof(Conversation.OwnerChatterId)}
                                 FROM SocialMediaWebsite.dbo.Conversations
-                                """);
+                                WHERE Id IN
+                                (SELECT ConversationId
+                                FROM SocialMediaWebsite.dbo.ConversationUsers
+                                WHERE UserId = @UserId)
+                                """,
+                                new { UserId = userId });
 
             foreach (Conversation conversation in conversations)
             {
