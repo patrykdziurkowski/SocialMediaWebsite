@@ -219,7 +219,7 @@ namespace Tests.Domain
             _subject = new(1, new List<Conversation>());
 
             //Act
-            _subject.RaiseDomainEvent(new ConversationLeftEvent());
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(1, 1));
 
             //Assert
             _subject.DomainEvents.Should().HaveCount(1);
@@ -231,8 +231,8 @@ namespace Tests.Domain
         {
             //Arrange
             _subject = new(1, new List<Conversation>());
-            _subject.RaiseDomainEvent(new ConversationLeftEvent());
-            _subject.RaiseDomainEvent(new ConversationLeftEvent());
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(1, 1));
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(2, 1));
 
             int numberOfEventsBeforeClearing = _subject.DomainEvents.Count();
 

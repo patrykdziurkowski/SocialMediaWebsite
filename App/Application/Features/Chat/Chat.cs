@@ -67,7 +67,10 @@ namespace Application.Features.Chat
 
             conversationToLeave.ConversationMembers.RemoveAll(m => m.Id == ChatterId);
             _conversations.Remove(conversationToLeave);
-            RaiseDomainEvent(new ConversationLeftEvent());
+            RaiseDomainEvent(
+                new ConversationLeftEvent(
+                    (int) conversationToLeave.Id!,
+                    ChatterId));
 
             return Result.Ok();
         }
