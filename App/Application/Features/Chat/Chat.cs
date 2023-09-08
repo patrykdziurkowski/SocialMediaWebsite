@@ -38,8 +38,6 @@ namespace Application.Features.Chat
             _domainEvents.Clear();
         }
 
-
-
         public void CreateConversation(
             List<Chatter> conversationMembers,
             string title,
@@ -61,15 +59,10 @@ namespace Application.Features.Chat
         }
 
 
-
-        public Result LeaveConversation(int conversationId)
+        public void LeaveConversation(int conversationId)
         {
-            Conversation? conversationToLeave = Conversations
-                .SingleOrDefault(c => c.Id == conversationId);
-            if (conversationToLeave is null)
-            {
-                return Result.Fail("No conversation with such id was found.");
-            }
+            Conversation conversationToLeave = Conversations
+                .Single(c => c.Id == conversationId);
 
             conversationToLeave.ConversationMembers.RemoveAll(m => m.Id == ChatterId);
             _conversations.Remove(conversationToLeave);
@@ -77,22 +70,16 @@ namespace Application.Features.Chat
                 new ConversationLeftEvent(
                     (int) conversationToLeave.Id!,
                     ChatterId));
-
-            return Result.Ok();
         }
 
 
-        public Result PostMessage(
+        public void PostMessage(
             int conversationId,
             string text,
             int? replyMessageId = null)
         {
-            Conversation? conversationToPostIn = Conversations
-                .SingleOrDefault(c => c.Id == conversationId);
-            if (conversationToPostIn is null)
-            {
-                return Result.Fail("No conversation with such id was found.");
-            }
+            Conversation conversationToPostIn = Conversations
+                .Single(c => c.Id == conversationId);
 
             Message message = new(
                 ChatterId,
@@ -102,29 +89,25 @@ namespace Application.Features.Chat
             conversationToPostIn.LoadedMessages.Add(message);
             conversationToPostIn.TotalMessageCount++;
 
-            return Result.Ok();
+            RaiseDomainEvent(
+                new MessagePostedEvent(
+                    ChatterId,
+                    text,
+                    (int)conversationToPostIn.Id!,
+                    replyMessageId));
         }
 
-        public Result DeleteMessage(
+        public void DeleteMessage(
             int conversationId,
             int messageId)
         {
-            Conversation? conversationToDeleteFrom = Conversations
-                .SingleOrDefault(c => c.Id == conversationId);
-            if (conversationToDeleteFrom is null)
-            {
-                return Result.Fail("No conversation with such id was found.");
-            }
+            Conversation conversationToDeleteFrom = Conversations
+                .Single(c => c.Id == conversationId);
 
-            Message? messageToDelete = conversationToDeleteFrom.LoadedMessages
-                .SingleOrDefault(m => m.Id == messageId);
-            if (messageToDelete is null)
-            {
-                return Result.Fail("No message with such id was found in a given conversation.");
-            }
+            Message messageToDelete = conversationToDeleteFrom.LoadedMessages
+                .Single(m => m.Id == messageId);
 
             conversationToDeleteFrom.LoadedMessages.Remove(messageToDelete);
-            return Result.Ok();
         }
 
     }

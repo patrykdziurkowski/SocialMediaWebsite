@@ -2,6 +2,7 @@
 using Application.Features.Chat.Events;
 using Application.Features.Shared;
 using FluentAssertions;
+using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace Tests.Domain
         }
 
         [Fact]
-        public void LeaveConversation_DoesNotRemoveChatterFromConversation_WhenInvalidId()
+        public void LeaveConversation_ThrowsException_WhenInvalidId()
         {
             //Arrange
             const int LeavingChatterId = 1;
@@ -83,7 +84,9 @@ namespace Tests.Domain
             IEnumerable<Chatter> conversationMembers = _subject.Conversations.Single().ConversationMembers;
 
             //Act
-            _subject.LeaveConversation(999);
+            _subject
+                .Invoking(m => m.LeaveConversation(999))
+                .Should().Throw<InvalidOperationException>();
 
             //Assert
             conversationMembers.Should().Contain(chatter => chatter.Id == LeavingChatterId);
@@ -114,7 +117,7 @@ namespace Tests.Domain
         }
 
         [Fact]
-        public void PostMessage_GivenNonExistantConversationId_DoesntAddAnyMessage()
+        public void PostMessage_GivenNonExistantConversationId_ThrowsException()
         {
             //Arrange
             const int CurrentChatterId = 1;
@@ -127,7 +130,9 @@ namespace Tests.Domain
             Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
 
             //Act
-            _subject.PostMessage(999, "Text");
+            _subject
+                .Invoking(m => m.PostMessage(999, "Text"))
+                .Should().Throw<InvalidOperationException>();
 
             //Assert
             conversation.TotalMessageCount.Should().Be(0);
@@ -161,7 +166,7 @@ namespace Tests.Domain
         }
 
         [Fact]
-        public void DeleteMessage_GivenNonExistantConversation_DoesntRemoveMessage()
+        public void DeleteMessage_GivenNonExistantConversation_ThrowsException()
         {
             //Arrange
             const int CurrentChatterId = 1;
@@ -180,14 +185,16 @@ namespace Tests.Domain
             Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
 
             //Act
-            _subject.DeleteMessage(70, 600);
+            _subject
+                .Invoking(m => m.DeleteMessage(70, 600))
+                .Should().Throw<InvalidOperationException>();
 
             //Assert
             conversation.LoadedMessages.Should().HaveCount(1);
         }
 
         [Fact]
-        public void DeleteMessage_GivenNonExistantMessage_DoesntRemoveMessage()
+        public void DeleteMessage_GivenNonExistantMessage_ThrowsException()
         {
             //Arrange
             const int CurrentChatterId = 1;
@@ -206,7 +213,9 @@ namespace Tests.Domain
             Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
 
             //Act
-            _subject.DeleteMessage(50, 700);
+            _subject
+                .Invoking(m => m.DeleteMessage(50, 700))
+                .Should().Throw<InvalidOperationException>();
 
             //Assert
             conversation.LoadedMessages.Should().HaveCount(1);

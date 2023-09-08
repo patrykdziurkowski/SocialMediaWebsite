@@ -97,13 +97,12 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
-            Result leaveResult = chat.LeaveConversation((int)conversationToLeave.Id!);
+            chat.LeaveConversation((int)conversationToLeave.Id!);
             await _subject.SaveAsync(chat);
 
             //Assert
             Chat resultChat = await _subject.GetAsync(1);
 
-            leaveResult.IsSuccess.Should().BeTrue();
             resultChat.Conversations.Should().BeEmpty();
             resultChat.DomainEvents.Should().BeEmpty();
         }
