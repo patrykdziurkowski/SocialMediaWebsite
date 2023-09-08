@@ -66,9 +66,29 @@ namespace Application.Features.Chat
                 {
                     await HandleConversationCreatedEvent(connection, transaction, domainEvent);
                 }
+                else if (domainEvent is MessagePostedEvent)
+                {
+                    await HandleMessagePostedEvent(connection, transaction, domainEvent);
+                }
             }
 
             transaction.Commit();
+        }
+
+        private async Task HandleMessagePostedEvent(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            DomainEvent domainEvent)
+        {
+            await connection.ExecuteAsync(
+                $"""
+                INSERT INTO SocialMediaWebsite.dbo.Messages
+                (AuthorUserId, Text, ConversationId, ReplyMessageId)
+                VALUES
+                (@AuthorUserId, @Text, @ConversationId, @ReplyMessageId)
+                """,
+                domainEvent,
+                transaction);
         }
 
         private async Task HandleConversationLeftEvent(

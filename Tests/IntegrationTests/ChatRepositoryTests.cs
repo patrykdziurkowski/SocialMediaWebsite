@@ -127,14 +127,41 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
-            Result leaveResult = chat.LeaveConversation((int) conversationToLeave.Id!);
+            chat.LeaveConversation((int) conversationToLeave.Id!);
             await _subject.SaveAsync(chat);
 
             //Assert
             Chat resultChat = await _subject.GetAsync(2);
 
-            leaveResult.IsSuccess.Should().BeTrue();
             resultChat.Conversations.Single().ConversationMembers.Should().HaveCount(1);
+            resultChat.DomainEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task SaveAsync_WhenPostingAMessage_PostsMessage()
+        {
+            //Arrange
+            await InsertFakeUserIntoDatabase(1);
+            await InsertFakeUserIntoDatabase(2);
+            Chat chat = await _subject.GetAsync(1);
+
+            List<Chatter> conversationMembers = new()
+            {
+                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
+                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
+            };
+            chat.CreateConversation(conversationMembers, "Title");
+            await _subject.SaveAsync(chat);
+            chat = await _subject.GetAsync(1);
+
+            //Act
+            Conversation conversationToPostIn = chat.Conversations.Single();
+            chat.PostMessage((int) conversationToPostIn.Id!, "Message text");
+            await _subject.SaveAsync(chat);
+
+            //Assert
+            Chat resultChat = await _subject.GetAsync(1);
+            resultChat.Conversations.Single().LoadedMessages.Should().HaveCount(1);
             resultChat.DomainEvents.Should().BeEmpty();
         }
 
