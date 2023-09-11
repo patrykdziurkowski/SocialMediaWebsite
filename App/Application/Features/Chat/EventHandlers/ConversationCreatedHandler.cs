@@ -12,7 +12,10 @@ namespace Application.Features.Chat.EventHandlers
 {
     public class ConversationCreatedHandler : IEventHandler
     {
-        public async Task Handle(DomainEvent domainEvent, IDbConnection connection, IDbTransaction transaction)
+        public async Task Handle(
+            DomainEvent domainEvent,
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
             int insertedConversationId = await connection.QuerySingleAsync<int>(
                 $"""

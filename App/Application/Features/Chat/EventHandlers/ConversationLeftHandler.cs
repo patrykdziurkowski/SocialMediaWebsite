@@ -11,7 +11,10 @@ namespace Application.Features.Chat.EventHandlers
 {
     public class ConversationLeftHandler : IEventHandler
     {
-        public async Task Handle(DomainEvent domainEvent, IDbConnection connection, IDbTransaction transaction)
+        public async Task Handle(
+            DomainEvent domainEvent,
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
             await connection.ExecuteAsync(
                 $"""
