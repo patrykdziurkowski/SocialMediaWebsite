@@ -23,7 +23,7 @@ namespace Tests.Domain
             _subject = new(1, new List<Conversation>());
 
             //Act
-            _subject.CreateConversation(new List<Chatter>(), "Title", "Description");
+            _subject.CreateConversation(new List<int>(), "Title", "Description");
 
             //Assert
             _subject.Conversations.Should().HaveCount(1);
@@ -36,13 +36,13 @@ namespace Tests.Domain
         {
             //Arrange
             _subject = new(1, new List<Conversation>());
-            List<Chatter> conversationMembers = GetThreeSampleConversationMembers();
+            List<int> conversationMemberIds = new() { 1, 2, 3 };
 
             //Act
-            _subject.CreateConversation(conversationMembers, "Title", "Description");
+            _subject.CreateConversation(conversationMemberIds, "Title", "Description");
 
             //Assert
-            _subject.Conversations.Single().ConversationMembers.Should().HaveCount(conversationMembers.Count);
+            _subject.Conversations.Single().ConversationMemberIds.Should().HaveCount(conversationMemberIds.Count);
 
         }
 
@@ -59,14 +59,14 @@ namespace Tests.Domain
             }; 
 
             _subject = new(LeavingChatterId, conversations);
-            IEnumerable<Chatter> conversationMembers = _subject.Conversations.Single().ConversationMembers;
+            IEnumerable<int> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
             _subject.LeaveConversation(ConversationId);
 
             //Assert
-            conversationMembers.Should().NotContain(chatter => chatter.Id == LeavingChatterId);
-            conversationMembers.Should().HaveCount(2);
+            conversationMemberIds.Should().NotContain(LeavingChatterId);
+            conversationMemberIds.Should().HaveCount(2);
             conversations.Should().BeEmpty();
         }
 
@@ -81,7 +81,7 @@ namespace Tests.Domain
             };
 
             _subject = new(LeavingChatterId, conversations);
-            IEnumerable<Chatter> conversationMembers = _subject.Conversations.Single().ConversationMembers;
+            IEnumerable<int> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
             _subject
@@ -89,8 +89,8 @@ namespace Tests.Domain
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
-            conversationMembers.Should().Contain(chatter => chatter.Id == LeavingChatterId);
-            conversationMembers.Should().HaveCount(3);
+            conversationMemberIds.Should().Contain(LeavingChatterId);
+            conversationMemberIds.Should().HaveCount(3);
             conversations.Should().NotBeEmpty();
         }
 
@@ -263,27 +263,8 @@ namespace Tests.Domain
                 0,
                 2,
                 new List<Message>(),
-                GetThreeSampleConversationMembers(),
+                new List<int>() { 1, 2, 3 },
                 "Title");
-        }
-
-        private static List<Chatter> GetThreeSampleConversationMembers()
-        {
-            return new List<Chatter>()
-            {
-                new Chatter(
-                    1,
-                    "John",
-                    new DateTimeOffset()),
-                new Chatter(
-                    2,
-                    "Brian",
-                    new DateTimeOffset()),
-                new Chatter(
-                    3,
-                    "Edward",
-                    new DateTimeOffset()),
-            };
         }
 
     }

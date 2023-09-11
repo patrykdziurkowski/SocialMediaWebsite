@@ -60,14 +60,10 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(2);
             Chat chat = await _subject.GetAsync(1);
 
-            List<Chatter> conversationMembers = new()
-            {
-                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
-                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
-            };
+            List<int> conversationMemberIds = new() { 1, 2 };
 
             //Act
-            chat.CreateConversation(conversationMembers, "Title");
+            chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
 
             //Assert
@@ -109,7 +105,7 @@ namespace Tests.IntegrationTests
             //Assert
             Chat resultChat = await _subject.GetAsync(2);
 
-            resultChat.Conversations.Single().ConversationMembers.Should().HaveCount(1);
+            resultChat.Conversations.Single().ConversationMemberIds.Should().HaveCount(1);
             resultChat.DomainEvents.Should().BeEmpty();
         }
 
@@ -163,12 +159,8 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(2);
             Chat chat = await _subject.GetAsync(1);
 
-            List<Chatter> conversationMembers = new()
-            {
-                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
-                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
-            };
-            chat.CreateConversation(conversationMembers, "Title");
+            List<int> conversationMemberIds = new() { 1, 2 };
+            chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
             chat = await _subject.GetAsync(1);
             return chat;

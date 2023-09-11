@@ -17,7 +17,7 @@ namespace Application.Features.Chat
             TotalMessageCount = default!;
             OwnerChatterId = default!;
             LoadedMessages = new List<Message>();
-            ConversationMembers = new List<Chatter>();
+            ConversationMemberIds = new List<int>();
         }
 
         public Conversation(
@@ -26,7 +26,7 @@ namespace Application.Features.Chat
             int messageCount,
             int ownerChatterId,
             List<Message> messages,
-            List<Chatter> conversationMembers,
+            List<int> conversationMemberIds,
             string title,
             string? description = null)
         {
@@ -35,14 +35,14 @@ namespace Application.Features.Chat
             TotalMessageCount = messageCount;
             OwnerChatterId = ownerChatterId;
             LoadedMessages = messages;
-            ConversationMembers = conversationMembers;
+            ConversationMemberIds = conversationMemberIds;
             Title = title;
             Description = description;
         }
 
         public Conversation(
             int ownerChatterId,
-            List<Chatter> conversationMembers,
+            List<int> conversationMemberIds,
             string title,
             string? description = null)
         {
@@ -51,7 +51,7 @@ namespace Application.Features.Chat
             TotalMessageCount = 0;
             OwnerChatterId = ownerChatterId;
             LoadedMessages = new List<Message>();
-            ConversationMembers = conversationMembers;
+            ConversationMemberIds = conversationMemberIds;
             Title = title;
             Description = description;
         }
@@ -63,6 +63,6 @@ namespace Application.Features.Chat
         public int TotalMessageCount { get; set; }
         public int OwnerChatterId { get; set; }
         public List<Message> LoadedMessages { get; set; }
-        public List<Chatter> ConversationMembers { get; set; }
+        public List<int> ConversationMemberIds { get; set; }
     }
 }

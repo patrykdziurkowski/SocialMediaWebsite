@@ -39,13 +39,13 @@ namespace Application.Features.Chat
         }
 
         public void CreateConversation(
-            List<Chatter> conversationMembers,
+            List<int> conversationMemberIds,
             string title,
             string? description = null)
         {
             Conversation newConversation = new(
                 ChatterId,
-                conversationMembers,
+                conversationMemberIds,
                 title,
                 description);
 
@@ -55,7 +55,7 @@ namespace Application.Features.Chat
                     title,
                     description,
                     ChatterId,
-                    conversationMembers));
+                    conversationMemberIds));
         }
 
 
@@ -64,7 +64,7 @@ namespace Application.Features.Chat
             Conversation conversationToLeave = Conversations
                 .Single(c => c.Id == conversationId);
 
-            conversationToLeave.ConversationMembers.RemoveAll(m => m.Id == ChatterId);
+            conversationToLeave.ConversationMemberIds.Remove(ChatterId);
             _conversations.Remove(conversationToLeave);
             RaiseDomainEvent(
                 new ConversationLeftEvent(

@@ -13,17 +13,17 @@ namespace Application.Features.Chat.Events
             string title,
             string? description,
             int ownerUserId,
-            List<Chatter> conversationMembers)
+            List<int> conversationMemberIds)
         {
             Title = title;
             Description = description;
             OwnerUserId = ownerUserId;
-            ConversationMembers = conversationMembers;
+            ConversationMemberIds = conversationMemberIds;
         }
 
         public string Title { get; set; }
         public string? Description { get; set; }
         public int OwnerUserId { get; set; }
-        public List<Chatter> ConversationMembers { get; set; }
+        public List<int> ConversationMemberIds { get; set; }
     }
 }

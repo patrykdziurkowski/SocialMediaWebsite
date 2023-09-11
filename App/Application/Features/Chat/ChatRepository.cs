@@ -72,22 +72,16 @@ namespace Application.Features.Chat
 
         private async Task LoadConversationMembersAsync(Conversation conversation, IDbConnection connection)
         {
-            IEnumerable<Chatter> conversationMembers = await connection
-                    .QueryAsync<Chatter>(
+            IEnumerable<int> conversationMemberIds = await connection
+                    .QueryAsync<int>(
                         $"""
-                        SELECT
-                            Id AS {nameof(Chatter.Id)},
-                            UserName AS {nameof(Chatter.Name)},
-                            JoinDateTime AS {nameof(Chatter.JoinDateTime)}
-                        FROM SocialMediaWebsite.dbo.Users
-                        WHERE Id IN (
-                            SELECT UserId
-                            FROM SocialMediaWebsite.dbo.ConversationUsers
-                            WHERE ConversationId = @ConversationId)
+                        SELECT UserId
+                        FROM SocialMediaWebsite.dbo.ConversationUsers
+                        WHERE ConversationId = @ConversationId
                         """,
                         new { ConversationId = conversation.Id });
 
-            conversation.ConversationMembers = conversationMembers.ToList();
+            conversation.ConversationMemberIds = conversationMemberIds.ToList();
         }
 
         private async Task LoadConversationMessagesAsync(Conversation conversation, IDbConnection connection)

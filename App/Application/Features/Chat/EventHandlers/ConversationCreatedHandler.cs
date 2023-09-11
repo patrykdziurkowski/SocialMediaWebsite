@@ -25,7 +25,7 @@ namespace Application.Features.Chat.EventHandlers
                 domainEvent,
                 transaction);
 
-            foreach (Chatter chatter in ((ConversationCreatedEvent) domainEvent).ConversationMembers)
+            foreach (int chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
             {
                 await connection.ExecuteAsync(
                     $"""
@@ -36,7 +36,7 @@ namespace Application.Features.Chat.EventHandlers
                     """,
                     new
                     {
-                        UserId = chatter.Id,
+                        UserId = chatterId,
                         ConversationId = insertedConversationId
                     },
                     transaction);
