@@ -1,5 +1,6 @@
 ﻿using Application.Features.Chat.EventHandlers;
 using Application.Features.Chat.Events;
+using Application.Features.Chat.Interfaces;
 using Application.Features.Shared;
 using Microsoft.Data.SqlClient;
 using System;

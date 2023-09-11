@@ -1,4 +1,5 @@
 ﻿using Application.Features.Chat.Events;
+using Application.Features.Chat.Interfaces;
 using Application.Features.Shared;
 using Dapper;
 using System;
