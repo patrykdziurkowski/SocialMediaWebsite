@@ -81,19 +81,7 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenLeavingConversation_LeavesConversation()
         {
             //Arrange
-            await InsertFakeUserIntoDatabase(1);
-            await InsertFakeUserIntoDatabase(2);
-            Chat chat = await _subject.GetAsync(1);
-
-            List<Chatter> conversationMembers = new()
-            {
-                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
-                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
-            };
-
-            chat.CreateConversation(conversationMembers, "Title");
-            await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
+            Chat chat = await SetupConversationWithUsers();
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
@@ -111,19 +99,7 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenLeavingConversation_RemovesLeavingUserFromConversation()
         {
             //Arrange
-            await InsertFakeUserIntoDatabase(1);
-            await InsertFakeUserIntoDatabase(2);
-            Chat chat = await _subject.GetAsync(1);
-
-            List<Chatter> conversationMembers = new()
-            {
-                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
-                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
-            };
-
-            chat.CreateConversation(conversationMembers, "Title");
-            await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
+            Chat chat = await SetupConversationWithUsers();
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
@@ -141,18 +117,7 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenPostingAMessage_PostsMessage()
         {
             //Arrange
-            await InsertFakeUserIntoDatabase(1);
-            await InsertFakeUserIntoDatabase(2);
-            Chat chat = await _subject.GetAsync(1);
-
-            List<Chatter> conversationMembers = new()
-            {
-                    new Chatter(1, "UserWithId1", DateTimeOffset.MinValue),
-                    new Chatter(2, "UserWithId2", DateTimeOffset.MinValue)
-            };
-            chat.CreateConversation(conversationMembers, "Title");
-            await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
+            Chat chat = await SetupConversationWithUsers();
 
             //Act
             Conversation conversationToPostIn = chat.Conversations.Single();
@@ -169,6 +134,31 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenDeletingAMessage_DeletesMessage()
         {
             //Arrange
+            Chat chat = await SetupConversationWithUsers();
+            Chat chatWithAMessage = await PostAMessageInConversation(chat);
+
+            //Act
+            chatWithAMessage.DeleteMessage(
+                (int) chatWithAMessage.Conversations.Single().Id!,
+                chatWithAMessage.Conversations.Single().LoadedMessages.Single().Id);
+            await _subject.SaveAsync(chatWithAMessage);
+
+            //Assert
+            Chat resultChat = await _subject.GetAsync(1);
+            resultChat.Conversations.Single().LoadedMessages.Should().BeEmpty();
+            resultChat.DomainEvents.Should().BeEmpty();
+        }
+
+        private async Task<Chat> PostAMessageInConversation(Chat chat)
+        {
+            Conversation conversationToPostIn = chat.Conversations.Single();
+            chat.PostMessage((int) conversationToPostIn.Id!, "Message text");
+            await _subject.SaveAsync(chat);
+            return await _subject.GetAsync(1);
+        }
+
+        private async Task<Chat> SetupConversationWithUsers()
+        {
             await InsertFakeUserIntoDatabase(1);
             await InsertFakeUserIntoDatabase(2);
             Chat chat = await _subject.GetAsync(1);
@@ -181,25 +171,8 @@ namespace Tests.IntegrationTests
             chat.CreateConversation(conversationMembers, "Title");
             await _subject.SaveAsync(chat);
             chat = await _subject.GetAsync(1);
-
-            Conversation conversationToPostIn = chat.Conversations.Single();
-            chat.PostMessage((int) conversationToPostIn.Id!, "Message text");
-            await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
-
-            //Act
-            chat.DeleteMessage(
-                (int)conversationToPostIn.Id!,
-                chat.Conversations.Single().LoadedMessages.Single().Id);
-            await _subject.SaveAsync(chat);
-
-            //Assert
-            Chat resultChat = await _subject.GetAsync(1);
-            resultChat.Conversations.Single().LoadedMessages.Should().BeEmpty();
-            resultChat.DomainEvents.Should().BeEmpty();
+            return chat;
         }
-
-
 
         private async Task InsertFakeUserIntoDatabase(int id)
         {
