@@ -49,7 +49,7 @@ namespace Tests.IntegrationTests
             //Assert
             chat.Conversations.Should().BeEmpty(); 
             chat.DomainEvents.Should().BeEmpty();
-            chat.ChatterId.Should().Be(1);
+            chat.CurrentChatterId.Should().Be(1);
         }
 
         [Fact]

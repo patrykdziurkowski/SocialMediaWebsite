@@ -18,12 +18,12 @@ namespace Application.Features.Chat
             int chatterId,
             List<Conversation> conversations)
         {
-            ChatterId = chatterId;
+            CurrentChatterId = chatterId;
             _conversations = conversations;
             _domainEvents = new List<DomainEvent>();
         }
 
-        public int ChatterId { get; private set; }
+        public int CurrentChatterId { get; private set; }
         public IEnumerable<Conversation> Conversations => _conversations;
         public IEnumerable<DomainEvent> DomainEvents => _domainEvents;
 
@@ -44,7 +44,7 @@ namespace Application.Features.Chat
             string? description = null)
         {
             Conversation newConversation = new(
-                ChatterId,
+                CurrentChatterId,
                 conversationMemberIds,
                 title,
                 description);
@@ -54,7 +54,7 @@ namespace Application.Features.Chat
                 new ConversationCreatedEvent(
                     title,
                     description,
-                    ChatterId,
+                    CurrentChatterId,
                     conversationMemberIds));
         }
 
@@ -64,12 +64,12 @@ namespace Application.Features.Chat
             Conversation conversationToLeave = Conversations
                 .Single(c => c.Id == conversationId);
 
-            conversationToLeave.ConversationMemberIds.Remove(ChatterId);
+            conversationToLeave.ConversationMemberIds.Remove(CurrentChatterId);
             _conversations.Remove(conversationToLeave);
             RaiseDomainEvent(
                 new ConversationLeftEvent(
                     (int) conversationToLeave.Id!,
-                    ChatterId));
+                    CurrentChatterId));
         }
 
 
@@ -82,7 +82,7 @@ namespace Application.Features.Chat
                 .Single(c => c.Id == conversationId);
 
             Message message = new(
-                ChatterId,
+                CurrentChatterId,
                 text,
                 replyMessageId);
 
@@ -91,7 +91,7 @@ namespace Application.Features.Chat
 
             RaiseDomainEvent(
                 new MessagePostedEvent(
-                    ChatterId,
+                    CurrentChatterId,
                     text,
                     (int)conversationToPostIn.Id!,
                     replyMessageId));

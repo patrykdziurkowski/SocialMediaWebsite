@@ -23,7 +23,7 @@ namespace Application.Features.Chat
 
             Chat chat = await _chatRepository.GetAsync(1);
 
-            return Ok(chat.ChatterId);
+            return Ok(chat.CurrentChatterId);
         }
            
     }
