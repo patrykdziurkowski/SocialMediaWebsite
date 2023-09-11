@@ -70,9 +70,27 @@ namespace Application.Features.Chat
                 {
                     await HandleMessagePostedEvent(connection, transaction, domainEvent);
                 }
+                else if (domainEvent is MessageDeletedEvent)
+                {
+                    await HandleMessageDeletedEvent(connection, transaction, domainEvent);
+                }
             }
 
             transaction.Commit();
+        }
+
+        private async Task HandleMessageDeletedEvent(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            DomainEvent domainEvent)
+        {
+            await connection.ExecuteAsync(
+                $"""
+                DELETE FROM SocialMediaWebsite.dbo.Messages
+                WHERE Id = @MessageId
+                """,
+                domainEvent,
+                transaction);
         }
 
         private async Task HandleMessagePostedEvent(

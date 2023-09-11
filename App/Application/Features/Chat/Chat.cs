@@ -108,6 +108,9 @@ namespace Application.Features.Chat
                 .Single(m => m.Id == messageId);
 
             conversationToDeleteFrom.LoadedMessages.Remove(messageToDelete);
+
+            RaiseDomainEvent(
+                new MessageDeletedEvent(messageId));
         }
 
     }
