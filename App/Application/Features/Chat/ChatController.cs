@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,12 +19,15 @@ namespace Application.Features.Chat
             _chatRepository = chatRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
+            Claim chatterIdClaim = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+            int chatterId = int.Parse(chatterIdClaim.Value);
 
-            Chat chat = await _chatRepository.GetAsync(1);
+            Chat chat = await _chatRepository.GetAsync(chatterId);
 
-            return Ok(chat.CurrentChatterId);
+            return Ok(chat);
         }
            
     }
