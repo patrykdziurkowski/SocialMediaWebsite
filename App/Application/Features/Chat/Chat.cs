@@ -68,7 +68,7 @@ namespace Application.Features.Chat
             _conversations.Remove(conversationToLeave);
             RaiseDomainEvent(
                 new ConversationLeftEvent(
-                    (int) conversationToLeave.Id!,
+                    conversationId,
                     CurrentChatterId));
         }
 
@@ -93,7 +93,7 @@ namespace Application.Features.Chat
                 new MessagePostedEvent(
                     CurrentChatterId,
                     text,
-                    (int)conversationToPostIn.Id!,
+                    conversationId,
                     replyMessageId));
         }
 
