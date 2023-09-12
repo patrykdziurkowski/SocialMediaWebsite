@@ -115,5 +115,16 @@ namespace Application
                 .WithMessage("Password must be a minimum of 8 characters with at least one digit, uppercase letter, lowercase letter, and a special character.");
         }
 
+        public static IRuleBuilderOptions<T, string?> MustBeValidConversationTitle<T>(
+            this IRuleBuilder<T, string?> ruleBuilder)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .MinimumLength(2)
+                .MaximumLength(20)
+                .WithMessage("Title must be between 2 and 20 characters");
+        }
+
+
     }
 }

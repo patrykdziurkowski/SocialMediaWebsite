@@ -490,5 +490,77 @@ namespace Tests
             result.IsValid.Should().BeFalse();
         }
 
+        [Fact]
+        public void MustBeValidConversationTitle_GivenValidConversationTitle_Passes()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationTitle();
+
+            string? validTitle = "Cust0m Conversation!";
+
+            //Act
+            ValidationResult result = validator.Validate(validTitle);
+
+            //Assert
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void MustBeValidConversationTitle_GivenTooShortConversationTitle_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationTitle();
+
+            string? invalidTitle = "a";
+
+            //Act
+            ValidationResult result = validator.Validate(invalidTitle);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidConversationTitle_GivenTooLongConversationTitle_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationTitle();
+
+            string? invalidTitle = "012345678901234567890";
+
+            //Act
+            ValidationResult result = validator.Validate(invalidTitle);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void MustBeValidConversationTitle_GivenEmptyConversationTitle_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationTitle();
+
+            string invalidTitle = "";
+
+            //Act
+            ValidationResult result = validator.Validate(invalidTitle);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
     }
 }
