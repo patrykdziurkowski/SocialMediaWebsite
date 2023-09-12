@@ -562,5 +562,47 @@ namespace Tests
             result.IsValid.Should().BeFalse();
         }
 
+
+        [Fact]
+        public void MustBeValidConversationDescription_GivenValidDescription_Passes()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationDescription();
+
+            string validDescription = "This is a t3st descriptiOn!!";
+
+            //Act
+            ValidationResult result = validator.Validate(validDescription);
+
+            //Assert
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void MustBeValidConversationDescription_Given257CharacterLongDescription_Fails()
+        {
+            //Arrange
+            InlineValidator<string> validator = new();
+            validator
+                .RuleFor(x => x.ToString())
+                .MustBeValidConversationDescription();
+
+            StringBuilder sb = new("");
+            while (sb.ToString().Length <= 256)
+            {
+                sb.Append("a");
+            }
+            string tooLongDescription = sb.ToString();
+
+            //Act
+            ValidationResult result = validator.Validate(tooLongDescription);
+
+            //Assert
+            result.IsValid.Should().BeFalse();
+        }
+
     }
 }

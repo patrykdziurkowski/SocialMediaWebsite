@@ -125,6 +125,13 @@ namespace Application
                 .WithMessage("Title must be between 2 and 20 characters");
         }
 
+        public static IRuleBuilderOptions<T, string?> MustBeValidConversationDescription<T>(
+            this IRuleBuilder<T, string?> ruleBuilder)
+        {
+            return ruleBuilder
+                .MaximumLength(256)
+                .WithMessage("Description must be a maximum of 256 characters");
+        }
 
     }
 }
