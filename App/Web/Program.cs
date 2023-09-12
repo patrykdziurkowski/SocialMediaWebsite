@@ -4,7 +4,9 @@ using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
+using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
+using Application.Features.Chat.Validators;
 using Application.Features.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -32,6 +34,7 @@ services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<IChatEventHandlerFactory, ChatEventHandlerFactory>();
 services.AddSingleton<ChatRepository>();
 
+services.AddSingleton<IValidator<ConversationCreationDto>, ConversationCreationDtoValidator>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 services.AddSingleton<IValidator<UserLoginModel>, LoginValidator>();
 services.AddSingleton<IUserRepository, UserRepository>();
