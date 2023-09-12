@@ -16,7 +16,7 @@ namespace Tests.IntegrationTests
                 .DeleteIfExists(force: true)
                 .UseImage("smwschemaonly:latest")
                 .WithName("SmwSqlServer")
-                .WaitForHealthy(TimeSpan.FromSeconds(10))
+                .WaitForHealthy(TimeSpan.FromSeconds(20))
                 .ExposePort(1433, 1433)
                 .Build();
 
