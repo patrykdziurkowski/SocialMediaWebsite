@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Chat
 {
-    public class ChatRepository
+    public class ChatRepository : IChatRepository
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly IChatEventHandlerFactory _eventHandlerFactory;
@@ -55,9 +55,9 @@ namespace Application.Features.Chat
 
             return new Chat(userId, conversations.ToList());
         }
-        
+
         public async Task SaveAsync(Chat chat)
-        {   
+        {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
             IDbTransaction transaction = connection.BeginTransaction();

@@ -1,4 +1,5 @@
 ﻿using Application.Features.Chat.Dtos;
+using Application.Features.Chat.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +17,11 @@ namespace Application.Features.Chat
     [Authorize]
     public class ChatController : Controller
     {
-        private readonly ChatRepository _chatRepository;
+        private readonly IChatRepository _chatRepository;
         private readonly IValidator<ConversationCreationDto> _conversationCreationValidator;
 
         public ChatController(
-            ChatRepository chatRepository,
+            IChatRepository chatRepository,
             IValidator<ConversationCreationDto> conversationCreationValidator)
         {
             _chatRepository = chatRepository;
@@ -64,6 +65,8 @@ namespace Application.Features.Chat
 
             return new StatusCodeResult(201);
         }
+
+
 
     }
 }
