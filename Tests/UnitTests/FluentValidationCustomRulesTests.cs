@@ -590,10 +590,12 @@ namespace Tests
                 .RuleFor(x => x.ToString())
                 .MustBeValidConversationDescription();
 
+            const char SomeCharacterToAppend = 'a';
+
             StringBuilder sb = new("");
             while (sb.ToString().Length <= 256)
             {
-                sb.Append("a");
+                sb.Append(SomeCharacterToAppend);
             }
             string tooLongDescription = sb.ToString();
 
