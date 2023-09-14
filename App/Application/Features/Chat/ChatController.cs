@@ -39,6 +39,7 @@ namespace Application.Features.Chat
         }
 
         [HttpPost]
+        [Route("Conversation")]
         public async Task<IActionResult> CreateConversation(ConversationCreationDto input)
         {
             FluentValidation.Results.ValidationResult result = _conversationCreationValidator
