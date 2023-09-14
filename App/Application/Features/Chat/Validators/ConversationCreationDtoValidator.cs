@@ -17,6 +17,10 @@ namespace Application.Features.Chat.Validators
 
             RuleFor(p => p.Description)
                 .MustBeValidConversationDescription();
+
+            RuleFor(p => p.ConversationMemberIds)
+                .NotEmpty()
+                .Must(list => list?.Distinct().Count() > 1);
         }
     }
 }
