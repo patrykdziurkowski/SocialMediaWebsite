@@ -28,6 +28,9 @@ namespace Application.Features.Chat
         }
 
         [HttpGet]
+        [Route("Chat")]
+        [Route("Conversations")]
+        [Route("Messages")]
         public async Task<IActionResult> Index()
         {
             Claim chatterIdClaim = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
@@ -39,7 +42,7 @@ namespace Application.Features.Chat
         }
 
         [HttpPost]
-        [Route("Conversation")]
+        [Route("Conversations")]
         public async Task<IActionResult> CreateConversation(ConversationCreationDto input)
         {
             FluentValidation.Results.ValidationResult result = _conversationCreationValidator
