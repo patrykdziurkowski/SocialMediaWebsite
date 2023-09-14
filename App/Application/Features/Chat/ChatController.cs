@@ -53,8 +53,8 @@ namespace Application.Features.Chat
                 return BadRequest();
             }
 
-            Claim chatterIdClaim = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
-            int chatterId = int.Parse(chatterIdClaim.Value);
+            string chatterIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            int chatterId = int.Parse(chatterIdClaim);
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
             chat.CreateConversation(
