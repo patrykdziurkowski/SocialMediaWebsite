@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Dapper;
 using FluentResults;
+using Application.Features.Chat.Interfaces;
 
 namespace Tests.IntegrationTests
 {
@@ -24,7 +25,7 @@ namespace Tests.IntegrationTests
         public ChatRepositoryTests(
             IntegrationTestApplicationFactory factory)
         {
-            ChatRepository? subject = (ChatRepository?) factory.Services.GetService(typeof(ChatRepository));
+            ChatRepository? subject = (ChatRepository?) factory.Services.GetService(typeof(IChatRepository));
             IConnectionFactory? connectionFactory = (IConnectionFactory?)factory.Services.GetService(typeof(IConnectionFactory));
 
             if (subject is null || connectionFactory is null)
