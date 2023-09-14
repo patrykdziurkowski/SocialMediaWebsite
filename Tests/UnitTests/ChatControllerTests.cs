@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +74,47 @@ namespace Tests.UnitTests
 
             //Act
             IActionResult result = await _subject.CreateConversation(validInput);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+        }
+
+        [Fact]
+        public async Task LeaveConversation_GivenNonExistentConversationId_Returns500()
+        {
+            //Arrange
+            Chat usersChat = new(1, new List<Conversation>());
+            _chatRepository.GetAsync(1).Returns(usersChat);
+
+            int conversationId = 5;
+
+            //Act & Assert
+            await _subject
+                .Invoking(m => m.LeaveConversation(conversationId))
+                .Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Fact]
+        public async Task LeaveConversation_GivenExistingConversationId_Returns201()
+        {
+            //Arrange
+            Conversation conversationToDelete = new(
+                5,
+                DateTimeOffset.MinValue,
+                0,
+                1,
+                new List<Message>(),
+                new List<int>() { 1, 2 },
+                "Title");
+
+            Chat usersChat = new(
+                1,
+                new List<Conversation>() { conversationToDelete });
+
+            _chatRepository.GetAsync(1).Returns(usersChat);
+            
+            //Act
+            IActionResult result = await _subject.LeaveConversation(5);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);

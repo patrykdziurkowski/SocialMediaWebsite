@@ -66,7 +66,24 @@ namespace Application.Features.Chat
             return new StatusCodeResult(201);
         }
 
+        [HttpPatch]
+        [Route("Conversations")]
+        public async Task<IActionResult> LeaveConversation(int conversationid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            string chatterIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            int chatterId = int.Parse(chatterIdClaim);
+
+            Chat chat = await _chatRepository.GetAsync(chatterId);
+            chat.LeaveConversation(conversationid);
+            await _chatRepository.SaveAsync(chat);
+
+            return new StatusCodeResult(201);
+        }
 
     }
 }
