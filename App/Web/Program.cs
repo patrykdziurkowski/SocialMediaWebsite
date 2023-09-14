@@ -1,5 +1,6 @@
 using Application;
 using Application.Features.Authentication;
+using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
@@ -28,6 +29,7 @@ services
 
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+services.AddSingleton<IRegisterCommand, RegisterCommand>();
 services.AddSingleton<ISecretHasher, SecretHasher>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();

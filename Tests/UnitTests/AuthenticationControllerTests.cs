@@ -1,4 +1,5 @@
 ﻿using Application.Features.Authentication;
+using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
@@ -24,21 +25,19 @@ namespace Tests
 
         private readonly RegisterValidator _registerValidator;
         private readonly LoginValidator _loginValidator;
-        private readonly IUserRepository _userRepository;
-        private readonly ISecretHasher _secretHasher;
+
         private readonly ISignInManager _signInManager;
+        private readonly IRegisterCommand _registerCommand;
 
         public AuthenticationControllerTests()
         {
             _registerValidator = new();
             _loginValidator = new();
-            _userRepository = Substitute.For<IUserRepository>();
-            _secretHasher = Substitute.For<ISecretHasher>();
+            _registerCommand = Substitute.For<IRegisterCommand>();
             _signInManager = Substitute.For<ISignInManager>();
 
             _subject = new(
-                _userRepository,
-                _secretHasher,
+                _registerCommand,
                 _signInManager,
                 _registerValidator,
                 _loginValidator);
@@ -54,8 +53,8 @@ namespace Tests
                 Email = "john@smith.com",
                 Password = "P@ssword1"
             };
-                
-            _userRepository.Register(Arg.Any<User>()).Returns(Result.Ok());
+
+            _registerCommand.Handle(validUser).Returns(Result.Ok());
 
             //Act
             StatusCodeResult result = (StatusCodeResult) await _subject.Register(validUser);
@@ -83,7 +82,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Register_Post_ShouldReturn500_WhenDatabaseInsertionUnsuccessful()
+        public async Task Register_Post_ShouldReturn403_WhenRegisterCommandFailed()
         {
             //Arrange
             UserRegisterModel validUser = new()
@@ -91,15 +90,15 @@ namespace Tests
                 UserName = "JohnSmith123",
                 Email = "john@smith.com",
                 Password = "P@ssword1"
-            };     
-                 
-            _userRepository.Register(Arg.Any<User>()).Returns(Result.Fail(""));
+            };
+
+            _registerCommand.Handle(validUser).Returns(Result.Fail(""));
 
             //Act
             StatusCodeResult result = (StatusCodeResult) await _subject.Register(validUser);
 
             //Assert
-            result.StatusCode.Should().Be(500);
+            result.StatusCode.Should().Be(403);
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using Application.Features.Authentication;
+using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using FluentResults;
@@ -17,23 +18,21 @@ namespace Application.Features.Chat
 {
     public class AuthenticationController : Controller
     {
-        private readonly IUserRepository _userRepository;
-        private readonly ISecretHasher _secretHasher;
+        private readonly IRegisterCommand _registerCommand;
         private readonly ISignInManager _signInManager;
 
         private readonly IValidator<UserRegisterModel> _registerValidator;
         private readonly IValidator<UserLoginModel> _loginValidator;
 
         public AuthenticationController(
-            IUserRepository userRepository,
-            ISecretHasher secretHasher,
+            IRegisterCommand registerCommand,
             ISignInManager signInManager,
             IValidator<UserRegisterModel> registerValidator,
             IValidator<UserLoginModel> loginValidator)
         {
-            _userRepository = userRepository;
-            _secretHasher = secretHasher;
+            _registerCommand = registerCommand;
             _signInManager = signInManager;
+
             _registerValidator = registerValidator;
             _loginValidator = loginValidator;
         }
@@ -48,16 +47,10 @@ namespace Application.Features.Chat
                 return BadRequest(validationResult.Errors);
             }
 
-            string passwordHash = _secretHasher.Hash(inputUser.Password!);
-            User user = new(
-                inputUser.UserName!,
-                inputUser.Email!,
-                passwordHash);
-
-            Result result = await _userRepository.Register(user);
-            if (result.IsFailed)
+            Result registerResult = await _registerCommand.Handle(inputUser);
+            if (registerResult.IsFailed)
             {
-                return StatusCode(500);
+                return StatusCode(403);
             }
 
             return StatusCode(201);
