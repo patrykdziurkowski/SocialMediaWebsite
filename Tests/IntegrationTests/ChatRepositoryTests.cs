@@ -146,6 +146,28 @@ namespace Tests.IntegrationTests
             resultChat.DomainEvents.Should().BeEmpty();
         }
 
+        [Fact]
+        public async Task SaveAsync_WhenAddingAConversationMember_AddsMember()
+        {
+            //Arrange
+            await InsertFakeUserIntoDatabase(4);
+            Chat chat = await SetupConversationWithUsers();
+            int conversationToAddToId = (int)chat.Conversations.Single().Id!;
+            int chatterId = 4;
+
+            //Act
+            chat.AddMemberToConversation(
+                conversationToAddToId,
+                chatterId);
+            await _subject.SaveAsync(chat);
+
+            //Assert
+            chat = await _subject.GetAsync(1);
+            chat.Conversations.Single().ConversationMemberIds.Should().Contain(4);
+        }
+
+
+
         private async Task<Chat> PostAMessageInConversation(Chat chat)
         {
             Conversation conversationToPostIn = chat.Conversations.Single();

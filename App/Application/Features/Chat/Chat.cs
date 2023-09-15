@@ -72,6 +72,24 @@ namespace Application.Features.Chat
                     CurrentChatterId));
         }
 
+        public Result AddMemberToConversation(int conversationId, int chatterId)
+        {
+            Conversation conversationToAddMemberTo = Conversations
+                .Single(c => c.Id == conversationId);
+
+            if (conversationToAddMemberTo.ConversationMemberIds.Contains(chatterId))
+            {
+                return Result.Fail("That chatter is already in this conversation");
+            }
+
+            conversationToAddMemberTo.ConversationMemberIds.Add(chatterId);
+            RaiseDomainEvent(
+                new ConversationMemberAddedEvent(
+                    conversationId,
+                    chatterId));
+            return Result.Ok();
+        }
+
 
         public void PostMessage(
             int conversationId,

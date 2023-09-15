@@ -2,6 +2,7 @@
 using Application.Features.Chat.Events;
 using Application.Features.Shared;
 using FluentAssertions;
+using FluentResults;
 using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
@@ -253,6 +254,35 @@ namespace Tests.Domain
             _subject.DomainEvents.Should().BeEmpty();
         }
 
+        [Fact]
+        public void AddMemberToConversation_AddsChatterId_ToConversationMemberIds()
+        {
+            //Arrange
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(1, new List<Conversation>() { conversation });
+
+            //Act
+            Result result = _subject.AddMemberToConversation((int)conversation.Id!, 4);
+
+            //Assert
+            conversation.ConversationMemberIds.Should().Contain(4);
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AddMemberToConversation_ReturnsFail_IfMemberAlreadyInConversation()
+        {
+            //Arrange
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(1, new List<Conversation>() { conversation });
+
+            //Act
+            Result result = _subject.AddMemberToConversation((int) conversation.Id!, 2);
+
+            //Assert
+            conversation.ConversationMemberIds.Should().HaveCount(3);
+            result.IsFailed.Should().BeTrue();
+        }
 
 
         private static Conversation CreateSampleConversationWithChattersAndId(int id)
