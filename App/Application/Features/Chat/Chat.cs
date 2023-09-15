@@ -143,9 +143,13 @@ namespace Application.Features.Chat
         {
             Conversation conversationToDeleteFrom = Conversations
                 .Single(c => c.Id == conversationId);
-
             Message messageToDelete = conversationToDeleteFrom.LoadedMessages
                 .Single(m => m.Id == messageId);
+
+            if (messageToDelete.AuthorChatterId != CurrentChatterId)
+            {
+                throw new InvalidOperationException("Attempted to delete a message that doesn't belong to this user");
+            }
 
             conversationToDeleteFrom.LoadedMessages.Remove(messageToDelete);
             conversationToDeleteFrom.TotalMessageCount--;

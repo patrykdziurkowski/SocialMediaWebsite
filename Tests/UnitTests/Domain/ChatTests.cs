@@ -224,6 +224,32 @@ namespace Tests.Domain
         }
 
         [Fact]
+        public void DeleteMessage_WhenMessageDoesntBelongToCurrentUser_ThrowsException()
+        {
+            //Arrange
+            const int CurrentChatterId = 1;
+            const int SomeOtherChatterId = 55;
+            List<Conversation> conversations = new()
+            {
+                CreateSampleConversationWithChattersAndId(50)
+            };
+            conversations.Single().LoadedMessages.Add(
+                new Message(
+                    600,
+                    SomeOtherChatterId,
+                    "Text",
+                    new DateTimeOffset()));
+
+            _subject = new(CurrentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+
+            //Act & Assert
+            _subject
+                .Invoking(m => m.DeleteMessage(50, 600))
+                .Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
         public void RaiseDomainEvent_AddsEventToList()
         {
             //Arrange
