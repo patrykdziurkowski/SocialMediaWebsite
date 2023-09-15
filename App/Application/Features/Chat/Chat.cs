@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Chat
 {
-    public class Chat
+    public class Chat : AggreggateRoot
     {
         private readonly List<Conversation> _conversations;
-        private readonly List<DomainEvent> _domainEvents;
 
         public Chat(
             int chatterId,
@@ -20,23 +19,10 @@ namespace Application.Features.Chat
         {
             CurrentChatterId = chatterId;
             _conversations = conversations;
-            _domainEvents = new List<DomainEvent>();
         }
 
         public int CurrentChatterId { get; private set; }
         public IEnumerable<Conversation> Conversations => _conversations;
-        public IEnumerable<DomainEvent> DomainEvents => _domainEvents;
-
-
-        public void RaiseDomainEvent(DomainEvent domainEvent)
-        {
-            _domainEvents.Add(domainEvent);
-        }
-
-        public void ClearDomainEvents()
-        {
-            _domainEvents.Clear();
-        }
 
         public void CreateConversation(
             List<int> conversationMemberIds,

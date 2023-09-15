@@ -250,39 +250,6 @@ namespace Tests.Domain
         }
 
         [Fact]
-        public void RaiseDomainEvent_AddsEventToList()
-        {
-            //Arrange
-            _subject = new(1, new List<Conversation>());
-
-            //Act
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(1, 1));
-
-            //Assert
-            _subject.DomainEvents.Should().HaveCount(1);
-
-        }
-
-        [Fact]
-        public void ClearDomainEvents_RemovesAllEventsFromList()
-        {
-            //Arrange
-            _subject = new(1, new List<Conversation>());
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(1, 1));
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(2, 1));
-
-            int numberOfEventsBeforeClearing = _subject.DomainEvents.Count();
-
-            //Act
-            _subject.ClearDomainEvents();
-
-            //Assert
-            numberOfEventsBeforeClearing.Should().Be(2);
-            _subject.DomainEvents.Should().BeEmpty();
-        }
-
-
-        [Fact]
         public void AddMemberToConversation_AddsChatterId_ToConversationMemberIds()
         {
             //Arrange
@@ -381,6 +348,9 @@ namespace Tests.Domain
             //Assert
             conversation.ConversationMemberIds.Should().NotContain(2);
         }
+
+
+
 
 
         private static Conversation CreateSampleConversationWithChattersAndId(int id)
