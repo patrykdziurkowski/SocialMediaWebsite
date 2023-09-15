@@ -70,6 +70,11 @@ namespace Application.Features.Chat
                 new ConversationLeftEvent(
                     conversationId,
                     CurrentChatterId));
+
+            if (conversationToLeave.ConversationMemberIds.Count == 0)
+            {
+                RaiseDomainEvent(new ConversationDeletedEvent(conversationId));
+            }
         }
 
         public Result AddMemberToConversation(int conversationId, int chatterId)

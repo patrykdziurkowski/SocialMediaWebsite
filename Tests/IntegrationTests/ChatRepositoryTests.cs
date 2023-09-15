@@ -111,6 +111,25 @@ namespace Tests.IntegrationTests
         }
 
         [Fact]
+        public async Task SaveAsync_WhenLeavingConversationWithOneMember_DeletesEntireConversation()
+        {
+            //Arrange
+            Chat chat = await SetupConversationWithOneUser();
+
+            //Act
+            Conversation conversationToLeave = chat.Conversations.Single();
+            chat.LeaveConversation((int) conversationToLeave.Id!);
+            await _subject.SaveAsync(chat);
+
+            //Assert
+            Chat resultChat = await _subject.GetAsync(1);
+
+            resultChat.Conversations.Should().BeEmpty();
+            resultChat.DomainEvents.Should().BeEmpty();
+            (await ConversationsExistInDatabase()).Should().BeFalse();
+        }
+
+        [Fact]
         public async Task SaveAsync_WhenPostingAMessage_PostsMessage()
         {
             //Arrange
@@ -196,6 +215,18 @@ namespace Tests.IntegrationTests
             return await _subject.GetAsync(1);
         }
 
+        private async Task<Chat> SetupConversationWithOneUser()
+        {
+            await InsertFakeUserIntoDatabase(1);
+            Chat chat = await _subject.GetAsync(1);
+
+            List<int> conversationMemberIds = new() { 1 };
+            chat.CreateConversation(conversationMemberIds, "Title");
+            await _subject.SaveAsync(chat);
+            chat = await _subject.GetAsync(1);
+            return chat;
+        }
+
         private async Task<Chat> SetupConversationWithUsers()
         {
             await InsertFakeUserIntoDatabase(1);
@@ -207,6 +238,19 @@ namespace Tests.IntegrationTests
             await _subject.SaveAsync(chat);
             chat = await _subject.GetAsync(1);
             return chat;
+        }
+
+        private async Task<bool> ConversationsExistInDatabase()
+        {
+            using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
+            connection.Open();
+
+            IEnumerable<Conversation> conversations = await connection.QueryAsync<Conversation>(
+                """
+                SELECT * FROM SocialMediaWebsite.dbo.Conversations;
+                """);
+
+            return conversations.Any();
         }
 
         private async Task InsertFakeUserIntoDatabase(int id)

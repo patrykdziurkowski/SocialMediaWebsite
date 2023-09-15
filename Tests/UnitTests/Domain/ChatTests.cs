@@ -95,6 +95,7 @@ namespace Tests.Domain
             conversations.Should().NotBeEmpty();
         }
 
+
         [Fact]
         public void PostMessage_GivenExistingConversationId_AddsAMessageToConversation()
         {
