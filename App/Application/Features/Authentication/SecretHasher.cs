@@ -43,7 +43,7 @@ namespace Application.Features.Authentication
             byte[] hash = Convert.FromHexString(segments[0]);
             byte[] salt = Convert.FromHexString(segments[1]);
             int iterations = int.Parse(segments[2]);
-            HashAlgorithmName algorithm = new HashAlgorithmName(segments[3]);
+            HashAlgorithmName algorithm = new(segments[3]);
             byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
                 input,
                 salt,
