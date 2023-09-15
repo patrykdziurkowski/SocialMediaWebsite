@@ -99,10 +99,15 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
-        public void KickMemberFromConversation(int conversationId, int chatterId)
+        public Result KickMemberFromConversation(int conversationId, int chatterId)
         {
             Conversation conversationToKickMemberFrom = Conversations
                 .Single(c => c.Id == conversationId);
+
+            if (CurrentChatterId != conversationToKickMemberFrom.OwnerChatterId)
+            {
+                return Result.Fail("You cannot kick members from a conversation you do not own");
+            }
 
             bool userExisted = conversationToKickMemberFrom.ConversationMemberIds.Remove(chatterId);
             if (!userExisted)
@@ -114,6 +119,7 @@ namespace Application.Features.Chat
                 new ConversationMemberKickedEvent(
                     conversationId,
                     chatterId));
+            return Result.Ok();
         }
 
 

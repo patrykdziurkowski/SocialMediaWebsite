@@ -333,6 +333,26 @@ namespace Tests.Domain
         }
 
         [Fact]
+        public void KickMemberFromConversation_ReturnsFail_WhenCurrentChatterIsNotConversationOwner()
+        {
+            //Arrange
+            const int CurrentChatterId = 2;
+
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(CurrentChatterId, new List<Conversation>() { conversation });
+
+            int ChatOwnerId = conversation.OwnerChatterId;
+
+            //Act
+            Result result = _subject.KickMemberFromConversation((int) conversation.Id!, 1);
+
+            //Assert
+            CurrentChatterId.Should().NotBe(ChatOwnerId);
+            result.IsFailed.Should().BeTrue();
+            conversation.ConversationMemberIds.Should().Contain(1);
+        }
+
+        [Fact]
         public void KickMemberFromConversation_Throws_WhenMemberNotInConversation()
         {
             //Arrange
