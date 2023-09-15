@@ -30,7 +30,7 @@ namespace Tests.IntegrationTests
 
             if (subject is null || connectionFactory is null)
             {
-                throw new ArgumentNullException("Test dependencies not found in DI container");
+                throw new ApplicationException("Test dependencies not found in DI container");
             }  
 
             _subject = subject;
