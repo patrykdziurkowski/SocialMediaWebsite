@@ -82,6 +82,10 @@ namespace Application.Features.Chat
             Conversation conversationToAddMemberTo = Conversations
                 .Single(c => c.Id == conversationId);
 
+            if (conversationToAddMemberTo.OwnerChatterId != CurrentChatterId)
+            {
+                return Result.Fail("You cannot add members to a conversation you do not own");
+            }
             if (conversationToAddMemberTo.ConversationMemberIds.Contains(chatterId))
             {
                 return Result.Fail("That chatter is already in this conversation");

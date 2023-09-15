@@ -281,6 +281,7 @@ namespace Tests.Domain
             _subject.DomainEvents.Should().BeEmpty();
         }
 
+
         [Fact]
         public void AddMemberToConversation_AddsChatterId_ToConversationMemberIds()
         {
@@ -307,6 +308,26 @@ namespace Tests.Domain
             Result result = _subject.AddMemberToConversation((int) conversation.Id!, 2);
 
             //Assert
+            conversation.ConversationMemberIds.Should().HaveCount(3);
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [Fact]
+        public void AddMemberToConversation_ReturnsFail_IfCurrentChatterIsNotConversationOwner()
+        {
+            //Arrange
+            const int CurrentChatterId = 2;
+
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(CurrentChatterId, new List<Conversation>() { conversation });
+
+            int ChatOwnerId = conversation.OwnerChatterId;
+
+            //Act
+            Result result = _subject.AddMemberToConversation((int)conversation.Id!, 4);
+
+            //Assert
+            CurrentChatterId.Should().NotBe(ChatOwnerId);
             conversation.ConversationMemberIds.Should().HaveCount(3);
             result.IsFailed.Should().BeTrue();
         }
@@ -348,7 +369,7 @@ namespace Tests.Domain
                 id,
                 new DateTimeOffset(),
                 0,
-                2,
+                1,
                 new List<Message>(),
                 new List<int>() { 1, 2, 3 },
                 "Title");
