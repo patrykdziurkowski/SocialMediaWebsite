@@ -166,6 +166,26 @@ namespace Tests.IntegrationTests
             chat.Conversations.Single().ConversationMemberIds.Should().Contain(4);
         }
 
+        [Fact]
+        public async Task SaveAsync_WhenKickingAConversationMember_RemovesMemberFromList()
+        {
+            //Arrange
+            int chatterToKickId = 2;
+            Chat chat = await SetupConversationWithUsers();
+            int conversationToKickFrom = (int) chat.Conversations.Single().Id!;
+
+            //Act
+            chat.KickMemberFromConversation(
+                conversationToKickFrom,
+                chatterToKickId);
+            await _subject.SaveAsync(chat);
+
+            //Assert
+            chat = await _subject.GetAsync(1);
+            chat.Conversations.Single().ConversationMemberIds.Should().NotContain(3);
+        }
+
+
 
 
         private async Task<Chat> PostAMessageInConversation(Chat chat)

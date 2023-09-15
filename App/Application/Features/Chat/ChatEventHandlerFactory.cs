@@ -23,6 +23,7 @@ namespace Application.Features.Chat
                 MessagePostedEvent => new MessagePostedHandler(),
                 MessageDeletedEvent => new MessageDeletedHandler(),
                 ConversationMemberAddedEvent => new ConversationMemberAddedHandler(),
+                ConversationMemberKickedEvent => new ConversationMemberKickedHandler(),
                 _ => throw new NotImplementedException($"No handler found for provided event {domainEvent.GetType()}"),
             };
         }

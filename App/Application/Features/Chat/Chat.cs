@@ -90,6 +90,23 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
+        public void KickMemberFromConversation(int conversationId, int chatterId)
+        {
+            Conversation conversationToKickMemberFrom = Conversations
+                .Single(c => c.Id == conversationId);
+
+            bool userExisted = conversationToKickMemberFrom.ConversationMemberIds.Remove(chatterId);
+            if (!userExisted)
+            {
+                throw new InvalidOperationException("Chatter to be kicked was not found in the given conversation");
+            }
+
+            RaiseDomainEvent(
+                new ConversationMemberKickedEvent(
+                    conversationId,
+                    chatterId));
+        }
+
 
         public void PostMessage(
             int conversationId,

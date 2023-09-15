@@ -284,6 +284,36 @@ namespace Tests.Domain
             result.IsFailed.Should().BeTrue();
         }
 
+        [Fact]
+        public void KickMemberFromConversation_Throws_WhenMemberNotInConversation()
+        {
+            //Arrange
+            int idOfChatterNotInConversation = 22;
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(1, new List<Conversation>() { conversation });
+
+            //Act & Assert
+            _subject
+                .Invoking(m => m.KickMemberFromConversation(
+                    (int) conversation.Id!,
+                    idOfChatterNotInConversation))
+                .Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void KickMemberFromConversation_GivenConversationMember_RemovesThemFromList()
+        {
+            //Arrange
+            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
+            _subject = new(1, new List<Conversation>() { conversation });
+
+            //Act
+            _subject.KickMemberFromConversation((int) conversation.Id!, 2);
+
+            //Assert
+            conversation.ConversationMemberIds.Should().NotContain(2);
+        }
+
 
         private static Conversation CreateSampleConversationWithChattersAndId(int id)
         {
