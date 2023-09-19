@@ -17,30 +17,30 @@ namespace Application.Features.Chat.EventHandlers
             IDbConnection connection,
             IDbTransaction transaction)
         {
-            int insertedConversationId = await connection.QuerySingleAsync<int>(
+            await connection.ExecuteAsync(
                 $"""
                 INSERT INTO SocialMediaWebsite.dbo.Conversations
-                (Title, Description, OwnerUserId)
+                (Id, Title, Description, OwnerUserId)
                 VALUES
-                (@Title, @Description, @OwnerUserId);
-                SELECT CAST(SCOPE_IDENTITY() as int)
+                (@ConversationId, @Title, @Description, @OwnerUserId)
                 """,
                 domainEvent,
                 transaction);
 
-            foreach (int chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
+            foreach (Guid chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
             {
                 await connection.ExecuteAsync(
                     $"""
                     INSERT INTO SocialMediaWebsite.dbo.ConversationUsers
-                    (UserId, ConversationId)
+                    (Id, UserId, ConversationId)
                     VALUES
-                    (@UserId, @ConversationId)
+                    (@Id, @UserId, @ConversationId)
                     """,
                     new
                     {
+                        Id = Guid.NewGuid(),
                         UserId = chatterId,
-                        ConversationId = insertedConversationId
+                        ConversationId = ((ConversationCreatedEvent) domainEvent).ConversationId
                     },
                     transaction);
             }

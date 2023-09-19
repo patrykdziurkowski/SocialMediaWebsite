@@ -22,9 +22,17 @@ namespace Tests.IntegrationTests
 
         private readonly IConnectionFactory _connectionFactory;
 
+        private readonly Guid _currentChatterId;
+        private readonly Guid _someOtherChatterId;
+        private int _numberOfCreatedUsers;
+
         public ChatRepositoryTests(
             IntegrationTestApplicationFactory factory)
         {
+            _numberOfCreatedUsers = 0;
+            _currentChatterId = Guid.NewGuid();
+            _someOtherChatterId = Guid.NewGuid();
+
             ChatRepository? subject = (ChatRepository?) factory.Services.GetService(typeof(IChatRepository));
             IConnectionFactory? connectionFactory = (IConnectionFactory?)factory.Services.GetService(typeof(IConnectionFactory));
 
@@ -45,30 +53,30 @@ namespace Tests.IntegrationTests
             //Arrange
 
             //Act
-            Chat chat = await _subject.GetAsync(1);
+            Chat chat = await _subject.GetAsync(_currentChatterId);
 
             //Assert
             chat.Conversations.Should().BeEmpty(); 
             chat.DomainEvents.Should().BeEmpty();
-            chat.CurrentChatterId.Should().Be(1);
+            chat.CurrentChatterId.Should().Be(_currentChatterId);
         }
 
         [Fact]
         public async Task SaveAsync_GivenConversationCreation_CreatesConversation()
         {
             //Arrange
-            await InsertFakeUserIntoDatabase(1);
-            await InsertFakeUserIntoDatabase(2);
-            Chat chat = await _subject.GetAsync(1);
+            await InsertFakeUserIntoDatabase(_currentChatterId);
+            await InsertFakeUserIntoDatabase(_someOtherChatterId);
+            Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<int> conversationMemberIds = new() { 1, 2 };
+            List<Guid> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
             //Act
             chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(1);
+            Chat resultChat = await _subject.GetAsync(_currentChatterId);
 
             resultChat.Conversations.Should().HaveCount(1);
             resultChat.DomainEvents.Should().BeEmpty();
@@ -82,11 +90,11 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
-            chat.LeaveConversation((int)conversationToLeave.Id!);
+            chat.LeaveConversation(conversationToLeave.Id);
             await _subject.SaveAsync(chat);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(1);
+            Chat resultChat = await _subject.GetAsync(_currentChatterId);
 
             resultChat.Conversations.Should().BeEmpty();
             resultChat.DomainEvents.Should().BeEmpty();
@@ -100,11 +108,11 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
-            chat.LeaveConversation((int) conversationToLeave.Id!);
+            chat.LeaveConversation(conversationToLeave.Id);
             await _subject.SaveAsync(chat);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(2);
+            Chat resultChat = await _subject.GetAsync(_someOtherChatterId);
 
             resultChat.Conversations.Single().ConversationMemberIds.Should().HaveCount(1);
             resultChat.DomainEvents.Should().BeEmpty();
@@ -118,11 +126,11 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToLeave = chat.Conversations.Single();
-            chat.LeaveConversation((int) conversationToLeave.Id!);
+            chat.LeaveConversation(conversationToLeave.Id);
             await _subject.SaveAsync(chat);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(1);
+            Chat resultChat = await _subject.GetAsync(_currentChatterId);
 
             resultChat.Conversations.Should().BeEmpty();
             resultChat.DomainEvents.Should().BeEmpty();
@@ -137,11 +145,11 @@ namespace Tests.IntegrationTests
 
             //Act
             Conversation conversationToPostIn = chat.Conversations.Single();
-            chat.PostMessage((int) conversationToPostIn.Id!, "Message text");
+            chat.PostMessage(conversationToPostIn.Id, "Message text");
             await _subject.SaveAsync(chat);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(1);
+            Chat resultChat = await _subject.GetAsync(_currentChatterId);
             resultChat.Conversations.Single().LoadedMessages.Should().HaveCount(1);
             resultChat.DomainEvents.Should().BeEmpty();
         }
@@ -155,12 +163,12 @@ namespace Tests.IntegrationTests
 
             //Act
             chatWithAMessage.DeleteMessage(
-                (int) chatWithAMessage.Conversations.Single().Id!,
+                chatWithAMessage.Conversations.Single().Id,
                 chatWithAMessage.Conversations.Single().LoadedMessages.Single().Id);
             await _subject.SaveAsync(chatWithAMessage);
 
             //Assert
-            Chat resultChat = await _subject.GetAsync(1);
+            Chat resultChat = await _subject.GetAsync(_currentChatterId);
             resultChat.Conversations.Single().LoadedMessages.Should().BeEmpty();
             resultChat.DomainEvents.Should().BeEmpty();
         }
@@ -169,39 +177,39 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenAddingAConversationMember_AddsMember()
         {
             //Arrange
-            await InsertFakeUserIntoDatabase(4);
+            Guid chatterToAddId = Guid.NewGuid();
+            
+            await InsertFakeUserIntoDatabase(chatterToAddId);
             Chat chat = await SetupConversationWithUsers();
-            int conversationToAddToId = (int)chat.Conversations.Single().Id!;
-            int chatterId = 4;
+            Guid conversationToAddToId = chat.Conversations.Single().Id;
 
             //Act
             chat.AddMemberToConversation(
                 conversationToAddToId,
-                chatterId);
+                chatterToAddId);
             await _subject.SaveAsync(chat);
 
             //Assert
-            chat = await _subject.GetAsync(1);
-            chat.Conversations.Single().ConversationMemberIds.Should().Contain(4);
+            chat = await _subject.GetAsync(_currentChatterId);
+            chat.Conversations.Single().ConversationMemberIds.Should().Contain(chatterToAddId);
         }
 
         [Fact]
         public async Task SaveAsync_WhenKickingAConversationMember_RemovesMemberFromList()
         {
             //Arrange
-            int chatterToKickId = 2;
             Chat chat = await SetupConversationWithUsers();
-            int conversationToKickFrom = (int) chat.Conversations.Single().Id!;
+            Guid conversationToKickFrom = chat.Conversations.Single().Id;
 
             //Act
             chat.KickMemberFromConversation(
                 conversationToKickFrom,
-                chatterToKickId);
+                _someOtherChatterId);
             await _subject.SaveAsync(chat);
 
             //Assert
-            chat = await _subject.GetAsync(1);
-            chat.Conversations.Single().ConversationMemberIds.Should().NotContain(3);
+            chat = await _subject.GetAsync(_currentChatterId);
+            chat.Conversations.Single().ConversationMemberIds.Should().NotContain(_someOtherChatterId);
         }
 
 
@@ -210,33 +218,33 @@ namespace Tests.IntegrationTests
         private async Task<Chat> PostAMessageInConversation(Chat chat)
         {
             Conversation conversationToPostIn = chat.Conversations.Single();
-            chat.PostMessage((int) conversationToPostIn.Id!, "Message text");
+            chat.PostMessage(conversationToPostIn.Id, "Message text");
             await _subject.SaveAsync(chat);
-            return await _subject.GetAsync(1);
+            return await _subject.GetAsync(_currentChatterId);
         }
 
         private async Task<Chat> SetupConversationWithOneUser()
         {
-            await InsertFakeUserIntoDatabase(1);
-            Chat chat = await _subject.GetAsync(1);
+            await InsertFakeUserIntoDatabase(_currentChatterId);
+            Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<int> conversationMemberIds = new() { 1 };
+            List<Guid> conversationMemberIds = new() { _currentChatterId };
             chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
+            chat = await _subject.GetAsync(_currentChatterId);
             return chat;
         }
 
         private async Task<Chat> SetupConversationWithUsers()
         {
-            await InsertFakeUserIntoDatabase(1);
-            await InsertFakeUserIntoDatabase(2);
-            Chat chat = await _subject.GetAsync(1);
+            await InsertFakeUserIntoDatabase(_currentChatterId);
+            await InsertFakeUserIntoDatabase(_someOtherChatterId);
+            Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<int> conversationMemberIds = new() { 1, 2 };
+            List<Guid> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
             chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
-            chat = await _subject.GetAsync(1);
+            chat = await _subject.GetAsync(_currentChatterId);
             return chat;
         }
 
@@ -253,27 +261,26 @@ namespace Tests.IntegrationTests
             return conversations.Any();
         }
 
-        private async Task InsertFakeUserIntoDatabase(int id)
+        private async Task InsertFakeUserIntoDatabase(Guid id)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
 
             await connection.ExecuteAsync(
                 """
-                SET IDENTITY_INSERT SocialMediaWebsite.dbo.Users ON;
                 INSERT INTO SocialMediaWebsite.dbo.Users
                 (Id, UserName, Email, PasswordHash)
                 VALUES
                 (@Id, @UserName, @Email, @PasswordHash);
-                SET IDENTITY_INSERT SocialMediaWebsite.dbo.Users OFF
                 """,
                 new
                 {
                     Id = id,
-                    UserName = $"UserWithId{id}",
-                    Email = $"user{id}@email.com",
-                    PasswordHash = $"dummyHash{id}"
+                    UserName = $"UserWithId{_numberOfCreatedUsers}",
+                    Email = $"user{_numberOfCreatedUsers}@email.com",
+                    PasswordHash = $"dummyHash{_numberOfCreatedUsers}"
                 });
+            _numberOfCreatedUsers++;
         }
 
         private void ClearDatabaseData()

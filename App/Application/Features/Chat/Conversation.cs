@@ -17,37 +17,18 @@ namespace Application.Features.Chat
             TotalMessageCount = default!;
             OwnerChatterId = default!;
             LoadedMessages = new List<Message>();
-            ConversationMemberIds = new List<int>();
+            ConversationMemberIds = new List<Guid>();
         }
 
         public Conversation(
-            int id,
             DateTimeOffset creationDateTime,
-            int messageCount,
-            int ownerChatterId,
-            List<Message> messages,
-            List<int> conversationMemberIds,
+            Guid ownerChatterId,
+            List<Guid> conversationMemberIds,
             string title,
             string? description = null)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             CreationDateTime = creationDateTime;
-            TotalMessageCount = messageCount;
-            OwnerChatterId = ownerChatterId;
-            LoadedMessages = messages;
-            ConversationMemberIds = conversationMemberIds;
-            Title = title;
-            Description = description;
-        }
-
-        public Conversation(
-            int ownerChatterId,
-            List<int> conversationMemberIds,
-            string title,
-            string? description = null)
-        {
-            Id = null;
-            CreationDateTime = null;
             TotalMessageCount = 0;
             OwnerChatterId = ownerChatterId;
             LoadedMessages = new List<Message>();
@@ -56,13 +37,13 @@ namespace Application.Features.Chat
             Description = description;
         }
 
-        public int? Id { get; private set; }
+        public Guid Id { get; private set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public DateTimeOffset? CreationDateTime { get; private set; }
         public int TotalMessageCount { get; set; }
-        public int OwnerChatterId { get; set; }
+        public Guid OwnerChatterId { get; set; }
         public List<Message> LoadedMessages { get; set; }
-        public List<int> ConversationMemberIds { get; set; }
+        public List<Guid> ConversationMemberIds { get; set; }
     }
 }

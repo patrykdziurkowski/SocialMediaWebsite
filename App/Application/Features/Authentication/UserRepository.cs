@@ -52,12 +52,13 @@ namespace Application.Features.Authentication
             int numberOfAffectedRows = await connection.ExecuteAsync(
                 """
                 INSERT INTO Users
-                (UserName, Email, PasswordHash)
+                (Id, UserName, Email, PasswordHash)
                 VALUES
-                (@UserName, @Email, @PasswordHash)
+                (@Id, @UserName, @Email, @PasswordHash)
                 """,
                 new
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     PasswordHash = user.PasswordHash

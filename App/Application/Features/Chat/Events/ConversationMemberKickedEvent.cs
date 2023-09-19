@@ -10,14 +10,14 @@ namespace Application.Features.Chat.Events
     public class ConversationMemberKickedEvent : DomainEvent
     {
         public ConversationMemberKickedEvent(
-            int conversationId,
-            int chatterId)
+            Guid conversationId,
+            Guid chatterId)
         {
             ConversationId = conversationId;
             ChatterId = chatterId;
         }
 
-        public int ConversationId { get; }
-        public int ChatterId { get; }
+        public Guid ConversationId { get; }
+        public Guid ChatterId { get; }
     }
 }

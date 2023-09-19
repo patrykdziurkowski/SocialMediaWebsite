@@ -9,10 +9,10 @@ namespace Application.Features.Chat.Events
 {
     public class MessageDeletedEvent : DomainEvent
     {
-        public MessageDeletedEvent(int messageId)
+        public MessageDeletedEvent(Guid messageId)
         {
             MessageId = messageId;
         }
-        public int MessageId { get; set; }
+        public Guid MessageId { get; set; }
     }
 }

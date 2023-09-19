@@ -16,15 +16,25 @@ namespace Tests.Domain
     public class ChatTests
     {
         private Chat? _subject;
+        private readonly Guid _currentChatterId;
+        private readonly Guid _chatterInConversationId;
+        private readonly Guid _chatterNotInConversationId;
+
+        public ChatTests()
+        {
+            _currentChatterId = Guid.NewGuid();
+            _chatterInConversationId = Guid.NewGuid();
+            _chatterNotInConversationId = Guid.NewGuid();
+        }
 
         [Fact]
         public void CreateConversation_AddsNewConversationToList()
         {
             //Arrange
-            _subject = new(1, new List<Conversation>());
+            _subject = new(_currentChatterId, new List<Conversation>());
 
             //Act
-            _subject.CreateConversation(new List<int>(), "Title", "Description");
+            _subject.CreateConversation(new List<Guid>(), "Title", "Description");
 
             //Assert
             _subject.Conversations.Should().HaveCount(1);
@@ -36,8 +46,8 @@ namespace Tests.Domain
         public void CreateConversation_AddsNewConversationWithConversationMembers()
         {
             //Arrange
-            _subject = new(1, new List<Conversation>());
-            List<int> conversationMemberIds = new() { 1, 2, 3 };
+            _subject = new(_currentChatterId, new List<Conversation>());
+            List<Guid> conversationMemberIds = new() { _currentChatterId, Guid.NewGuid(), Guid.NewGuid() };
 
             //Act
             _subject.CreateConversation(conversationMemberIds, "Title", "Description");
@@ -51,23 +61,20 @@ namespace Tests.Domain
         public void LeaveConversation_RemovesChatterFromConversation_WhenValidId()
         {
             //Arrange
-            const int ConversationId = 50;
-            const int LeavingChatterId = 1;
-
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(ConversationId)
+                CreateSampleConversationWithChatters(_currentChatterId)
             }; 
 
-            _subject = new(LeavingChatterId, conversations);
-            IEnumerable<int> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
+            _subject = new(_currentChatterId, conversations);
+            IEnumerable<Guid> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
-            _subject.LeaveConversation(ConversationId);
+            _subject.LeaveConversation(conversations.Single().Id);
 
             //Assert
-            conversationMemberIds.Should().NotContain(LeavingChatterId);
-            conversationMemberIds.Should().HaveCount(2);
+            conversationMemberIds.Should().NotContain(_currentChatterId);
+            conversationMemberIds.Should().HaveCount(1);
             conversations.Should().BeEmpty();
         }
 
@@ -75,23 +82,22 @@ namespace Tests.Domain
         public void LeaveConversation_ThrowsException_WhenInvalidId()
         {
             //Arrange
-            const int LeavingChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(Guid.NewGuid())
             };
 
-            _subject = new(LeavingChatterId, conversations);
-            IEnumerable<int> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
+            _subject = new(_currentChatterId, conversations);
+            IEnumerable<Guid> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
             _subject
-                .Invoking(m => m.LeaveConversation(999))
+                .Invoking(m => m.LeaveConversation(Guid.Empty))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
-            conversationMemberIds.Should().Contain(LeavingChatterId);
-            conversationMemberIds.Should().HaveCount(3);
+            conversationMemberIds.Should().Contain(_currentChatterId);
+            conversationMemberIds.Should().HaveCount(2);
             conversations.Should().NotBeEmpty();
         }
 
@@ -100,17 +106,16 @@ namespace Tests.Domain
         public void PostMessage_GivenExistingConversationId_AddsAMessageToConversation()
         {
             //Arrange
-            const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act
-            _subject.PostMessage(50, "Text");
+            _subject.PostMessage(conversation.Id, "Text");
 
             //Assert
             conversation.TotalMessageCount.Should().Be(1);
@@ -122,18 +127,17 @@ namespace Tests.Domain
         public void PostMessage_GivenNonExistantConversationId_ThrowsException()
         {
             //Arrange
-            const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act
             _subject
-                .Invoking(m => m.PostMessage(999, "Text"))
+                .Invoking(m => m.PostMessage(Guid.Empty, "Text"))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -145,23 +149,22 @@ namespace Tests.Domain
         public void DeleteMessage_GivenExistingConversationAndMessage_RemovesMessage()
         {
             //Arrange
-            const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
-            conversations.Single().LoadedMessages.Add(
-                new Message(
-                    600,
-                    CurrentChatterId,
-                    "Text",
-                    new DateTimeOffset()));
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            Message messageToDelete = new(
+                    _currentChatterId,
+                    "Text",
+                    DateTimeOffset.MinValue);
+            conversations.Single().LoadedMessages.Add(messageToDelete);
+
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act
-            _subject.DeleteMessage(50, 600);
+            _subject.DeleteMessage(conversation.Id, messageToDelete.Id);
 
             //Assert
             conversation.LoadedMessages.Should().BeEmpty();
@@ -171,24 +174,23 @@ namespace Tests.Domain
         public void DeleteMessage_GivenNonExistantConversation_ThrowsException()
         {
             //Arrange
-            const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
-            conversations.Single().LoadedMessages.Add(
-                new Message(
-                    600,
-                    CurrentChatterId,
-                    "Text",
-                    new DateTimeOffset()));
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            Message messageToDelete = new(
+                _currentChatterId,
+                "Text",
+                DateTimeOffset.MinValue);
+            conversations.Single().LoadedMessages.Add(messageToDelete);
+
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act
             _subject
-                .Invoking(m => m.DeleteMessage(70, 600))
+                .Invoking(m => m.DeleteMessage(Guid.Empty, messageToDelete.Id))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -199,24 +201,23 @@ namespace Tests.Domain
         public void DeleteMessage_GivenNonExistantMessage_ThrowsException()
         {
             //Arrange
-            const int CurrentChatterId = 1;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
-            conversations.Single().LoadedMessages.Add(
-                new Message(
-                    600,
-                    CurrentChatterId,
-                    "Text",
-                    new DateTimeOffset()));
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            Message messageToDelete = new(
+                _currentChatterId,
+                "Text",
+                DateTimeOffset.MinValue);
+            conversations.Single().LoadedMessages.Add(messageToDelete);
+
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act
             _subject
-                .Invoking(m => m.DeleteMessage(50, 700))
+                .Invoking(m => m.DeleteMessage(conversation.Id, Guid.Empty))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -227,25 +228,23 @@ namespace Tests.Domain
         public void DeleteMessage_WhenMessageDoesntBelongToCurrentUser_ThrowsException()
         {
             //Arrange
-            const int CurrentChatterId = 1;
-            const int SomeOtherChatterId = 55;
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChattersAndId(50)
+                CreateSampleConversationWithChatters(_currentChatterId)
             };
-            conversations.Single().LoadedMessages.Add(
-                new Message(
-                    600,
-                    SomeOtherChatterId,
-                    "Text",
-                    new DateTimeOffset()));
 
-            _subject = new(CurrentChatterId, conversations);
-            Conversation conversation = _subject.Conversations.Single(c => c.Id == 50);
+            Message messageToDelete = new(
+                _chatterInConversationId,
+                "Text",
+                DateTimeOffset.MinValue);
+            conversations.Single().LoadedMessages.Add(messageToDelete);
+
+            _subject = new(_currentChatterId, conversations);
+            Conversation conversation = _subject.Conversations.Single();
 
             //Act & Assert
             _subject
-                .Invoking(m => m.DeleteMessage(50, 600))
+                .Invoking(m => m.DeleteMessage(conversation.Id, messageToDelete.Id))
                 .Should().Throw<InvalidOperationException>();
         }
 
@@ -253,14 +252,14 @@ namespace Tests.Domain
         public void AddMemberToConversation_AddsChatterId_ToConversationMemberIds()
         {
             //Arrange
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(1, new List<Conversation>() { conversation });
+            Conversation conversation = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
             //Act
-            Result result = _subject.AddMemberToConversation((int)conversation.Id!, 4);
+            Result result = _subject.AddMemberToConversation(conversation.Id, _chatterNotInConversationId);
 
             //Assert
-            conversation.ConversationMemberIds.Should().Contain(4);
+            conversation.ConversationMemberIds.Should().Contain(_chatterNotInConversationId);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -268,14 +267,14 @@ namespace Tests.Domain
         public void AddMemberToConversation_ReturnsFail_IfMemberAlreadyInConversation()
         {
             //Arrange
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(1, new List<Conversation>() { conversation });
+            Conversation conversation = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
             //Act
-            Result result = _subject.AddMemberToConversation((int) conversation.Id!, 2);
+            Result result = _subject.AddMemberToConversation(conversation.Id, _chatterInConversationId);
 
             //Assert
-            conversation.ConversationMemberIds.Should().HaveCount(3);
+            conversation.ConversationMemberIds.Should().HaveCount(2);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -283,19 +282,17 @@ namespace Tests.Domain
         public void AddMemberToConversation_ReturnsFail_IfCurrentChatterIsNotConversationOwner()
         {
             //Arrange
-            const int CurrentChatterId = 2;
+            Conversation conversation = CreateSampleConversationWithChatters(_chatterInConversationId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(CurrentChatterId, new List<Conversation>() { conversation });
-
-            int ChatOwnerId = conversation.OwnerChatterId;
+            Guid chatOwnerId = conversation.OwnerChatterId;
 
             //Act
-            Result result = _subject.AddMemberToConversation((int)conversation.Id!, 4);
+            Result result = _subject.AddMemberToConversation(conversation.Id, _chatterNotInConversationId);
 
             //Assert
-            CurrentChatterId.Should().NotBe(ChatOwnerId);
-            conversation.ConversationMemberIds.Should().HaveCount(3);
+            _currentChatterId.Should().NotBe(chatOwnerId);
+            conversation.ConversationMemberIds.Should().HaveCount(2);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -303,35 +300,33 @@ namespace Tests.Domain
         public void KickMemberFromConversation_ReturnsFail_WhenCurrentChatterIsNotConversationOwner()
         {
             //Arrange
-            const int CurrentChatterId = 2;
+            Conversation conversation = CreateSampleConversationWithChatters(_chatterInConversationId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(CurrentChatterId, new List<Conversation>() { conversation });
-
-            int ChatOwnerId = conversation.OwnerChatterId;
+            Guid chatOwnerId = conversation.OwnerChatterId;
 
             //Act
-            Result result = _subject.KickMemberFromConversation((int) conversation.Id!, 1);
+            Result result = _subject.KickMemberFromConversation(conversation.Id, _chatterInConversationId);
 
             //Assert
-            CurrentChatterId.Should().NotBe(ChatOwnerId);
+            _currentChatterId.Should().NotBe(chatOwnerId);
             result.IsFailed.Should().BeTrue();
-            conversation.ConversationMemberIds.Should().Contain(1);
+            conversation.ConversationMemberIds.Should().Contain(_chatterInConversationId);
         }
 
         [Fact]
         public void KickMemberFromConversation_Throws_WhenMemberNotInConversation()
         {
             //Arrange
-            int idOfChatterNotInConversation = 22;
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(1, new List<Conversation>() { conversation });
+            Guid conversationId = Guid.NewGuid();
+            Conversation conversation = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
             //Act & Assert
             _subject
                 .Invoking(m => m.KickMemberFromConversation(
-                    (int) conversation.Id!,
-                    idOfChatterNotInConversation))
+                    conversationId,
+                    _chatterNotInConversationId))
                 .Should().Throw<InvalidOperationException>();
         }
 
@@ -339,29 +334,26 @@ namespace Tests.Domain
         public void KickMemberFromConversation_GivenConversationMember_RemovesThemFromList()
         {
             //Arrange
-            Conversation conversation = CreateSampleConversationWithChattersAndId(50);
-            _subject = new(1, new List<Conversation>() { conversation });
+            Conversation conversation = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
             //Act
-            _subject.KickMemberFromConversation((int) conversation.Id!, 2);
+            _subject.KickMemberFromConversation(conversation.Id, _chatterInConversationId);
 
             //Assert
-            conversation.ConversationMemberIds.Should().NotContain(2);
+            conversation.ConversationMemberIds.Should().NotContain(_chatterInConversationId);
         }
 
 
 
 
 
-        private static Conversation CreateSampleConversationWithChattersAndId(int id)
+        private Conversation CreateSampleConversationWithChatters(Guid conversationOwnerId)
         {
-            return new(
-                id,
-                new DateTimeOffset(),
-                0,
-                1,
-                new List<Message>(),
-                new List<int>() { 1, 2, 3 },
+            return new Conversation(
+                DateTimeOffset.MinValue,
+                conversationOwnerId,
+                new List<Guid>() { _currentChatterId, _chatterInConversationId },
                 "Title");
         }
 

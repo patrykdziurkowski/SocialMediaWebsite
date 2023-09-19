@@ -10,14 +10,16 @@ namespace Application.Features.Chat.Events
     public class ConversationMemberAddedEvent : DomainEvent
     {
         public ConversationMemberAddedEvent(
-            int conversationId,
-            int chatterId)
+            Guid conversationId,
+            Guid chatterId)
         {
+            LinkId = Guid.NewGuid();
             ConversationId = conversationId;
             ChatterId = chatterId;
         }
 
-        public int ConversationId { get; set; }
-        public int ChatterId { get; set; }
+        public Guid LinkId { get; set; }
+        public Guid ConversationId { get; set; }
+        public Guid ChatterId { get; set; }
     }
 }

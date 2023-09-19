@@ -19,9 +19,9 @@ namespace Application.Features.Chat.EventHandlers
             await connection.ExecuteAsync(
                 $"""
                 INSERT INTO SocialMediaWebsite.dbo.Messages
-                (AuthorUserId, Text, ConversationId, ReplyMessageId)
+                (Id, AuthorUserId, Text, ConversationId, ReplyMessageId)
                 VALUES
-                (@AuthorUserId, @Text, @ConversationId, @ReplyMessageId)
+                (@MessageId, @AuthorUserId, @Text, @ConversationId, @ReplyMessageId)
                 """,
                 domainEvent,
                 transaction);

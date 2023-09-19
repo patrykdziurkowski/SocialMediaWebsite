@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Features.Chat
+﻿namespace Application.Features.Chat
 {
     public class Message
     {
@@ -16,34 +10,24 @@ namespace Application.Features.Chat
             MessageDateTime = default!;
             ReplyMessageId = default;
         }
-        public Message(
-            int authorChatterId,
-            string text,
-            int? replyMessageId = null)
-        {
-            AuthorChatterId = authorChatterId;
-            Text = text;
-            ReplyMessageId = replyMessageId;
-        }
 
         public Message(
-            int id,
-            int authorChatterId,
+            Guid authorChatterId,
             string text,
             DateTimeOffset messageDateTime,
-            int? replyMessageId = null)
+            Guid? replyMessageId = null)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             AuthorChatterId = authorChatterId;
             Text = text;
             MessageDateTime = messageDateTime;
             ReplyMessageId = replyMessageId;
         }
 
-        public int Id { get; private set; }
-        public int AuthorChatterId { get; private set; }
+        public Guid Id { get; private set; }
+        public Guid AuthorChatterId { get; private set; }
         public string Text { get; set; }
         public DateTimeOffset MessageDateTime { get; private set; }
-        public int? ReplyMessageId { get; private set; }
+        public Guid? ReplyMessageId { get; private set; }
     }
 }

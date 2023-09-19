@@ -9,7 +9,7 @@ namespace Application.Features.Chat
     public class Chatter
     {
         public Chatter(
-            int id,
+            Guid id,
             string name,
             DateTimeOffset joinDateTime)
         {
@@ -18,7 +18,7 @@ namespace Application.Features.Chat
             JoinDateTime = joinDateTime;
         }
 
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
         public string Name { get; set; }
         public DateTimeOffset JoinDateTime { get; private set; }
     }

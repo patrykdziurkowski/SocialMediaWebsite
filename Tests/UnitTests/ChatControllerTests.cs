@@ -28,8 +28,12 @@ namespace Tests.UnitTests
         private readonly IChatRepository _chatRepository;
         private readonly ConversationCreationDtoValidator _conversationCreationValidator;
 
+        private readonly Guid _currentChatterId;
+
         public ChatControllerTests()
         {
+            _currentChatterId = Guid.NewGuid();
+
             _chatRepository = Substitute.For<IChatRepository>();
             _conversationCreationValidator = new();
 
@@ -46,7 +50,7 @@ namespace Tests.UnitTests
             //Arrange
             ConversationCreationDto invalidInput = new()
             { 
-                ConversationMemberIds = new List<int>() { 1 },
+                ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
                 Title = "",
                 Description = "ValidDescription",
             };
@@ -62,15 +66,15 @@ namespace Tests.UnitTests
         public async Task CreateConversation_GivenValidInput_Returns201()
         {
             //Arrange
-            Chat usersChat = new(1, new List<Conversation>());
+            Chat usersChat = new(_currentChatterId, new List<Conversation>());
             ConversationCreationDto validInput = new()
             {
-                ConversationMemberIds = new List<int>() { 1, 2 },
+                ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
                 Title = "ValidTitle",
                 Description = "ValidDescription",
             };  
 
-            _chatRepository.GetAsync(1).Returns(usersChat);
+            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
 
             //Act
             IActionResult result = await _subject.CreateConversation(validInput);
@@ -83,14 +87,12 @@ namespace Tests.UnitTests
         public async Task LeaveConversation_GivenNonExistentConversationId_Returns500()
         {
             //Arrange
-            Chat usersChat = new(1, new List<Conversation>());
-            _chatRepository.GetAsync(1).Returns(usersChat);
-
-            int conversationId = 5;
+            Chat usersChat = new(_currentChatterId, new List<Conversation>());
+            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
 
             //Act & Assert
             await _subject
-                .Invoking(m => m.LeaveConversation(conversationId))
+                .Invoking(m => m.LeaveConversation(Guid.Empty))
                 .Should().ThrowAsync<InvalidOperationException>();
         }
 
@@ -99,22 +101,19 @@ namespace Tests.UnitTests
         {
             //Arrange
             Conversation conversationToDelete = new(
-                5,
                 DateTimeOffset.MinValue,
-                0,
-                1,
-                new List<Message>(),
-                new List<int>() { 1, 2 },
+                _currentChatterId,
+                new List<Guid>() { _currentChatterId, Guid.NewGuid() },
                 "Title");
 
             Chat usersChat = new(
-                1,
+                _currentChatterId,
                 new List<Conversation>() { conversationToDelete });
 
-            _chatRepository.GetAsync(1).Returns(usersChat);
+            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
             
             //Act
-            IActionResult result = await _subject.LeaveConversation(5);
+            IActionResult result = await _subject.LeaveConversation(conversationToDelete.Id);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
@@ -126,7 +125,7 @@ namespace Tests.UnitTests
         {
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim(ClaimTypes.NameIdentifier, _currentChatterId.ToString()),
                 new Claim(ClaimTypes.Name, "userName"),
                 new Claim(ClaimTypes.Email, "user@email.com")
 

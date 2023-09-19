@@ -33,7 +33,7 @@ BEGIN TRY
 
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Users] (
-        [Id]               INT            NOT NULL IDENTITY(1,1),
+        [Id]               UNIQUEIDENTIFIER NOT NULL,
         [UserName]         NVARCHAR (50)  NOT NULL,
         [FirstName]        NVARCHAR (50)  NULL,
         [LastName]         NVARCHAR (50)  NULL,
@@ -45,9 +45,9 @@ BEGIN TRY
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[BlockedUsers] (
-        [Id]             INT                NOT NULL IDENTITY(1,1),
-        [BlockingUserId] INT                NOT NULL,
-        [BlockedUserId]  INT                NOT NULL,
+        [Id]             UNIQUEIDENTIFIER   NOT NULL,
+        [BlockingUserId] UNIQUEIDENTIFIER                NOT NULL,
+        [BlockedUserId]  UNIQUEIDENTIFIER                NOT NULL,
         [BlockDateTime]  DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_BlockingUser FOREIGN KEY (BlockingUserId) REFERENCES Users(Id),
@@ -56,13 +56,13 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Visibility]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
+	    [Id] INT NOT NULL PRIMARY KEY, 
         [Visibility] NVARCHAR(20) NOT NULL
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Profiles]
     (
-	    [UserId] INT NOT NULL PRIMARY KEY, 
+	    [UserId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
         [Description] NVARCHAR(255) NULL, 
         [ProfilePicture] IMAGE NULL, 
         [ProfileVisibilityId] INT NOT NULL,
@@ -71,22 +71,22 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[ProfileLikes]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [LikingUserId] INT NOT NULL, 
-        [LikedProfileId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [LikingUserId] UNIQUEIDENTIFIER NOT NULL, 
+        [LikedProfileId] UNIQUEIDENTIFIER NOT NULL, 
         [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ProfileLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedProfile FOREIGN KEY (LikedProfileId) REFERENCES Profiles(UserId)
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[GroupJoinRestrictions] (
-        [Id]     INT           NOT NULL IDENTITY(1,1),
+        [Id]     INT           NOT NULL,
         [Restriction] NVARCHAR (20) NOT NULL,
         PRIMARY KEY CLUSTERED ([Id] ASC)
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Groups] (
-        [Id]                 INT             NOT NULL IDENTITY(1,1),
+        [Id]                 UNIQUEIDENTIFIER             NOT NULL,
         [Name]               NVARCHAR (128)  NOT NULL,
         [Description]        NVARCHAR (1024) NULL,
         [VisibilityId]       INT             NOT NULL,
@@ -99,10 +99,10 @@ BEGIN TRY
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[GroupInvitations] (
-        [Id]             INT                NOT NULL IDENTITY(1,1),
-        [InvitingUserId] INT                NOT NULL,
-        [InvitedUserId]  INT                NOT NULL,
-        [GroupId]        INT                NOT NULL,
+        [Id]             UNIQUEIDENTIFIER                NOT NULL,
+        [InvitingUserId] UNIQUEIDENTIFIER                NOT NULL,
+        [InvitedUserId]  UNIQUEIDENTIFIER                NOT NULL,
+        [GroupId]        UNIQUEIDENTIFIER                NOT NULL,
         [Message]        NVARCHAR (1024)    NULL,
         [InviteDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         [IsActive]       BIT                NOT NULL DEFAULT 1, 
@@ -114,9 +114,9 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[GroupApplications]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [ApplyingUserId] INT NOT NULL, 
-        [GroupId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [ApplyingUserId] UNIQUEIDENTIFIER NOT NULL, 
+        [GroupId] UNIQUEIDENTIFIER NOT NULL, 
         [Message] NVARCHAR(1024) NULL, 
         [AppliedDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ApplyingUser FOREIGN KEY (ApplyingUserId) REFERENCES Users(Id),
@@ -125,9 +125,9 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[UserGroupMemberships]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [UserId] INT NOT NULL, 
-        [GroupId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [UserId] UNIQUEIDENTIFIER NOT NULL, 
+        [GroupId] UNIQUEIDENTIFIER NOT NULL, 
         [JoinDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(), 
         [WasInvited] BIT NOT NULL DEFAULT 0,
         CONSTRAINT FK_MembershipUser FOREIGN KEY (UserId) REFERENCES Users(Id),
@@ -135,14 +135,14 @@ BEGIN TRY
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Posts] (
-        [Id]                  INT                NOT NULL IDENTITY(1,1),
+        [Id]                  UNIQUEIDENTIFIER                NOT NULL,
         [Title]               NVARCHAR (40)      NOT NULL,
         [Description]         NVARCHAR (1024)    NULL,
         [PostDateTime]        DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
-        [AuthorUserId]        INT                NOT NULL,
-        [GroupId]             INT                NULL,
+        [AuthorUserId]        UNIQUEIDENTIFIER                NOT NULL,
+        [GroupId]             UNIQUEIDENTIFIER                NULL,
         [IsCommentingEnabled] BIT                DEFAULT 1 NOT NULL,
-        [SharedPostId] INT NULL, 
+        [SharedPostId] UNIQUEIDENTIFIER NULL, 
         PRIMARY KEY CLUSTERED ([Id] ASC),
         CONSTRAINT FK_PostAuthor FOREIGN KEY (AuthorUserId) REFERENCES Users(Id),
         CONSTRAINT FK_PostGroup FOREIGN KEY (GroupId) REFERENCES Groups(Id),
@@ -151,21 +151,21 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[PostLikes]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [LikingUserId] INT NOT NULL, 
-        [LikedPostId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [LikingUserId] UNIQUEIDENTIFIER NOT NULL, 
+        [LikedPostId] UNIQUEIDENTIFIER NOT NULL, 
         [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_PostLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedPost FOREIGN KEY (LikedPostId) REFERENCES Posts(Id)
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Comments] (
-        [Id]              INT                NOT NULL IDENTITY(1,1),
+        [Id]              UNIQUEIDENTIFIER                NOT NULL,
         [Text]            NVARCHAR (1024)    NOT NULL,
         [CommentDateTime] DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
-        [ParentPostId]    INT                NOT NULL,
-        [ParentCommentId] INT                NULL,
-        [AuthorUserId] INT NOT NULL, 
+        [ParentPostId]    UNIQUEIDENTIFIER                NOT NULL,
+        [ParentCommentId] UNIQUEIDENTIFIER                NULL,
+        [AuthorUserId] UNIQUEIDENTIFIER NOT NULL, 
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_CommentParentPost FOREIGN KEY (ParentPostId) REFERENCES Posts(Id),
         CONSTRAINT FK_CommentParentComment FOREIGN KEY (ParentCommentId) REFERENCES Comments(Id),
@@ -173,9 +173,9 @@ BEGIN TRY
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[CommentLikes] (
-        [Id]             INT                NOT NULL IDENTITY(1,1),
-        [LikingUserId]   INT                NOT NULL,
-        [LikedCommentId] INT                NOT NULL,
+        [Id]             UNIQUEIDENTIFIER   NOT NULL,
+        [LikingUserId]   UNIQUEIDENTIFIER                NOT NULL,
+        [LikedCommentId] UNIQUEIDENTIFIER                NOT NULL,
         [LikeDateTime]   DATETIMEOFFSET (7) NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         PRIMARY KEY CLUSTERED ([Id] ASC),
 	    CONSTRAINT FK_CommentLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
@@ -184,18 +184,18 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Conversations]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
         [Title] NVARCHAR(20) NOT NULL, 
         [Description] NVARCHAR(256) NULL, 
-        [OwnerUserId] INT NOT NULL, 
+        [OwnerUserId] UNIQUEIDENTIFIER NOT NULL, 
         [CreationDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_ConversationOwner FOREIGN KEY (OwnerUserId) REFERENCES Users(Id)
     );
 
     CREATE TABLE SocialMediaWebsite.[dbo].[ConversationUsers] (
-        [Id]             INT NOT NULL IDENTITY(1,1),
-        [UserId]         INT NOT NULL,
-        [ConversationId] INT NOT NULL,
+        [Id]             UNIQUEIDENTIFIER NOT NULL,
+        [UserId]         UNIQUEIDENTIFIER NOT NULL,
+        [ConversationId] UNIQUEIDENTIFIER NOT NULL,
         [ConversationIsHidden] BIT NOT NULL DEFAULT 0, 
         PRIMARY KEY CLUSTERED ([Id] ASC),
         CONSTRAINT FK_ConversationUser FOREIGN KEY (UserId) REFERENCES Users(Id),
@@ -204,12 +204,12 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[Messages]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [AuthorUserId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [AuthorUserId] UNIQUEIDENTIFIER NOT NULL, 
         [Text] NVARCHAR(256) NOT NULL, 
         [MessageDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(), 
-        [ConversationId] INT NOT NULL, 
-        [ReplyMessageId] INT NULL,
+        [ConversationId] UNIQUEIDENTIFIER NOT NULL, 
+        [ReplyMessageId] UNIQUEIDENTIFIER NULL,
         CONSTRAINT FK_MessageAuthor FOREIGN KEY (AuthorUserId) REFERENCES Users(Id),
         CONSTRAINT FK_MessageConversation FOREIGN KEY (ConversationId) REFERENCES Conversations(Id),
         CONSTRAINT FK_ReplyMessage FOREIGN KEY (ReplyMessageId) REFERENCES [Messages](Id)
@@ -217,9 +217,9 @@ BEGIN TRY
 
     CREATE TABLE SocialMediaWebsite.[dbo].[MessageLikes]
     (
-	    [Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-        [LikingUserId] INT NOT NULL, 
-        [LikedMessageId] INT NOT NULL, 
+	    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+        [LikingUserId] UNIQUEIDENTIFIER NOT NULL, 
+        [LikedMessageId] UNIQUEIDENTIFIER NOT NULL, 
         [LikeDateTime] DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET(),
         CONSTRAINT FK_MessageLikingUser FOREIGN KEY (LikingUserId) REFERENCES Users(Id),
         CONSTRAINT FK_LikedMessage FOREIGN KEY (LikedMessageId) REFERENCES [Messages](Id)

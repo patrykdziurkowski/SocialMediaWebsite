@@ -2,7 +2,7 @@
 {
     public interface IChatRepository
     {
-        Task<Chat> GetAsync(int userId);
+        Task<Chat> GetAsync(Guid userId);
         Task SaveAsync(Chat chat);
     }
 }
