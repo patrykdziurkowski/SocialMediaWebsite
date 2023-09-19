@@ -40,7 +40,7 @@ namespace Application.Features.Chat
         public Guid Id { get; private set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public DateTimeOffset? CreationDateTime { get; private set; }
+        public DateTimeOffset CreationDateTime { get; private set; }
         public int TotalMessageCount { get; set; }
         public Guid OwnerChatterId { get; set; }
         public List<Message> LoadedMessages { get; set; }
