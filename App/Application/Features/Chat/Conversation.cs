@@ -27,7 +27,7 @@ namespace Application.Features.Chat
             string title,
             string? description = null)
         {
-            Id = Guid.NewGuid();
+            Id = new ConversationId(Guid.NewGuid());
             CreationDateTime = creationDateTime;
             TotalMessageCount = 0;
             OwnerChatterId = ownerChatterId;
@@ -37,7 +37,7 @@ namespace Application.Features.Chat
             Description = description;
         }
 
-        public Guid Id { get; private set; }
+        public ConversationId Id { get; private set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public DateTimeOffset CreationDateTime { get; private set; }

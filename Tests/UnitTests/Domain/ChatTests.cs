@@ -97,7 +97,7 @@ namespace Tests.Domain
 
             //Act
             _subject
-                .Invoking(m => m.LeaveConversation(Guid.Empty))
+                .Invoking(m => m.LeaveConversation(new ConversationId(Guid.Empty)))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -142,7 +142,7 @@ namespace Tests.Domain
 
             //Act
             _subject
-                .Invoking(m => m.PostMessage(Guid.Empty, "Text"))
+                .Invoking(m => m.PostMessage(new ConversationId(Guid.Empty), "Text"))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -195,7 +195,7 @@ namespace Tests.Domain
 
             //Act
             _subject
-                .Invoking(m => m.DeleteMessage(Guid.Empty, messageToDelete.Id))
+                .Invoking(m => m.DeleteMessage(new ConversationId(Guid.Empty), messageToDelete.Id))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert
@@ -330,7 +330,7 @@ namespace Tests.Domain
             //Act & Assert
             _subject
                 .Invoking(m => m.KickMemberFromConversation(
-                    conversationId,
+                    new ConversationId(conversationId),
                     _chatterNotInConversationId))
                 .Should().Throw<InvalidOperationException>();
         }

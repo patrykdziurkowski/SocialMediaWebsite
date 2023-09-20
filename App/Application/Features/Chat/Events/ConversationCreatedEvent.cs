@@ -10,7 +10,7 @@ namespace Application.Features.Chat.Events
     public class ConversationCreatedEvent : DomainEvent
     {
         public ConversationCreatedEvent(
-            Guid conversationId,
+            ConversationId conversationId,
             string title,
             string? description,
             ChatterId ownerUserId,
@@ -23,7 +23,7 @@ namespace Application.Features.Chat.Events
             ConversationMemberIds = conversationMemberIds;
         }
 
-        public Guid ConversationId { get; set; }
+        public ConversationId ConversationId { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public ChatterId OwnerUserId { get; set; }

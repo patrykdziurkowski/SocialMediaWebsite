@@ -47,7 +47,7 @@ namespace Application.Features.Chat
         }
 
 
-        public void LeaveConversation(Guid conversationId)
+        public void LeaveConversation(ConversationId conversationId)
         {
             Conversation conversationToLeave = Conversations
                 .Single(c => c.Id == conversationId);
@@ -65,7 +65,7 @@ namespace Application.Features.Chat
             }
         }
 
-        public Result AddMemberToConversation(Guid conversationId, ChatterId chatterId)
+        public Result AddMemberToConversation(ConversationId conversationId, ChatterId chatterId)
         {
             Conversation conversationToAddMemberTo = Conversations
                 .Single(c => c.Id == conversationId);
@@ -87,7 +87,7 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
-        public Result KickMemberFromConversation(Guid conversationId, ChatterId chatterId)
+        public Result KickMemberFromConversation(ConversationId conversationId, ChatterId chatterId)
         {
             Conversation conversationToKickMemberFrom = Conversations
                 .Single(c => c.Id == conversationId);
@@ -112,7 +112,7 @@ namespace Application.Features.Chat
 
 
         public void PostMessage(
-            Guid conversationId,
+            ConversationId conversationId,
             string text,
             MessageId? replyMessageId = null)
         {
@@ -138,7 +138,7 @@ namespace Application.Features.Chat
         }
 
         public void DeleteMessage(
-            Guid conversationId,
+            ConversationId conversationId,
             MessageId messageId)
         {
             Conversation conversationToDeleteFrom = Conversations

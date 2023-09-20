@@ -181,7 +181,7 @@ namespace Tests.IntegrationTests
             
             await InsertFakeUserIntoDatabase(chatterToAddId);
             Chat chat = await SetupConversationWithUsers();
-            Guid conversationToAddToId = chat.Conversations.Single().Id;
+            ConversationId conversationToAddToId = chat.Conversations.Single().Id;
 
             //Act
             chat.AddMemberToConversation(
@@ -199,7 +199,7 @@ namespace Tests.IntegrationTests
         {
             //Arrange
             Chat chat = await SetupConversationWithUsers();
-            Guid conversationToKickFrom = chat.Conversations.Single().Id;
+            ConversationId conversationToKickFrom = chat.Conversations.Single().Id;
 
             //Act
             chat.KickMemberFromConversation(

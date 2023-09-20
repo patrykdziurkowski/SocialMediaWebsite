@@ -50,7 +50,7 @@ namespace Tests.UnitTests
             //Arrange
             ConversationCreationDto invalidInput = new()
             { 
-                ConversationMemberIds = new List<ChatterId>() { new ChatterId(Guid.NewGuid()) },
+                ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
                 Title = "",
                 Description = "ValidDescription",
             };
@@ -69,7 +69,7 @@ namespace Tests.UnitTests
             Chat usersChat = new(_currentChatterId, new List<Conversation>());
             ConversationCreationDto validInput = new()
             {
-                ConversationMemberIds = new List<ChatterId>() { new ChatterId(Guid.NewGuid()), new ChatterId(Guid.NewGuid()) },
+                ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
                 Title = "ValidTitle",
                 Description = "ValidDescription",
             };  
@@ -113,7 +113,7 @@ namespace Tests.UnitTests
             _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
             
             //Act
-            IActionResult result = await _subject.LeaveConversation(conversationToDelete.Id);
+            IActionResult result = await _subject.LeaveConversation(conversationToDelete.Id.Value);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);

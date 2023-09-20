@@ -77,7 +77,7 @@ namespace Application.Features.Chat
             ChatterId chatterId = GetCurrentUserId();
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
-            chat.LeaveConversation(conversationid);
+            chat.LeaveConversation(new ConversationId(conversationid));
             await _chatRepository.SaveAsync(chat);
 
             return new StatusCodeResult(201);

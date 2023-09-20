@@ -10,7 +10,7 @@ namespace Application.Features.Chat.Events
     public class ConversationMemberAddedEvent : DomainEvent
     {
         public ConversationMemberAddedEvent(
-            Guid conversationId,
+            ConversationId conversationId,
             ChatterId chatterId)
         {
             LinkId = Guid.NewGuid();
@@ -19,7 +19,7 @@ namespace Application.Features.Chat.Events
         }
 
         public Guid LinkId { get; set; }
-        public Guid ConversationId { get; set; }
+        public ConversationId ConversationId { get; set; }
         public ChatterId ChatterId { get; set; }
     }
 }

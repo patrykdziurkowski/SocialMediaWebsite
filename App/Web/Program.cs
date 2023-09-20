@@ -55,6 +55,7 @@ services
 
 SqlMapper.AddTypeHandler(new ChatterIdTypeHandler());
 SqlMapper.AddTypeHandler(new MessageIdTypeHandler());
+SqlMapper.AddTypeHandler(new ConversationIdTypeHandler());
 
 var app = builder.Build();
 

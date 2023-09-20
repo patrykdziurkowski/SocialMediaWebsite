@@ -10,14 +10,14 @@ namespace Application.Features.Chat.Events
     public class ConversationLeftEvent : DomainEvent
     {
         public ConversationLeftEvent(
-            Guid conversationId,
+            ConversationId conversationId,
             ChatterId userId)
         {
             ConversationId = conversationId;
             UserId = userId;
         }
 
-        public Guid ConversationId { get; set; }
+        public ConversationId ConversationId { get; set; }
         public ChatterId UserId { get; set; }
     }
 }

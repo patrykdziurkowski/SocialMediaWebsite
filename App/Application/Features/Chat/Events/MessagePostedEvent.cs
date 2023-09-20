@@ -13,7 +13,7 @@ namespace Application.Features.Chat.Events
             MessageId messageId,
             ChatterId authorUserId,
             string text,
-            Guid conversationId,
+            ConversationId conversationId,
             MessageId? replyMessageId)
         {
             MessageId = messageId;
@@ -26,7 +26,7 @@ namespace Application.Features.Chat.Events
         public MessageId MessageId { get; set; }
         public ChatterId AuthorUserId { get; set; }
         public string Text { get; set; }
-        public Guid ConversationId { get; set; }
+        public ConversationId ConversationId { get; set; }
         public MessageId? ReplyMessageId { get; set;}
     }
 }
