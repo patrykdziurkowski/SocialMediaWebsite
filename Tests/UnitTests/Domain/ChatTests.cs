@@ -323,14 +323,14 @@ namespace Tests.Domain
         public void KickMemberFromConversation_Throws_WhenMemberNotInConversation()
         {
             //Arrange
-            Guid conversationId = Guid.NewGuid();
+            ConversationId conversationId = new();
             Conversation conversation = CreateSampleConversationWithChatters(_currentChatterId);
             _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
             //Act & Assert
             _subject
                 .Invoking(m => m.KickMemberFromConversation(
-                    new ConversationId(conversationId),
+                    conversationId,
                     _chatterNotInConversationId))
                 .Should().Throw<InvalidOperationException>();
         }
