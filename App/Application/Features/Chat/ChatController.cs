@@ -67,7 +67,7 @@ namespace Application.Features.Chat
 
         [HttpPatch]
         [Route("Conversations")]
-        public async Task<IActionResult> LeaveConversation(Guid conversationid)
+        public async Task<IActionResult> LeaveConversation(Guid conversationId)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace Application.Features.Chat
             ChatterId chatterId = GetCurrentUserId();
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
-            chat.LeaveConversation(new ConversationId(conversationid));
+            chat.LeaveConversation(new ConversationId(conversationId));
             await _chatRepository.SaveAsync(chat);
 
             return new StatusCodeResult(201);
