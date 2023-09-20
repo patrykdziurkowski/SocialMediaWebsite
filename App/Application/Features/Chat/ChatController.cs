@@ -54,9 +54,10 @@ namespace Application.Features.Chat
 
             ChatterId chatterId = GetCurrentUserId();
 
+       
             Chat chat = await _chatRepository.GetAsync(chatterId);
             chat.CreateConversation(
-                input.ConversationMemberIds!,
+                input.ConversationMemberIds!.Select(guid => new ChatterId(guid)).ToList(),
                 input.Title!,
                 input.Description);
             await _chatRepository.SaveAsync(chat);
