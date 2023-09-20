@@ -24,7 +24,7 @@ namespace Application.Features.Chat
             _connectionFactory = connectionFactory;
             _eventHandlerFactory = eventHandlerFactory;
         }
-        public async Task<Chat> GetAsync(Guid userId)
+        public async Task<Chat> GetAsync(ChatterId userId)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
@@ -73,8 +73,8 @@ namespace Application.Features.Chat
 
         private async Task LoadConversationMembersAsync(Conversation conversation, IDbConnection connection)
         {
-            IEnumerable<Guid> conversationMemberIds = await connection
-                    .QueryAsync<Guid>(
+            IEnumerable<ChatterId> conversationMemberIds = await connection
+                    .QueryAsync<ChatterId>(
                         $"""
                         SELECT UserId
                         FROM SocialMediaWebsite.dbo.ConversationUsers

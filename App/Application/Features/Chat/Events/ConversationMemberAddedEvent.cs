@@ -11,7 +11,7 @@ namespace Application.Features.Chat.Events
     {
         public ConversationMemberAddedEvent(
             Guid conversationId,
-            Guid chatterId)
+            ChatterId chatterId)
         {
             LinkId = Guid.NewGuid();
             ConversationId = conversationId;
@@ -20,6 +20,6 @@ namespace Application.Features.Chat.Events
 
         public Guid LinkId { get; set; }
         public Guid ConversationId { get; set; }
-        public Guid ChatterId { get; set; }
+        public ChatterId ChatterId { get; set; }
     }
 }

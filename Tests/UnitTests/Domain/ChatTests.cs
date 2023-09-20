@@ -16,15 +16,15 @@ namespace Tests.Domain
     public class ChatTests
     {
         private Chat? _subject;
-        private readonly Guid _currentChatterId;
-        private readonly Guid _chatterInConversationId;
-        private readonly Guid _chatterNotInConversationId;
+        private readonly ChatterId _currentChatterId;
+        private readonly ChatterId _chatterInConversationId;
+        private readonly ChatterId _chatterNotInConversationId;
 
         public ChatTests()
         {
-            _currentChatterId = Guid.NewGuid();
-            _chatterInConversationId = Guid.NewGuid();
-            _chatterNotInConversationId = Guid.NewGuid();
+            _currentChatterId = new ChatterId(Guid.NewGuid());
+            _chatterInConversationId = new ChatterId(Guid.NewGuid());
+            _chatterNotInConversationId = new ChatterId(Guid.NewGuid());
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Tests.Domain
             _subject = new(_currentChatterId, new List<Conversation>());
 
             //Act
-            _subject.CreateConversation(new List<Guid>(), "Title", "Description");
+            _subject.CreateConversation(new List<ChatterId>(), "Title", "Description");
 
             //Assert
             _subject.Conversations.Should().HaveCount(1);
@@ -47,7 +47,12 @@ namespace Tests.Domain
         {
             //Arrange
             _subject = new(_currentChatterId, new List<Conversation>());
-            List<Guid> conversationMemberIds = new() { _currentChatterId, Guid.NewGuid(), Guid.NewGuid() };
+            List<ChatterId> conversationMemberIds = new()
+            { 
+                _currentChatterId,
+                new ChatterId(Guid.NewGuid()),
+                new ChatterId(Guid.NewGuid())
+            };
 
             //Act
             _subject.CreateConversation(conversationMemberIds, "Title", "Description");
@@ -67,7 +72,7 @@ namespace Tests.Domain
             }; 
 
             _subject = new(_currentChatterId, conversations);
-            IEnumerable<Guid> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
+            IEnumerable<ChatterId> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
             _subject.LeaveConversation(conversations.Single().Id);
@@ -84,11 +89,11 @@ namespace Tests.Domain
             //Arrange
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChatters(Guid.NewGuid())
+                CreateSampleConversationWithChatters(new ChatterId(Guid.NewGuid()))
             };
 
             _subject = new(_currentChatterId, conversations);
-            IEnumerable<Guid> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
+            IEnumerable<ChatterId> conversationMemberIds = _subject.Conversations.Single().ConversationMemberIds;
 
             //Act
             _subject
@@ -285,7 +290,7 @@ namespace Tests.Domain
             Conversation conversation = CreateSampleConversationWithChatters(_chatterInConversationId);
             _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
-            Guid chatOwnerId = conversation.OwnerChatterId;
+            ChatterId chatOwnerId = conversation.OwnerChatterId;
 
             //Act
             Result result = _subject.AddMemberToConversation(conversation.Id, _chatterNotInConversationId);
@@ -303,7 +308,7 @@ namespace Tests.Domain
             Conversation conversation = CreateSampleConversationWithChatters(_chatterInConversationId);
             _subject = new(_currentChatterId, new List<Conversation>() { conversation });
 
-            Guid chatOwnerId = conversation.OwnerChatterId;
+            ChatterId chatOwnerId = conversation.OwnerChatterId;
 
             //Act
             Result result = _subject.KickMemberFromConversation(conversation.Id, _chatterInConversationId);
@@ -348,12 +353,12 @@ namespace Tests.Domain
 
 
 
-        private Conversation CreateSampleConversationWithChatters(Guid conversationOwnerId)
+        private Conversation CreateSampleConversationWithChatters(ChatterId conversationOwnerId)
         {
             return new Conversation(
                 DateTimeOffset.MinValue,
                 conversationOwnerId,
-                new List<Guid>() { _currentChatterId, _chatterInConversationId },
+                new List<ChatterId>() { _currentChatterId, _chatterInConversationId },
                 "Title");
         }
 

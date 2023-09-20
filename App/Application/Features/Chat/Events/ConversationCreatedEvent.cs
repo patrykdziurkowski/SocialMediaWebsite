@@ -13,8 +13,8 @@ namespace Application.Features.Chat.Events
             Guid conversationId,
             string title,
             string? description,
-            Guid ownerUserId,
-            List<Guid> conversationMemberIds)
+            ChatterId ownerUserId,
+            List<ChatterId> conversationMemberIds)
         {
             ConversationId = conversationId;
             Title = title;
@@ -26,7 +26,7 @@ namespace Application.Features.Chat.Events
         public Guid ConversationId { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public Guid OwnerUserId { get; set; }
-        public List<Guid> ConversationMemberIds { get; set; }
+        public ChatterId OwnerUserId { get; set; }
+        public List<ChatterId> ConversationMemberIds { get; set; }
     }
 }

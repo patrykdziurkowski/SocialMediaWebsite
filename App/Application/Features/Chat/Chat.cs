@@ -14,18 +14,18 @@ namespace Application.Features.Chat
         private readonly List<Conversation> _conversations;
 
         public Chat(
-            Guid chatterId,
+            ChatterId chatterId,
             List<Conversation> conversations)
         {
             CurrentChatterId = chatterId;
             _conversations = conversations;
         }
 
-        public Guid CurrentChatterId { get; private set; }
+        public ChatterId CurrentChatterId { get; private set; }
         public IEnumerable<Conversation> Conversations => _conversations;
 
         public void CreateConversation(
-            List<Guid> conversationMemberIds,
+            List<ChatterId> conversationMemberIds,
             string title,
             string? description = null)
         {
@@ -65,7 +65,7 @@ namespace Application.Features.Chat
             }
         }
 
-        public Result AddMemberToConversation(Guid conversationId, Guid chatterId)
+        public Result AddMemberToConversation(Guid conversationId, ChatterId chatterId)
         {
             Conversation conversationToAddMemberTo = Conversations
                 .Single(c => c.Id == conversationId);
@@ -87,7 +87,7 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
-        public Result KickMemberFromConversation(Guid conversationId, Guid chatterId)
+        public Result KickMemberFromConversation(Guid conversationId, ChatterId chatterId)
         {
             Conversation conversationToKickMemberFrom = Conversations
                 .Single(c => c.Id == conversationId);

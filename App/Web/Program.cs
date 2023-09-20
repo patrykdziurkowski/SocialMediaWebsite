@@ -9,11 +9,13 @@ using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
 using Application.Features.Shared;
+using Dapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
+using Web;
 
 Assembly? applicationAssembly = typeof(DomainEvent).Assembly;
 
@@ -50,6 +52,8 @@ services
             options.LoginPath = "/Authentication/Login";
             options.LogoutPath = "/Authentication/Logout";
         });
+
+SqlMapper.AddTypeHandler(new ChatterIdTypeHandler());
 
 var app = builder.Build();
 

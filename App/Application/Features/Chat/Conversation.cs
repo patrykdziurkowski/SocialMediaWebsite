@@ -17,13 +17,13 @@ namespace Application.Features.Chat
             TotalMessageCount = default!;
             OwnerChatterId = default!;
             LoadedMessages = new List<Message>();
-            ConversationMemberIds = new List<Guid>();
+            ConversationMemberIds = new List<ChatterId>();
         }
 
         public Conversation(
             DateTimeOffset creationDateTime,
-            Guid ownerChatterId,
-            List<Guid> conversationMemberIds,
+            ChatterId ownerChatterId,
+            List<ChatterId> conversationMemberIds,
             string title,
             string? description = null)
         {
@@ -42,8 +42,8 @@ namespace Application.Features.Chat
         public string? Description { get; set; }
         public DateTimeOffset CreationDateTime { get; private set; }
         public int TotalMessageCount { get; set; }
-        public Guid OwnerChatterId { get; set; }
+        public ChatterId OwnerChatterId { get; set; }
         public List<Message> LoadedMessages { get; set; }
-        public List<Guid> ConversationMemberIds { get; set; }
+        public List<ChatterId> ConversationMemberIds { get; set; }
     }
 }

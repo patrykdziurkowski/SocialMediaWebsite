@@ -28,11 +28,11 @@ namespace Tests.UnitTests
         private readonly IChatRepository _chatRepository;
         private readonly ConversationCreationDtoValidator _conversationCreationValidator;
 
-        private readonly Guid _currentChatterId;
+        private readonly ChatterId _currentChatterId;
 
         public ChatControllerTests()
         {
-            _currentChatterId = Guid.NewGuid();
+            _currentChatterId = new ChatterId(Guid.NewGuid());
 
             _chatRepository = Substitute.For<IChatRepository>();
             _conversationCreationValidator = new();
@@ -50,7 +50,7 @@ namespace Tests.UnitTests
             //Arrange
             ConversationCreationDto invalidInput = new()
             { 
-                ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
+                ConversationMemberIds = new List<ChatterId>() { new ChatterId(Guid.NewGuid()) },
                 Title = "",
                 Description = "ValidDescription",
             };
@@ -69,7 +69,7 @@ namespace Tests.UnitTests
             Chat usersChat = new(_currentChatterId, new List<Conversation>());
             ConversationCreationDto validInput = new()
             {
-                ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
+                ConversationMemberIds = new List<ChatterId>() { new ChatterId(Guid.NewGuid()), new ChatterId(Guid.NewGuid()) },
                 Title = "ValidTitle",
                 Description = "ValidDescription",
             };  
@@ -103,7 +103,7 @@ namespace Tests.UnitTests
             Conversation conversationToDelete = new(
                 DateTimeOffset.MinValue,
                 _currentChatterId,
-                new List<Guid>() { _currentChatterId, Guid.NewGuid() },
+                new List<ChatterId>() { _currentChatterId, new ChatterId(Guid.NewGuid()) },
                 "Title");
 
             Chat usersChat = new(

@@ -27,7 +27,7 @@ namespace Application.Features.Chat.EventHandlers
                 domainEvent,
                 transaction);
 
-            foreach (Guid chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
+            foreach (ChatterId chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
             {
                 await connection.ExecuteAsync(
                     $"""

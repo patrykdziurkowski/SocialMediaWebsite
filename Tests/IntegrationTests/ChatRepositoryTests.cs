@@ -22,16 +22,16 @@ namespace Tests.IntegrationTests
 
         private readonly IConnectionFactory _connectionFactory;
 
-        private readonly Guid _currentChatterId;
-        private readonly Guid _someOtherChatterId;
+        private readonly ChatterId _currentChatterId;
+        private readonly ChatterId _someOtherChatterId;
         private int _numberOfCreatedUsers;
 
         public ChatRepositoryTests(
             IntegrationTestApplicationFactory factory)
         {
             _numberOfCreatedUsers = 0;
-            _currentChatterId = Guid.NewGuid();
-            _someOtherChatterId = Guid.NewGuid();
+            _currentChatterId = new ChatterId(Guid.NewGuid());
+            _someOtherChatterId = new ChatterId(Guid.NewGuid());
 
             ChatRepository? subject = (ChatRepository?) factory.Services.GetService(typeof(IChatRepository));
             IConnectionFactory? connectionFactory = (IConnectionFactory?)factory.Services.GetService(typeof(IConnectionFactory));
@@ -69,7 +69,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<Guid> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
+            List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
             //Act
             chat.CreateConversation(conversationMemberIds, "Title");
@@ -177,7 +177,7 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenAddingAConversationMember_AddsMember()
         {
             //Arrange
-            Guid chatterToAddId = Guid.NewGuid();
+            ChatterId chatterToAddId = new(Guid.NewGuid());
             
             await InsertFakeUserIntoDatabase(chatterToAddId);
             Chat chat = await SetupConversationWithUsers();
@@ -228,7 +228,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_currentChatterId);
             Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<Guid> conversationMemberIds = new() { _currentChatterId };
+            List<ChatterId> conversationMemberIds = new() { _currentChatterId };
             chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
             chat = await _subject.GetAsync(_currentChatterId);
@@ -241,7 +241,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             Chat chat = await _subject.GetAsync(_currentChatterId);
 
-            List<Guid> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
+            List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
             chat.CreateConversation(conversationMemberIds, "Title");
             await _subject.SaveAsync(chat);
             chat = await _subject.GetAsync(_currentChatterId);
@@ -261,7 +261,7 @@ namespace Tests.IntegrationTests
             return conversations.Any();
         }
 
-        private async Task InsertFakeUserIntoDatabase(Guid id)
+        private async Task InsertFakeUserIntoDatabase(ChatterId id)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();

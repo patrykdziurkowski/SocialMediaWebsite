@@ -34,7 +34,7 @@ namespace Application.Features.Chat
         [Route("Messages")]
         public async Task<IActionResult> Index()
         {
-            Guid chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentUserId();
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
 
@@ -52,7 +52,7 @@ namespace Application.Features.Chat
                 return BadRequest();
             }
 
-            Guid chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentUserId();
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
             chat.CreateConversation(
@@ -73,7 +73,7 @@ namespace Application.Features.Chat
                 return BadRequest();
             }
 
-            Guid chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentUserId();
 
             Chat chat = await _chatRepository.GetAsync(chatterId);
             chat.LeaveConversation(conversationid);
@@ -82,10 +82,10 @@ namespace Application.Features.Chat
             return new StatusCodeResult(201);
         }
 
-        private Guid GetCurrentUserId()
+        private ChatterId GetCurrentUserId()
         {
             string chatterIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            return Guid.Parse(chatterIdClaim);
+            return new ChatterId(Guid.Parse(chatterIdClaim));
         }
 
     }

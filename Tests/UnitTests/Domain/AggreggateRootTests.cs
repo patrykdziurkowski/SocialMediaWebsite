@@ -27,7 +27,7 @@ namespace Tests.UnitTests.Domain
             //Arrange
 
             //Act
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), Guid.NewGuid()));
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), new ChatterId(Guid.NewGuid())));
 
             //Assert
             _subject.DomainEvents.Should().HaveCount(1);
@@ -37,8 +37,8 @@ namespace Tests.UnitTests.Domain
         public void ClearDomainEvents_RemovesAllEventsFromList()
         {
             //Arrange
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), Guid.NewGuid()));
-            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), Guid.NewGuid()));
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), new ChatterId(Guid.NewGuid())));
+            _subject.RaiseDomainEvent(new ConversationLeftEvent(Guid.NewGuid(), new ChatterId(Guid.NewGuid())));
 
             int numberOfEventsBeforeClearing = _subject.DomainEvents.Count();
 

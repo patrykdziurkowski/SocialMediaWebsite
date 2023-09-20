@@ -11,13 +11,13 @@ namespace Application.Features.Chat.Events
     {
         public ConversationMemberKickedEvent(
             Guid conversationId,
-            Guid chatterId)
+            ChatterId chatterId)
         {
             ConversationId = conversationId;
             ChatterId = chatterId;
         }
 
         public Guid ConversationId { get; }
-        public Guid ChatterId { get; }
+        public ChatterId ChatterId { get; }
     }
 }
