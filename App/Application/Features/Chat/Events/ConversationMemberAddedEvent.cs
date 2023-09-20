@@ -13,12 +13,9 @@ namespace Application.Features.Chat.Events
             ConversationId conversationId,
             ChatterId chatterId)
         {
-            LinkId = Guid.NewGuid();
             ConversationId = conversationId;
             ChatterId = chatterId;
         }
-
-        public Guid LinkId { get; set; }
         public ConversationId ConversationId { get; set; }
         public ChatterId ChatterId { get; set; }
     }

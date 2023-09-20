@@ -1,4 +1,5 @@
-﻿using Application.Features.Shared;
+﻿using Application.Features.Chat.Events;
+using Application.Features.Shared;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,12 @@ namespace Application.Features.Chat.EventHandlers
                 VALUES
                 (@LinkId, @ChatterId, @ConversationId)
                 """,
-                domainEvent,
+                new
+                {
+                    LinkId = Guid.NewGuid(),
+                    ChatterId = ((ConversationMemberAddedEvent)domainEvent).ChatterId,
+                    ConversationId = ((ConversationMemberAddedEvent) domainEvent).ConversationId
+                },
                 transaction);
         }
     }
