@@ -9,6 +9,10 @@ namespace Application.Features.Chat
 {
     public class ChatterId : DomainId
     {
+        public ChatterId() : base(Guid.NewGuid())
+        {
+        }
+
         public ChatterId(Guid value) : base(value)
         {
         }

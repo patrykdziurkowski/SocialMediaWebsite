@@ -17,7 +17,7 @@
             DateTimeOffset messageDateTime,
             MessageId? replyMessageId = null)
         {
-            Id = new MessageId(Guid.NewGuid());
+            Id = new MessageId();
             AuthorChatterId = authorChatterId;
             Text = text;
             MessageDateTime = messageDateTime;

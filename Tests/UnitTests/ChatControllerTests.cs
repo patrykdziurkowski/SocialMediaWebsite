@@ -32,7 +32,7 @@ namespace Tests.UnitTests
 
         public ChatControllerTests()
         {
-            _currentChatterId = new ChatterId(Guid.NewGuid());
+            _currentChatterId = new ChatterId();
 
             _chatRepository = Substitute.For<IChatRepository>();
             _conversationCreationValidator = new();
@@ -103,7 +103,7 @@ namespace Tests.UnitTests
             Conversation conversationToDelete = new(
                 DateTimeOffset.MinValue,
                 _currentChatterId,
-                new List<ChatterId>() { _currentChatterId, new ChatterId(Guid.NewGuid()) },
+                new List<ChatterId>() { _currentChatterId, new ChatterId() },
                 "Title");
 
             Chat usersChat = new(

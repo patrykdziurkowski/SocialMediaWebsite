@@ -25,9 +25,7 @@ namespace Tests.UnitTests.Domain
         public void RaiseDomainEvent_AddsEventToList()
         {
             //Arrange
-            ConversationLeftEvent e = new(
-                new ConversationId(Guid.NewGuid()),
-                new ChatterId(Guid.NewGuid()));
+            ConversationLeftEvent e = new(new ConversationId(), new ChatterId());
 
             //Act
             _subject.RaiseDomainEvent(e);
@@ -40,8 +38,8 @@ namespace Tests.UnitTests.Domain
         public void ClearDomainEvents_RemovesAllEventsFromList()
         {
             //Arrange
-            ConversationLeftEvent event1 = new(new ConversationId(Guid.NewGuid()), new ChatterId(Guid.NewGuid()));
-            ConversationLeftEvent event2 = new(new ConversationId(Guid.NewGuid()), new ChatterId(Guid.NewGuid()));
+            ConversationLeftEvent event1 = new(new ConversationId(), new ChatterId());
+            ConversationLeftEvent event2 = new(new ConversationId(), new ChatterId());
 
             _subject.RaiseDomainEvent(event1);
             _subject.RaiseDomainEvent(event2);

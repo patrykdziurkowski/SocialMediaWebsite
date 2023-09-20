@@ -30,8 +30,8 @@ namespace Tests.IntegrationTests
             IntegrationTestApplicationFactory factory)
         {
             _numberOfCreatedUsers = 0;
-            _currentChatterId = new ChatterId(Guid.NewGuid());
-            _someOtherChatterId = new ChatterId(Guid.NewGuid());
+            _currentChatterId = new ChatterId();
+            _someOtherChatterId = new ChatterId();
 
             ChatRepository? subject = (ChatRepository?) factory.Services.GetService(typeof(IChatRepository));
             IConnectionFactory? connectionFactory = (IConnectionFactory?)factory.Services.GetService(typeof(IConnectionFactory));
@@ -177,7 +177,7 @@ namespace Tests.IntegrationTests
         public async Task SaveAsync_WhenAddingAConversationMember_AddsMember()
         {
             //Arrange
-            ChatterId chatterToAddId = new(Guid.NewGuid());
+            ChatterId chatterToAddId = new();
             
             await InsertFakeUserIntoDatabase(chatterToAddId);
             Chat chat = await SetupConversationWithUsers();

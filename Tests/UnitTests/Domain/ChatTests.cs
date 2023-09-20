@@ -22,9 +22,9 @@ namespace Tests.Domain
 
         public ChatTests()
         {
-            _currentChatterId = new ChatterId(Guid.NewGuid());
-            _chatterInConversationId = new ChatterId(Guid.NewGuid());
-            _chatterNotInConversationId = new ChatterId(Guid.NewGuid());
+            _currentChatterId = new ChatterId();
+            _chatterInConversationId = new ChatterId();
+            _chatterNotInConversationId = new ChatterId();
         }
 
         [Fact]
@@ -50,8 +50,8 @@ namespace Tests.Domain
             List<ChatterId> conversationMemberIds = new()
             { 
                 _currentChatterId,
-                new ChatterId(Guid.NewGuid()),
-                new ChatterId(Guid.NewGuid())
+                new ChatterId(),
+                new ChatterId()
             };
 
             //Act
@@ -89,7 +89,7 @@ namespace Tests.Domain
             //Arrange
             List<Conversation> conversations = new()
             {
-                CreateSampleConversationWithChatters(new ChatterId(Guid.NewGuid()))
+                CreateSampleConversationWithChatters(new ChatterId())
             };
 
             _subject = new(_currentChatterId, conversations);
