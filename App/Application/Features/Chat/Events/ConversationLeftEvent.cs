@@ -11,13 +11,13 @@ namespace Application.Features.Chat.Events
     {
         public ConversationLeftEvent(
             ConversationId conversationId,
-            ChatterId userId)
+            ChatterId chatterId)
         {
             ConversationId = conversationId;
-            UserId = userId;
+            ChatterId = chatterId;
         }
 
         public ConversationId ConversationId { get; set; }
-        public ChatterId UserId { get; set; }
+        public ChatterId ChatterId { get; set; }
     }
 }

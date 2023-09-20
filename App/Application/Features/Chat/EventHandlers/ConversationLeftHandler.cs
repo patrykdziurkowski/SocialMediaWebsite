@@ -21,7 +21,7 @@ namespace Application.Features.Chat.EventHandlers
                 DELETE FROM SocialMediaWebsite.dbo.ConversationUsers
                 WHERE
                     ConversationId = @ConversationId
-                    AND UserId = @UserId
+                    AND UserId = @ChatterId
                 """,
                 domainEvent,
                 transaction);
