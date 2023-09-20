@@ -8,17 +8,23 @@ namespace Application.Features.Chat
 {
     public class Chatter
     {
+        private Chatter()
+        {
+            Id = default!;
+            Name = default!;
+            JoinDateTime = default!;
+        }
+
         public Chatter(
-            Guid id,
             string name,
             DateTimeOffset joinDateTime)
         {
-            Id = id;
+            Id = new ChatterId();
             Name = name;
             JoinDateTime = joinDateTime;
         }
 
-        public Guid Id { get; private set; }
+        public ChatterId Id { get; private set; }
         public string Name { get; set; }
         public DateTimeOffset JoinDateTime { get; private set; }
     }
