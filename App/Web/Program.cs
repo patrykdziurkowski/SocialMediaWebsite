@@ -54,6 +54,7 @@ services
         });
 
 SqlMapper.AddTypeHandler(new ChatterIdTypeHandler());
+SqlMapper.AddTypeHandler(new MessageIdTypeHandler());
 
 var app = builder.Build();
 

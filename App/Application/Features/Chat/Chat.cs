@@ -114,7 +114,7 @@ namespace Application.Features.Chat
         public void PostMessage(
             Guid conversationId,
             string text,
-            Guid? replyMessageId = null)
+            MessageId? replyMessageId = null)
         {
             Conversation conversationToPostIn = Conversations
                 .Single(c => c.Id == conversationId);
@@ -139,7 +139,7 @@ namespace Application.Features.Chat
 
         public void DeleteMessage(
             Guid conversationId,
-            Guid messageId)
+            MessageId messageId)
         {
             Conversation conversationToDeleteFrom = Conversations
                 .Single(c => c.Id == conversationId);

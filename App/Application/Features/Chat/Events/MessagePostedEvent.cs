@@ -10,11 +10,11 @@ namespace Application.Features.Chat.Events
     public class MessagePostedEvent : DomainEvent
     {
         public MessagePostedEvent(
-            Guid messageId,
+            MessageId messageId,
             ChatterId authorUserId,
             string text,
             Guid conversationId,
-            Guid? replyMessageId)
+            MessageId? replyMessageId)
         {
             MessageId = messageId;
             AuthorUserId = authorUserId;
@@ -23,10 +23,10 @@ namespace Application.Features.Chat.Events
             ReplyMessageId = replyMessageId;
         }
 
-        public Guid MessageId { get; set; }
+        public MessageId MessageId { get; set; }
         public ChatterId AuthorUserId { get; set; }
         public string Text { get; set; }
         public Guid ConversationId { get; set; }
-        public Guid? ReplyMessageId { get; set;}
+        public MessageId? ReplyMessageId { get; set;}
     }
 }

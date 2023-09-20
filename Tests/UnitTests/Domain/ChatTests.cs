@@ -222,7 +222,7 @@ namespace Tests.Domain
 
             //Act
             _subject
-                .Invoking(m => m.DeleteMessage(conversation.Id, Guid.Empty))
+                .Invoking(m => m.DeleteMessage(conversation.Id, new MessageId(Guid.Empty)))
                 .Should().Throw<InvalidOperationException>();
 
             //Assert

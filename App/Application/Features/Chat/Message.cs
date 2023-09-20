@@ -15,19 +15,19 @@
             ChatterId authorChatterId,
             string text,
             DateTimeOffset messageDateTime,
-            Guid? replyMessageId = null)
+            MessageId? replyMessageId = null)
         {
-            Id = Guid.NewGuid();
+            Id = new MessageId(Guid.NewGuid());
             AuthorChatterId = authorChatterId;
             Text = text;
             MessageDateTime = messageDateTime;
             ReplyMessageId = replyMessageId;
         }
 
-        public Guid Id { get; private set; }
+        public MessageId Id { get; private set; }
         public ChatterId AuthorChatterId { get; private set; }
         public string Text { get; set; }
         public DateTimeOffset MessageDateTime { get; private set; }
-        public Guid? ReplyMessageId { get; private set; }
+        public MessageId? ReplyMessageId { get; private set; }
     }
 }
