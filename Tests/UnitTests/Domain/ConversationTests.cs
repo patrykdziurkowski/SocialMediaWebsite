@@ -1,15 +1,8 @@
 ﻿using Application.Features.Chat;
 using Application.Features.Chat.Events;
 using Application.Features.Chatter;
-using Application.Features.Shared;
 using FluentAssertions;
 using FluentResults;
-using NSubstitute.ExceptionExtensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.Domain
@@ -50,7 +43,7 @@ namespace Tests.Domain
         {
             //Arrange
             List<ChatterId> conversationMemberIds = new()
-            { 
+            {
                 _currentChatterId,
                 new ChatterId(),
                 new ChatterId()

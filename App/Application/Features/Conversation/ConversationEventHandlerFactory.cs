@@ -2,13 +2,6 @@
 using Application.Features.Chat.Events;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Shared;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Application.Features.Chat
 {

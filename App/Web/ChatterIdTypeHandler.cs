@@ -1,5 +1,4 @@
 ﻿using Application.Features.Chatter;
-using Application.Features.Shared;
 using System.Data;
 using static Dapper.SqlMapper;
 

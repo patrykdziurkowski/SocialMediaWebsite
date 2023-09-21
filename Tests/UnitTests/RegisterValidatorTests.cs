@@ -1,14 +1,8 @@
 ﻿using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using FluentAssertions;
-using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.Extensions.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests

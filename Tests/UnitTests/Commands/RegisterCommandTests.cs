@@ -5,11 +5,6 @@ using Application.Features.Authentication.Models;
 using FluentAssertions;
 using FluentResults;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.UnitTests.Commands

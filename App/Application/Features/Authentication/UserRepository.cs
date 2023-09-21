@@ -1,13 +1,7 @@
 ﻿using Application.Features.Authentication.Interfaces;
 using Dapper;
 using FluentResults;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Authentication
 {

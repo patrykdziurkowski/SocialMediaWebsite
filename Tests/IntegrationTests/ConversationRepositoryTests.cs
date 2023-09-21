@@ -1,20 +1,11 @@
-﻿using Application.Features.Authentication;
-using Application;
+﻿using Application;
 using Application.Features.Chat;
-using Application.Features.Chat.Events;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Dapper;
-using FluentResults;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chatter;
-using NSubstitute.ExceptionExtensions;
 
 namespace Tests.IntegrationTests
 {

@@ -1,20 +1,12 @@
-﻿using Application.Features.Authentication;
-using Application.Features.Authentication.Commands;
+﻿using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
 using Application.Features.Chat;
 using FluentAssertions;
 using FluentResults;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests
@@ -112,7 +104,7 @@ namespace Tests
                 UserName = "JohnSmith123",
                 Password = "P@ssword1"
             };
-                
+
 
             _signInManager.SignIn(validUser).Returns(Result.Ok());
 
@@ -132,7 +124,7 @@ namespace Tests
                 UserName = "InvalidUser",
                 Password = "InvalidPassword"
             };
-                
+
 
             //Act
             ObjectResult result = (ObjectResult) await _subject.Login(validUser);
@@ -150,7 +142,7 @@ namespace Tests
                 UserName = "NotFoundUser",
                 Password = "P@ssword1!"
             };
-                
+
 
             _signInManager.SignIn(validUser).Returns(Result.Fail(""));
 
@@ -161,7 +153,7 @@ namespace Tests
             result.StatusCode.Should().Be(404);
         }
 
-        
+
 
     }
 }

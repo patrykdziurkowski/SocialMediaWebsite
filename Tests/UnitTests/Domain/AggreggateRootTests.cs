@@ -1,12 +1,6 @@
 ﻿using Application.Features.Chat.Events;
 using Application.Features.Chat;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Tests.UnitTests.Fakes;
 using Application.Features.Chatter;

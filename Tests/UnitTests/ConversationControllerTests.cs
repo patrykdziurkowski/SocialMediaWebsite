@@ -1,23 +1,13 @@
-﻿using Application.Features.Authentication;
-using Application.Features.Chat;
+﻿using Application.Features.Chat;
 using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
 using Application.Features.Chatter;
-using Castle.Components.DictionaryAdapter.Xml;
 using FluentAssertions;
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.UnitTests
