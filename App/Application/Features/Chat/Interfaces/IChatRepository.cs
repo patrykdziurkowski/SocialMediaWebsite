@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Chat.Interfaces
+﻿using Application.Features.Chatter;
+
+namespace Application.Features.Chat.Interfaces
 {
     public interface IChatRepository
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Features.Chat;
 using Application.Features.Chat.Events;
+using Application.Features.Chatter;
 using Application.Features.Shared;
 using FluentAssertions;
 using FluentResults;

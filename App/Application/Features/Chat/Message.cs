@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Chat
+﻿using Application.Features.Chatter;
+
+namespace Application.Features.Chat
 {
     public class Message
     {

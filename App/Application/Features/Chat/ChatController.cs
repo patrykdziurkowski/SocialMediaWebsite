@@ -1,5 +1,6 @@
 ﻿using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
+using Application.Features.Chatter;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;

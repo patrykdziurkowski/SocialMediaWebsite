@@ -13,6 +13,7 @@ using Xunit;
 using Dapper;
 using FluentResults;
 using Application.Features.Chat.Interfaces;
+using Application.Features.Chatter;
 
 namespace Tests.IntegrationTests
 {

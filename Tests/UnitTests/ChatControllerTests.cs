@@ -3,6 +3,7 @@ using Application.Features.Chat;
 using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
+using Application.Features.Chatter;
 using Castle.Components.DictionaryAdapter.Xml;
 using FluentAssertions;
 using FluentValidation;

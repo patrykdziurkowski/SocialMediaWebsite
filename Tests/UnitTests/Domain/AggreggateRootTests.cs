@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Tests.UnitTests.Fakes;
+using Application.Features.Chatter;
 
 namespace Tests.UnitTests.Domain
 {
