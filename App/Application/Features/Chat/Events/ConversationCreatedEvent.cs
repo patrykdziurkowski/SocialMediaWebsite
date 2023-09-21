@@ -21,7 +21,7 @@ namespace Application.Features.Chat.Events
             Title = title;
             Description = description;
             OwnerUserId = ownerUserId;
-            ConversationMemberIds = conversationMemberIds;
+            ConversationMemberIds = conversationMemberIds.ToList();
         }
 
         public ConversationId ConversationId { get; set; }
