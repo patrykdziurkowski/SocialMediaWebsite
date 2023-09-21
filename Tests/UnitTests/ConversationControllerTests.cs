@@ -22,24 +22,24 @@ using Xunit;
 
 namespace Tests.UnitTests
 {
-    public class ChatControllerTests
+    public class ConversationControllerTests
     {
-        private readonly ChatController _subject;
+        private readonly ConversationController _subject;
 
-        private readonly IChatRepository _chatRepository;
+        private readonly IConversationRepository _conversationRepository;
         private readonly ConversationCreationDtoValidator _conversationCreationValidator;
 
         private readonly ChatterId _currentChatterId;
 
-        public ChatControllerTests()
+        public ConversationControllerTests()
         {
             _currentChatterId = new ChatterId();
 
-            _chatRepository = Substitute.For<IChatRepository>();
+            _conversationRepository = Substitute.For<IConversationRepository>();
             _conversationCreationValidator = new();
 
             _subject = new(
-                _chatRepository,
+                _conversationRepository,
                 _conversationCreationValidator);
 
             AddUserToHttpContext();
@@ -67,15 +67,12 @@ namespace Tests.UnitTests
         public async Task CreateConversation_GivenValidInput_Returns201()
         {
             //Arrange
-            Chat usersChat = new(_currentChatterId, new List<Conversation>());
             ConversationCreationDto validInput = new()
             {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
                 Title = "ValidTitle",
                 Description = "ValidDescription",
-            };  
-
-            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
+            };
 
             //Act
             IActionResult result = await _subject.CreateConversation(validInput);
@@ -85,36 +82,19 @@ namespace Tests.UnitTests
         }
 
         [Fact]
-        public async Task LeaveConversation_GivenNonExistentConversationId_Returns500()
-        {
-            //Arrange
-            Chat usersChat = new(_currentChatterId, new List<Conversation>());
-            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
-
-            //Act & Assert
-            await _subject
-                .Invoking(m => m.LeaveConversation(Guid.Empty))
-                .Should().ThrowAsync<InvalidOperationException>();
-        }
-
-        [Fact]
         public async Task LeaveConversation_GivenExistingConversationId_Returns201()
         {
             //Arrange
-            Conversation conversationToDelete = new(
+            Conversation conversation = new(
                 DateTimeOffset.MinValue,
                 _currentChatterId,
                 new List<ChatterId>() { _currentChatterId, new ChatterId() },
                 "Title");
 
-            Chat usersChat = new(
-                _currentChatterId,
-                new List<Conversation>() { conversationToDelete });
-
-            _chatRepository.GetAsync(_currentChatterId).Returns(usersChat);
+            _conversationRepository.GetByIdAsync(_currentChatterId, conversation.Id).Returns(conversation);
             
             //Act
-            IActionResult result = await _subject.LeaveConversation(conversationToDelete.Id.Value);
+            IActionResult result = await _subject.LeaveConversation(conversation.Id.Value);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);

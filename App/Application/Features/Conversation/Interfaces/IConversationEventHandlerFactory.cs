@@ -2,7 +2,7 @@
 
 namespace Application.Features.Chat.Interfaces
 {
-    public interface IChatEventHandlerFactory
+    public interface IConversationEventHandlerFactory
     {
         IEventHandler GetHandler(DomainEvent domainEvent);
     }

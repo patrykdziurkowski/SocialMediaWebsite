@@ -16,16 +16,16 @@ using System.Threading.Tasks;
 namespace Application.Features.Chat
 {
     [Authorize]
-    public class ChatController : Controller
+    public class ConversationController : Controller
     {
-        private readonly IChatRepository _chatRepository;
+        private readonly IConversationRepository _conversationRepository;
         private readonly IValidator<ConversationCreationDto> _conversationCreationValidator;
 
-        public ChatController(
-            IChatRepository chatRepository,
+        public ConversationController(
+            IConversationRepository conversationRepository,
             IValidator<ConversationCreationDto> conversationCreationValidator)
         {
-            _chatRepository = chatRepository;
+            _conversationRepository = conversationRepository;
             _conversationCreationValidator = conversationCreationValidator;
         }
 
@@ -37,9 +37,9 @@ namespace Application.Features.Chat
         {
             ChatterId chatterId = GetCurrentUserId();
 
-            Chat chat = await _chatRepository.GetAsync(chatterId);
+            IEnumerable<Conversation> conversations = await _conversationRepository.GetAllAsync(chatterId);
 
-            return Ok(chat);
+            return Ok(conversations);
         }
 
         [HttpPost]
@@ -55,13 +55,12 @@ namespace Application.Features.Chat
 
             ChatterId chatterId = GetCurrentUserId();
 
-       
-            Chat chat = await _chatRepository.GetAsync(chatterId);
-            chat.CreateConversation(
+            Conversation createdConversation = Conversation.Create(
+                chatterId,
                 input.ConversationMemberIds!.Select(guid => new ChatterId(guid)).ToList(),
                 input.Title!,
                 input.Description);
-            await _chatRepository.SaveAsync(chat);
+            await _conversationRepository.SaveAsync(createdConversation);
 
             return new StatusCodeResult(201);
         }
@@ -76,10 +75,11 @@ namespace Application.Features.Chat
             }
 
             ChatterId chatterId = GetCurrentUserId();
+            ConversationId conversationToLeaveId = new (conversationId);
 
-            Chat chat = await _chatRepository.GetAsync(chatterId);
-            chat.LeaveConversation(new ConversationId(conversationId));
-            await _chatRepository.SaveAsync(chat);
+            Conversation conversationToLeave = await _conversationRepository.GetByIdAsync(chatterId, conversationToLeaveId);
+            conversationToLeave.Leave(chatterId);
+            await _conversationRepository.SaveAsync(conversationToLeave);
 
             return new StatusCodeResult(201);
         }

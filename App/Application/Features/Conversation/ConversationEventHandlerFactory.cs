@@ -12,7 +12,7 @@ using System.Transactions;
 
 namespace Application.Features.Chat
 {
-    public class ChatEventHandlerFactory : IChatEventHandlerFactory
+    public class ConversationEventHandlerFactory : IConversationEventHandlerFactory
     {
         public IEventHandler GetHandler(DomainEvent domainEvent)
         {

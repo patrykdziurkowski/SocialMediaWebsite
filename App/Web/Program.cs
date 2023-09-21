@@ -35,8 +35,8 @@ services.AddSingleton<IRegisterCommand, RegisterCommand>();
 services.AddSingleton<ISecretHasher, SecretHasher>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
-services.AddSingleton<IChatEventHandlerFactory, ChatEventHandlerFactory>();
-services.AddSingleton<IChatRepository, ChatRepository>();
+services.AddSingleton<IConversationEventHandlerFactory, ConversationEventHandlerFactory>();
+services.AddSingleton<IConversationRepository, ConversationRepository>();
 
 services.AddSingleton<IValidator<ConversationCreationDto>, ConversationCreationDtoValidator>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
