@@ -27,7 +27,7 @@ namespace Application.Features.Chat
             _conversationMemberIds = new List<ChatterId>();
         }
 
-        public Conversation(
+        private Conversation(
             DateTimeOffset creationDateTime,
             ChatterId ownerChatterId,
             List<ChatterId> conversationMemberIds,

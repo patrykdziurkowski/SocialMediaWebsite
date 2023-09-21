@@ -85,8 +85,7 @@ namespace Tests.UnitTests
         public async Task LeaveConversation_GivenExistingConversationId_Returns201()
         {
             //Arrange
-            Conversation conversation = new(
-                DateTimeOffset.MinValue,
+            Conversation conversation = Conversation.Create(
                 _currentChatterId,
                 new List<ChatterId>() { _currentChatterId, new ChatterId() },
                 "Title");

@@ -249,8 +249,7 @@ namespace Tests.Domain
 
         private Conversation CreateSampleConversationWithChatters(ChatterId conversationOwnerId)
         {
-            return new Conversation(
-                DateTimeOffset.MinValue,
+            return Conversation.Create(
                 conversationOwnerId,
                 new List<ChatterId>() { _currentChatterId, _chatterInConversationId },
                 "Title");
