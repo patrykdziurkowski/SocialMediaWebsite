@@ -220,12 +220,14 @@ namespace Tests.Domain
             ConversationId conversationId = new();
             _subject = CreateSampleConversationWithChatters(_currentChatterId);
 
-            //Act & Assert
-            _subject
-                .Invoking(m => m.KickMemberFromConversation(
-                    _currentChatterId,
-                    _chatterNotInConversationId))
-                .Should().Throw<InvalidOperationException>();
+            //Act
+            Action kickMember = () =>
+            {
+                _subject.KickMemberFromConversation(_currentChatterId, _chatterNotInConversationId);
+            };
+
+            //Assert
+            kickMember.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
