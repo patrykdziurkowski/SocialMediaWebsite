@@ -107,7 +107,7 @@ namespace Application.Features.Chat
             }
         }
 
-        public Result AddMemberToConversation(ChatterId currentChatterId, ChatterId chatterId)
+        public Result AddMember(ChatterId currentChatterId, ChatterId chatterId)
         {
             if (currentChatterId != OwnerChatterId)
             {
@@ -126,7 +126,7 @@ namespace Application.Features.Chat
             return Result.Ok();
         }
 
-        public Result KickMemberFromConversation(ChatterId currentChatterId, ChatterId chatterId)
+        public Result KickMember(ChatterId currentChatterId, ChatterId chatterId)
         {
             if (currentChatterId != OwnerChatterId)
             {

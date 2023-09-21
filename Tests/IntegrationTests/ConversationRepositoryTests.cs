@@ -230,7 +230,7 @@ namespace Tests.IntegrationTests
                 "Title");
 
             //Act
-            conversation.AddMemberToConversation(_currentChatterId, yetAnotherChatter);
+            conversation.AddMember(_currentChatterId, yetAnotherChatter);
             await _subject.SaveAsync(conversation);
 
             //Assert
@@ -252,7 +252,7 @@ namespace Tests.IntegrationTests
                 "Title");
 
             //Act
-            conversation.KickMemberFromConversation(_currentChatterId, _someOtherChatterId);
+            conversation.KickMember(_currentChatterId, _someOtherChatterId);
             await _subject.SaveAsync(conversation);
 
             //Assert

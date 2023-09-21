@@ -158,7 +158,7 @@ namespace Tests.Domain
             _subject = CreateSampleConversationWithChatters(_currentChatterId);
 
             //Act
-            Result result = _subject.AddMemberToConversation(_currentChatterId, _chatterNotInConversationId);
+            Result result = _subject.AddMember(_currentChatterId, _chatterNotInConversationId);
 
             //Assert
             _subject.ConversationMemberIds.Should().Contain(_chatterNotInConversationId);
@@ -172,7 +172,7 @@ namespace Tests.Domain
             _subject = CreateSampleConversationWithChatters(_currentChatterId);
 
             //Act
-            Result result = _subject.AddMemberToConversation(_currentChatterId, _chatterInConversationId);
+            Result result = _subject.AddMember(_currentChatterId, _chatterInConversationId);
 
             //Assert
             _subject.ConversationMemberIds.Should().HaveCount(2);
@@ -188,7 +188,7 @@ namespace Tests.Domain
             ChatterId chatOwnerId = _subject.OwnerChatterId;
 
             //Act
-            Result result = _subject.AddMemberToConversation(_currentChatterId, _chatterNotInConversationId);
+            Result result = _subject.AddMember(_currentChatterId, _chatterNotInConversationId);
 
             //Assert
             _currentChatterId.Should().NotBe(chatOwnerId);
@@ -205,7 +205,7 @@ namespace Tests.Domain
             ChatterId chatOwnerId = _subject.OwnerChatterId;
 
             //Act
-            Result result = _subject.KickMemberFromConversation(_currentChatterId, _chatterInConversationId);
+            Result result = _subject.KickMember(_currentChatterId, _chatterInConversationId);
 
             //Assert
             _currentChatterId.Should().NotBe(chatOwnerId);
@@ -223,7 +223,7 @@ namespace Tests.Domain
             //Act
             Action kickMember = () =>
             {
-                _subject.KickMemberFromConversation(_currentChatterId, _chatterNotInConversationId);
+                _subject.KickMember(_currentChatterId, _chatterNotInConversationId);
             };
 
             //Assert
@@ -237,7 +237,7 @@ namespace Tests.Domain
             _subject = CreateSampleConversationWithChatters(_currentChatterId);
 
             //Act
-            _subject.KickMemberFromConversation(_currentChatterId, _chatterInConversationId);
+            _subject.KickMember(_currentChatterId, _chatterInConversationId);
 
             //Assert
             _subject.ConversationMemberIds.Should().NotContain(_chatterInConversationId);
