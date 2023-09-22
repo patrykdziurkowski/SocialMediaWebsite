@@ -105,6 +105,32 @@ namespace Application.Features.Chat
             return new StatusCodeResult(201);
         }
 
+        [HttpDelete]
+        [Route("Conversations/{conversationId}/Members")]
+        public async Task<IActionResult> KickMemberFromConversation(
+            Guid conversationId,
+            Guid chatterToKickId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            ChatterId chatterId = GetCurrentUserId();
+
+            Conversation conversation = await _conversationRepository
+                .GetByIdAsync(chatterId, new ConversationId(conversationId));
+
+            Result result = conversation.KickMember(chatterId, new ChatterId(chatterToKickId));
+            if (result.IsFailed)
+            {
+                return new StatusCodeResult(403);
+            }
+
+            await _conversationRepository.SaveAsync(conversation);
+            return new StatusCodeResult(201);
+        }
+
 
 
 

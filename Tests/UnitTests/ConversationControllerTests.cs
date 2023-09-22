@@ -156,6 +156,72 @@ namespace Tests.UnitTests
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
         }
 
+        [Fact]
+        public async Task KickMemberFromConversation_WhenCurrentChatterIsNotOwner_Returns403()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+               _chatterInConversationId,
+               new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+               "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject
+                .KickMemberFromConversation(conversation.Id.Value, _chatterInConversationId.Value);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(403);
+        }
+
+        [Fact]
+        public async Task KickMemberFromConversation_WhenKickedChatterWasNotInConversation_Throws()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+               _currentChatterId,
+               new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+               "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            Func<Task> kick = async () =>
+            {
+                await _subject
+                .KickMemberFromConversation(conversation.Id.Value, _chatterNotInConversationId.Value);
+            };
+
+            //Assert
+            await kick.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Fact]
+        public async Task KickMemberFromConversation_Returns201_WhenSuccessfulyKicked()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+               _currentChatterId,
+               new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+               "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject
+                .KickMemberFromConversation(conversation.Id.Value, _chatterInConversationId.Value);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+        }
+
 
 
 
