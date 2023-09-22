@@ -1,6 +1,7 @@
 ﻿using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chatter;
+using FluentResults;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,7 +69,7 @@ namespace Application.Features.Chat
             }
 
             ChatterId chatterId = GetCurrentUserId();
-            ConversationId conversationToLeaveId = new (conversationId);
+            ConversationId conversationToLeaveId = new(conversationId);
 
             Conversation conversationToLeave = await _conversationRepository.GetByIdAsync(chatterId, conversationToLeaveId);
             conversationToLeave.Leave(chatterId);
@@ -76,6 +77,37 @@ namespace Application.Features.Chat
 
             return new StatusCodeResult(201);
         }
+
+
+        [HttpPost]
+        [Route("Conversations/{conversationId}/Members")]
+        public async Task<IActionResult> AddMemberToConversation(
+            Guid conversationId,
+            Guid chatterToAddId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            ChatterId chatterId = GetCurrentUserId();
+
+            Conversation conversation = await _conversationRepository
+                .GetByIdAsync(chatterId, new ConversationId(conversationId));
+
+            Result result = conversation.AddMember(chatterId, new ChatterId(chatterToAddId));
+            if (result.IsFailed)
+            {
+                return new StatusCodeResult(403);
+            }
+
+            await _conversationRepository.SaveAsync(conversation);
+            return new StatusCodeResult(201);
+        }
+
+
+
+
 
         private ChatterId GetCurrentUserId()
         {

@@ -20,10 +20,14 @@ namespace Tests.UnitTests
         private readonly ConversationCreationDtoValidator _conversationCreationValidator;
 
         private readonly ChatterId _currentChatterId;
+        private readonly ChatterId _chatterInConversationId;
+        private readonly ChatterId _chatterNotInConversationId;
 
         public ConversationControllerTests()
         {
             _currentChatterId = new ChatterId();
+            _chatterInConversationId = new ChatterId();
+            _chatterNotInConversationId = new ChatterId();
 
             _conversationRepository = Substitute.For<IConversationRepository>();
             _conversationCreationValidator = new();
@@ -40,7 +44,7 @@ namespace Tests.UnitTests
         {
             //Arrange
             ConversationCreationDto invalidInput = new()
-            { 
+            {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
                 Title = "",
                 Description = "ValidDescription",
@@ -81,13 +85,77 @@ namespace Tests.UnitTests
                 "Title");
 
             _conversationRepository.GetByIdAsync(_currentChatterId, conversation.Id).Returns(conversation);
-            
+
             //Act
             IActionResult result = await _subject.LeaveConversation(conversation.Id.Value);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
         }
+
+        [Fact]
+        public async Task AddMemberToConversation_WhenCurrentChatterIsNotOwner_Returns403()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+                _chatterInConversationId,
+                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+                "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject
+                .AddMemberToConversation(conversation.Id.Value, _chatterNotInConversationId.Value);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(403);
+        }
+
+        [Fact]
+        public async Task AddMemberToConversation_AddingChatterWhoIsAlreadyAMember_Returns403()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+                _currentChatterId,
+                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+                "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject
+                .AddMemberToConversation(conversation.Id.Value, _chatterInConversationId.Value);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(403);
+        }
+
+        [Fact]
+        public async Task AddMemberToConversation_AddingNewMember_Returns201()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+                _currentChatterId,
+                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
+                "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject
+                .AddMemberToConversation(conversation.Id.Value, _chatterNotInConversationId.Value);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+        }
+
 
 
 
