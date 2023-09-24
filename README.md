@@ -1,4 +1,4 @@
-# SocialMediaWebsite
+# SocialMediaWebsite (W.I.P.)
 ## Setup Guide
 1. Clone the repository
 2. Open up the command line
