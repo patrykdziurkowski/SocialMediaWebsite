@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Features.Conversation.Validators
 {
-    public class PostMessageDtoValidator : AbstractValidator<PostMessageDto>
+    public class PostMessageModelValidator : AbstractValidator<PostMessageModel>
     {
-        public PostMessageDtoValidator()
+        public PostMessageModelValidator()
         {
             RuleFor(x => x.Text)
                 .NotEmpty()

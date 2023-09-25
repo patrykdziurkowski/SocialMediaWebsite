@@ -7,20 +7,20 @@ using Xunit;
 
 namespace Tests.UnitTests
 {
-    public class PostMessageDtoValidatorTests
+    public class PostMessageModelValidatorTests
     {
-        private PostMessageDtoValidator _subject;
+        private PostMessageModelValidator _subject;
 
-        public PostMessageDtoValidatorTests()
+        public PostMessageModelValidatorTests()
         {
-            _subject = new PostMessageDtoValidator();
+            _subject = new PostMessageModelValidator();
         }
 
         [Fact]
         public void Validate_GivenNullText_Fails()
         {
             //Arrange
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = null,
                 ReplyMessageId = null
@@ -37,7 +37,7 @@ namespace Tests.UnitTests
         public void Validate_GivenStringEmptyText_Fails()
         {
             //Arrange
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = string.Empty,
                 ReplyMessageId = null
@@ -61,7 +61,7 @@ namespace Tests.UnitTests
                 sb.Append(SomeCharacter);
             }
 
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = sb.ToString(),
                 ReplyMessageId = null
@@ -78,7 +78,7 @@ namespace Tests.UnitTests
         public void Validate_GivenValidString_Passes()
         {
             //Arrange
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = "Random 3xample message! 😀",
                 ReplyMessageId = null

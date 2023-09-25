@@ -19,8 +19,8 @@ namespace Tests.UnitTests
         private readonly ConversationController _subject;
 
         private readonly IConversationRepository _conversationRepository;
-        private readonly ConversationCreationDtoValidator _conversationCreationValidator;
-        private readonly PostMessageDtoValidator _postMessageValidator;
+        private readonly CreateConversationModelValidator _conversationCreationValidator;
+        private readonly PostMessageModelValidator _postMessageValidator;
 
         private readonly ChatterId _currentChatterId;
         private readonly ChatterId _chatterInConversationId;
@@ -49,7 +49,7 @@ namespace Tests.UnitTests
         public async Task CreateConversation_GivenInvalidInput_ReturnsBadRequest()
         {
             //Arrange
-            ConversationCreationDto invalidInput = new()
+            CreateConversationModel invalidInput = new()
             {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
                 Title = "",
@@ -67,7 +67,7 @@ namespace Tests.UnitTests
         public async Task CreateConversation_GivenValidInput_Returns201()
         {
             //Arrange
-            ConversationCreationDto validInput = new()
+            CreateConversationModel validInput = new()
             {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
                 Title = "ValidTitle",
@@ -232,7 +232,7 @@ namespace Tests.UnitTests
         public async Task PostMessage_Returns400_WhenInvalidInput()
         {
             //Arrange
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = "",
                 ReplyMessageId = null
@@ -249,7 +249,7 @@ namespace Tests.UnitTests
         public async Task PostMessage_Returns201_WhenSuccessfulyCreated()
         {
             //Arrange
-            PostMessageDto input = new()
+            PostMessageModel input = new()
             {
                 Text = "Some valid message!1",
                 ReplyMessageId = null

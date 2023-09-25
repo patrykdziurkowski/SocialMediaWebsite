@@ -15,13 +15,13 @@ namespace Application.Features.Chat
     public class ConversationController : Controller
     {
         private readonly IConversationRepository _conversationRepository;
-        private readonly IValidator<ConversationCreationDto> _conversationCreationValidator;
-        private readonly IValidator<PostMessageDto> _postMessageValidator;
+        private readonly IValidator<CreateConversationModel> _conversationCreationValidator;
+        private readonly IValidator<PostMessageModel> _postMessageValidator;
 
         public ConversationController(
             IConversationRepository conversationRepository,
-            IValidator<ConversationCreationDto> conversationCreationValidator,
-            IValidator<PostMessageDto> postMessageValidator)
+            IValidator<CreateConversationModel> conversationCreationValidator,
+            IValidator<PostMessageModel> postMessageValidator)
         {
             _conversationRepository = conversationRepository;
             _conversationCreationValidator = conversationCreationValidator;
@@ -43,7 +43,7 @@ namespace Application.Features.Chat
 
         [HttpPost]
         [Route("Conversations")]
-        public async Task<IActionResult> CreateConversation(ConversationCreationDto input)
+        public async Task<IActionResult> CreateConversation(CreateConversationModel input)
         {
             FluentValidation.Results.ValidationResult result = _conversationCreationValidator
                 .Validate(input);
@@ -140,7 +140,7 @@ namespace Application.Features.Chat
         [Route("Conversations/{conversationId}/Posts")]
         public async Task<IActionResult> PostMessage(
             Guid conversationId,
-            PostMessageDto input)
+            PostMessageModel input)
         {
             if (!ModelState.IsValid)
             {

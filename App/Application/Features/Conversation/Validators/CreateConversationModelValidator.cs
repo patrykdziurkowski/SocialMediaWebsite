@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Features.Chat.Validators
 {
-    public class ConversationCreationDtoValidator : AbstractValidator<ConversationCreationDto>
+    public class CreateConversationModelValidator : AbstractValidator<CreateConversationModel>
     {
-        public ConversationCreationDtoValidator()
+        public CreateConversationModelValidator()
         {
             RuleFor(p => p.Title)
                 .MustBeValidConversationTitle();

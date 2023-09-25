@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.Chat.Dtos
 {
-    public class ConversationCreationDto
+    public class CreateConversationModel
     {
         public List<Guid>? ConversationMemberIds { get; set; }
         public string? Title { get; set; }
