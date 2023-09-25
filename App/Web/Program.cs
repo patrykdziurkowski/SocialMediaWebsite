@@ -8,6 +8,8 @@ using Application.Features.Chat;
 using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
+using Application.Features.Conversation.Dtos;
+using Application.Features.Conversation.Validators;
 using Application.Features.Shared;
 using Dapper;
 using FluentValidation;
@@ -39,6 +41,7 @@ services.AddSingleton<IConversationEventHandlerFactory, ConversationEventHandler
 services.AddSingleton<IConversationRepository, ConversationRepository>();
 
 services.AddSingleton<IValidator<ConversationCreationDto>, ConversationCreationDtoValidator>();
+services.AddSingleton<IValidator<PostMessageDto>, PostMessageDtoValidator>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 services.AddSingleton<IValidator<UserLoginModel>, LoginValidator>();
 services.AddSingleton<IUserRepository, UserRepository>();
