@@ -3,6 +3,8 @@ using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
 using Application.Features.Chatter;
+using Application.Features.Conversation.Dtos;
+using Application.Features.Conversation.Validators;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,7 @@ namespace Tests.UnitTests
 
         private readonly IConversationRepository _conversationRepository;
         private readonly ConversationCreationDtoValidator _conversationCreationValidator;
+        private readonly PostMessageDtoValidator _postMessageValidator;
 
         private readonly ChatterId _currentChatterId;
         private readonly ChatterId _chatterInConversationId;
@@ -30,11 +33,14 @@ namespace Tests.UnitTests
             _chatterNotInConversationId = new ChatterId();
 
             _conversationRepository = Substitute.For<IConversationRepository>();
+
             _conversationCreationValidator = new();
+            _postMessageValidator = new();
 
             _subject = new(
                 _conversationRepository,
-                _conversationCreationValidator);
+                _conversationCreationValidator,
+                _postMessageValidator);
 
             AddUserToHttpContext();
         }
@@ -222,6 +228,48 @@ namespace Tests.UnitTests
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
         }
 
+        [Fact]
+        public async Task PostMessage_Returns400_WhenInvalidInput()
+        {
+            //Arrange
+            PostMessageDto input = new()
+            {
+                Text = "",
+                ReplyMessageId = null
+            };
+
+            //Act
+            IActionResult result = await _subject.PostMessage(Guid.Empty, input);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(400);
+        }
+
+        [Fact]
+        public async Task PostMessage_Returns201_WhenSuccessfulyCreated()
+        {
+            //Arrange
+            PostMessageDto input = new()
+            {
+                Text = "Some valid message!1",
+                ReplyMessageId = null
+            };
+
+            Conversation conversation = Conversation.Create(
+                _currentChatterId,
+                new List<ChatterId> { _currentChatterId, _chatterNotInConversationId },
+                "Title");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            //Act
+            IActionResult result = await _subject.PostMessage(conversation.Id.Value, input);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+        }
 
 
 

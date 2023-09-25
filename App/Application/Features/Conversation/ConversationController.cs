@@ -1,8 +1,10 @@
 ﻿using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chatter;
+using Application.Features.Conversation.Dtos;
 using FluentResults;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,13 +16,16 @@ namespace Application.Features.Chat
     {
         private readonly IConversationRepository _conversationRepository;
         private readonly IValidator<ConversationCreationDto> _conversationCreationValidator;
+        private readonly IValidator<PostMessageDto> _postMessageValidator;
 
         public ConversationController(
             IConversationRepository conversationRepository,
-            IValidator<ConversationCreationDto> conversationCreationValidator)
+            IValidator<ConversationCreationDto> conversationCreationValidator,
+            IValidator<PostMessageDto> postMessageValidator)
         {
             _conversationRepository = conversationRepository;
             _conversationCreationValidator = conversationCreationValidator;
+            _postMessageValidator = postMessageValidator;
         }
 
         [HttpGet]
@@ -131,7 +136,41 @@ namespace Application.Features.Chat
             return new StatusCodeResult(201);
         }
 
+        [HttpPost]
+        [Route("Conversations/{conversationId}/Posts")]
+        public async Task<IActionResult> PostMessage(
+            Guid conversationId,
+            PostMessageDto input)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            ValidationResult validationResult = _postMessageValidator.Validate(input);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            ChatterId currentChatterId = GetCurrentUserId();
+            MessageId? replyMessageId = null;
+            if (input.ReplyMessageId is not null)
+            {
+                replyMessageId = new MessageId((Guid) input.ReplyMessageId!);
+            }
+
+            Conversation conversation = await _conversationRepository.GetByIdAsync(
+                currentChatterId,
+                new ConversationId(conversationId));
+            conversation.PostMessage(
+                currentChatterId,
+                input.Text!,
+                replyMessageId);
+            await _conversationRepository.SaveAsync(conversation);
+
+            return new StatusCodeResult(201);
+        }
 
 
 
