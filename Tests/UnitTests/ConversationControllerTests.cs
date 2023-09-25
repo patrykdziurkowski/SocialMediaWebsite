@@ -60,7 +60,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.StartConversation(invalidInput);
 
             //Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<ObjectResult>();
         }
 
         [Fact]
@@ -242,7 +242,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.PostMessage(Guid.Empty, input);
 
             //Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<ObjectResult>();
         }
 
         [Fact]

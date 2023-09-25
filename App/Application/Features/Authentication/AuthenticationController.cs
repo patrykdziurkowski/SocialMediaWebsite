@@ -34,7 +34,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ValidationResult validationResult = _registerValidator
@@ -42,7 +42,7 @@ namespace Application.Features.Chat
             if (!validationResult.IsValid)
             {
                 validationResult.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             Result registerResult = await _registerCommand.Handle(inputUser);
@@ -59,14 +59,14 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ValidationResult validationResult = _loginValidator.Validate(inputUser);
             if (!validationResult.IsValid)
             {
                 validationResult.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             Result signInResult = await _signInManager.SignIn(inputUser);

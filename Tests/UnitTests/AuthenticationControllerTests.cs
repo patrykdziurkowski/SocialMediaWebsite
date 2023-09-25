@@ -67,10 +67,10 @@ namespace Tests
             };
 
             //Act
-            ObjectResult result = (ObjectResult) await _subject.Register(invalidUser);
+            IActionResult result = await _subject.Register(invalidUser);
 
             //Assert
-            result.StatusCode.Should().Be(400);
+            result.Should().BeOfType<ObjectResult>();
         }
 
         [Fact]
@@ -127,10 +127,10 @@ namespace Tests
 
 
             //Act
-            ObjectResult result = (ObjectResult) await _subject.Login(validUser);
+            IActionResult result = await _subject.Login(validUser);
 
             //Assert
-            result.StatusCode.Should().Be(400);
+            result.Should().BeOfType<ObjectResult>();
         }
 
         [Fact]

@@ -47,7 +47,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             FluentValidation.Results.ValidationResult result = _conversationCreationValidator
@@ -55,7 +55,7 @@ namespace Application.Features.Chat
             if (!result.IsValid)
             {
                 result.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -76,7 +76,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -98,7 +98,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -124,7 +124,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -150,14 +150,14 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ValidationResult validationResult = _postMessageValidator.Validate(input);
             if (!validationResult.IsValid)
             {
                 validationResult.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId currentChatterId = GetCurrentUserId();
@@ -187,7 +187,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return ValidationProblem(ModelState);
             }
 
             ChatterId currentChatterId = GetCurrentUserId();
