@@ -22,12 +22,12 @@ namespace Tests.Domain
         }
 
         [Fact]
-        public void CreateConversation_CreatesAConversation_WithDomainEvent()
+        public void StartConversation_CreatesAConversation_WithDomainEvent()
         {
             //Arrange
 
             //Act
-            _subject = Conversation.Create(
+            _subject = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId>(),
                 "Title");
@@ -35,11 +35,11 @@ namespace Tests.Domain
             //Assert
             _subject.Title.Should().Be("Title");
             _subject.DomainEvents.Should().HaveCount(1);
-            _subject.DomainEvents.Should().Contain(de => de is ConversationCreatedEvent);
+            _subject.DomainEvents.Should().Contain(de => de is ConversationStartedEvent);
         }
 
         [Fact]
-        public void CreateConversation_AddsNewConversationWithConversationMembers()
+        public void StartConversation_AddsNewConversationWithConversationMembers()
         {
             //Arrange
             List<ChatterId> conversationMemberIds = new()
@@ -50,7 +50,7 @@ namespace Tests.Domain
             };
 
             //Act
-            _subject = Conversation.Create(
+            _subject = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -63,7 +63,7 @@ namespace Tests.Domain
         public void LeaveConversation_RemovesChatterFromConversation()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             _subject.Leave(_currentChatterId);
@@ -78,7 +78,7 @@ namespace Tests.Domain
         public void PostMessage_AddsAMessageToConversation()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             _subject.PostMessage(_currentChatterId, "Text");
@@ -94,7 +94,7 @@ namespace Tests.Domain
         public void DeleteMessage_GivenExistingConversationAndMessage_RemovesMessage()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
             _subject.PostMessage(_currentChatterId, "Text");
 
             Message messageToDelete = _subject.LoadedMessages.Single();
@@ -110,7 +110,7 @@ namespace Tests.Domain
         public void DeleteMessage_GivenNonExistantMessage_ThrowsException()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
             _subject.PostMessage(_currentChatterId, "Text");
 
             //Act
@@ -128,7 +128,7 @@ namespace Tests.Domain
         public void DeleteMessage_WhenMessageDoesntBelongToCurrentUser_ThrowsException()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
             _subject.PostMessage(_chatterInConversationId, "Text");
 
             Message messageToDelete = _subject.LoadedMessages.Single();
@@ -148,7 +148,7 @@ namespace Tests.Domain
         public void AddMemberToConversation_AddsChatterId_ToConversationMemberIds()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             Result result = _subject.AddMember(_currentChatterId, _chatterNotInConversationId);
@@ -162,7 +162,7 @@ namespace Tests.Domain
         public void AddMemberToConversation_ReturnsFail_IfMemberAlreadyInConversation()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             Result result = _subject.AddMember(_currentChatterId, _chatterInConversationId);
@@ -176,7 +176,7 @@ namespace Tests.Domain
         public void AddMemberToConversation_ReturnsFail_WhenCurrentChatterIsNotConversationOwner()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_chatterInConversationId);
+            _subject = StartSampleConversationWithChatters(_chatterInConversationId);
 
             ChatterId chatOwnerId = _subject.OwnerChatterId;
 
@@ -193,7 +193,7 @@ namespace Tests.Domain
         public void KickMemberFromConversation_ReturnsFail_WhenCurrentChatterIsNotConversationOwner()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_chatterNotInConversationId);
+            _subject = StartSampleConversationWithChatters(_chatterNotInConversationId);
 
             ChatterId chatOwnerId = _subject.OwnerChatterId;
 
@@ -211,7 +211,7 @@ namespace Tests.Domain
         {
             //Arrange
             ConversationId conversationId = new();
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             Action kickMember = () =>
@@ -227,7 +227,7 @@ namespace Tests.Domain
         public void KickMemberFromConversation_GivenConversationMember_RemovesThemFromList()
         {
             //Arrange
-            _subject = CreateSampleConversationWithChatters(_currentChatterId);
+            _subject = StartSampleConversationWithChatters(_currentChatterId);
 
             //Act
             _subject.KickMember(_currentChatterId, _chatterInConversationId);
@@ -240,9 +240,9 @@ namespace Tests.Domain
 
 
 
-        private Conversation CreateSampleConversationWithChatters(ChatterId conversationOwnerId)
+        private Conversation StartSampleConversationWithChatters(ChatterId conversationOwnerId)
         {
-            return Conversation.Create(
+            return Conversation.Start(
                 conversationOwnerId,
                 new List<ChatterId>() { _currentChatterId, _chatterInConversationId },
                 "Title");

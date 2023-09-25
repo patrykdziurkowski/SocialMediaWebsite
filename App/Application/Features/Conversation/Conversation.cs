@@ -47,7 +47,7 @@ namespace Application.Features.Chat
         public ChatterId OwnerChatterId { get; private set; }
         public IEnumerable<Message> LoadedMessages
         {
-            get => _loadedMessages; 
+            get => _loadedMessages;
             set
             {
                 _loadedMessages = value.ToList();
@@ -63,7 +63,7 @@ namespace Application.Features.Chat
         }
 
 
-        public static Conversation Create(
+        public static Conversation Start(
             ChatterId currentChatterId,
             List<ChatterId> conversationMemberIds,
             string title,
@@ -77,7 +77,7 @@ namespace Application.Features.Chat
                 description);
 
             newConversation.RaiseDomainEvent(
-                new ConversationCreatedEvent(
+                new ConversationStartedEvent(
                     newConversation.Id,
                     title,
                     description,

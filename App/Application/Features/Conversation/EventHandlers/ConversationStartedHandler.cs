@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Application.Features.Chat.EventHandlers
 {
-    public class ConversationCreatedHandler : IEventHandler
+    public class ConversationStartedHandler : IEventHandler
     {
         public async Task Handle(
             DomainEvent domainEvent,
@@ -23,7 +23,7 @@ namespace Application.Features.Chat.EventHandlers
                 domainEvent,
                 transaction);
 
-            foreach (ChatterId chatterId in ((ConversationCreatedEvent) domainEvent).ConversationMemberIds)
+            foreach (ChatterId chatterId in ((ConversationStartedEvent) domainEvent).ConversationMemberIds)
             {
                 await connection.ExecuteAsync(
                     $"""
@@ -36,7 +36,7 @@ namespace Application.Features.Chat.EventHandlers
                     {
                         Id = Guid.NewGuid(),
                         UserId = chatterId,
-                        ConversationId = ((ConversationCreatedEvent) domainEvent).ConversationId
+                        ConversationId = ((ConversationStartedEvent) domainEvent).ConversationId
                     },
                     transaction);
             }

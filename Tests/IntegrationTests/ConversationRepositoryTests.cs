@@ -77,7 +77,7 @@ namespace Tests.IntegrationTests
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
             //Act
-            Conversation conversationToCreate = Conversation.Create(
+            Conversation conversationToCreate = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -100,7 +100,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversationToLeave = Conversation.Create(
+            Conversation conversationToLeave = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -122,7 +122,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversationToLeave = Conversation.Create(
+            Conversation conversationToLeave = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -144,7 +144,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversationToLeave = Conversation.Create(
+            Conversation conversationToLeave = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -167,7 +167,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversationToPostIn = Conversation.Create(
+            Conversation conversationToPostIn = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -189,7 +189,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -215,7 +215,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(yetAnotherChatter);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");
@@ -237,7 +237,7 @@ namespace Tests.IntegrationTests
             await InsertFakeUserIntoDatabase(_someOtherChatterId);
             List<ChatterId> conversationMemberIds = new() { _currentChatterId, _someOtherChatterId };
 
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 conversationMemberIds,
                 "Title");

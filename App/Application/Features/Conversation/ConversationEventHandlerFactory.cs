@@ -12,7 +12,7 @@ namespace Application.Features.Chat
             return domainEvent switch
             {
                 ConversationLeftEvent => new ConversationLeftHandler(),
-                ConversationCreatedEvent => new ConversationCreatedHandler(),
+                ConversationStartedEvent => new ConversationStartedHandler(),
                 MessagePostedEvent => new MessagePostedHandler(),
                 MessageDeletedEvent => new MessageDeletedHandler(),
                 ConversationMemberAddedEvent => new ConversationMemberAddedHandler(),

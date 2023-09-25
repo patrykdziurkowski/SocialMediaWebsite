@@ -19,7 +19,7 @@ namespace Tests.UnitTests
         private readonly ConversationController _subject;
 
         private readonly IConversationRepository _conversationRepository;
-        private readonly CreateConversationModelValidator _conversationCreationValidator;
+        private readonly StartConversationModelValidator _conversationCreationValidator;
         private readonly PostMessageModelValidator _postMessageValidator;
 
         private readonly ChatterId _currentChatterId;
@@ -46,10 +46,10 @@ namespace Tests.UnitTests
         }
 
         [Fact]
-        public async Task CreateConversation_GivenInvalidInput_ReturnsBadRequest()
+        public async Task StartConversation_GivenInvalidInput_ReturnsBadRequest()
         {
             //Arrange
-            CreateConversationModel invalidInput = new()
+            StartConversationModel invalidInput = new()
             {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid() },
                 Title = "",
@@ -57,17 +57,17 @@ namespace Tests.UnitTests
             };
 
             //Act
-            IActionResult result = await _subject.CreateConversation(invalidInput);
+            IActionResult result = await _subject.StartConversation(invalidInput);
 
             //Assert
             result.Should().BeOfType<BadRequestResult>();
         }
 
         [Fact]
-        public async Task CreateConversation_GivenValidInput_Returns201()
+        public async Task StartConversation_GivenValidInput_Returns201()
         {
             //Arrange
-            CreateConversationModel validInput = new()
+            StartConversationModel validInput = new()
             {
                 ConversationMemberIds = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() },
                 Title = "ValidTitle",
@@ -75,7 +75,7 @@ namespace Tests.UnitTests
             };
 
             //Act
-            IActionResult result = await _subject.CreateConversation(validInput);
+            IActionResult result = await _subject.StartConversation(validInput);
 
             //Assert
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
@@ -85,7 +85,7 @@ namespace Tests.UnitTests
         public async Task LeaveConversation_GivenExistingConversationId_Returns201()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId>() { _currentChatterId, new ChatterId() },
                 "Title");
@@ -103,7 +103,7 @@ namespace Tests.UnitTests
         public async Task AddMemberToConversation_WhenCurrentChatterIsNotOwner_Returns403()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _chatterInConversationId,
                 new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                 "Title");
@@ -124,7 +124,7 @@ namespace Tests.UnitTests
         public async Task AddMemberToConversation_AddingChatterWhoIsAlreadyAMember_Returns403()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                 "Title");
@@ -145,7 +145,7 @@ namespace Tests.UnitTests
         public async Task AddMemberToConversation_AddingNewMember_Returns201()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                 "Title");
@@ -166,7 +166,7 @@ namespace Tests.UnitTests
         public async Task KickMemberFromConversation_WhenCurrentChatterIsNotOwner_Returns403()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                _chatterInConversationId,
                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                "Title");
@@ -187,7 +187,7 @@ namespace Tests.UnitTests
         public async Task KickMemberFromConversation_WhenKickedChatterWasNotInConversation_Throws()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                _currentChatterId,
                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                "Title");
@@ -211,7 +211,7 @@ namespace Tests.UnitTests
         public async Task KickMemberFromConversation_Returns201_WhenSuccessfulyKicked()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                _currentChatterId,
                new List<ChatterId> { _currentChatterId, _chatterInConversationId },
                "Title");
@@ -255,7 +255,7 @@ namespace Tests.UnitTests
                 ReplyMessageId = null
             };
 
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId> { _currentChatterId, _chatterNotInConversationId },
                 "Title");
@@ -275,7 +275,7 @@ namespace Tests.UnitTests
         public async Task DeleteMessage_Returns200_UponSuccessfulDeletion()
         {
             //Arrange
-            Conversation conversation = Conversation.Create(
+            Conversation conversation = Conversation.Start(
                 _currentChatterId,
                 new List<ChatterId> { _currentChatterId, _chatterNotInConversationId },
                 "Title");

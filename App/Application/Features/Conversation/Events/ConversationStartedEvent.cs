@@ -3,9 +3,9 @@ using Application.Features.Shared;
 
 namespace Application.Features.Chat.Events
 {
-    public class ConversationCreatedEvent : DomainEvent
+    public class ConversationStartedEvent : DomainEvent
     {
-        public ConversationCreatedEvent(
+        public ConversationStartedEvent(
             ConversationId conversationId,
             string title,
             string? description,

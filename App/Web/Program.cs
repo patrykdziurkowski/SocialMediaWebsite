@@ -40,7 +40,7 @@ services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<IConversationEventHandlerFactory, ConversationEventHandlerFactory>();
 services.AddSingleton<IConversationRepository, ConversationRepository>();
 
-services.AddSingleton<IValidator<CreateConversationModel>, CreateConversationModelValidator>();
+services.AddSingleton<IValidator<StartConversationModel>, StartConversationModelValidator>();
 services.AddSingleton<IValidator<PostMessageModel>, PostMessageModelValidator>();
 services.AddSingleton<IValidator<UserRegisterModel>, RegisterValidator>();
 services.AddSingleton<IValidator<UserLoginModel>, LoginValidator>();
