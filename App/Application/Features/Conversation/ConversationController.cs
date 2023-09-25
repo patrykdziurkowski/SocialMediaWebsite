@@ -45,11 +45,16 @@ namespace Application.Features.Chat
         [Route("Conversations")]
         public async Task<IActionResult> StartConversation(StartConversationModel input)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             FluentValidation.Results.ValidationResult result = _conversationCreationValidator
                 .Validate(input);
-            if (!result.IsValid || !ModelState.IsValid)
+            if (!result.IsValid)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -70,7 +75,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -92,7 +97,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -118,7 +123,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             ChatterId chatterId = GetCurrentUserId();
@@ -144,7 +149,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             ValidationResult validationResult = _postMessageValidator.Validate(input);
@@ -180,7 +185,7 @@ namespace Application.Features.Chat
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             ChatterId currentChatterId = GetCurrentUserId();

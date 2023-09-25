@@ -32,6 +32,11 @@ namespace Application.Features.Chat
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterModel inputUser)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             ValidationResult validationResult = _registerValidator
                 .Validate(inputUser);
             if (!validationResult.IsValid)
@@ -51,6 +56,11 @@ namespace Application.Features.Chat
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginModel inputUser)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             ValidationResult validationResult = _loginValidator.Validate(inputUser);
             if (!validationResult.IsValid)
             {
