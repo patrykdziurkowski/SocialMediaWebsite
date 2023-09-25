@@ -271,6 +271,29 @@ namespace Tests.UnitTests
             ((StatusCodeResult) result).StatusCode.Should().Be(201);
         }
 
+        [Fact]
+        public async Task DeleteMessage_Returns200_UponSuccessfulDeletion()
+        {
+            //Arrange
+            Conversation conversation = Conversation.Create(
+                _currentChatterId,
+                new List<ChatterId> { _currentChatterId, _chatterNotInConversationId },
+                "Title");
+            conversation.PostMessage(_currentChatterId, "Text");
+
+            _conversationRepository
+                .GetByIdAsync(_currentChatterId, conversation.Id)
+                .Returns(conversation);
+
+            Guid inputMessageId = conversation.LoadedMessages.Single().Id.Value;
+
+            //Act
+            IActionResult result = await _subject.DeleteMessage(conversation.Id.Value, inputMessageId);
+
+            //Assert
+            ((StatusCodeResult) result).StatusCode.Should().Be(200);
+        }
+
 
 
         private void AddUserToHttpContext()

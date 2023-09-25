@@ -172,6 +172,29 @@ namespace Application.Features.Chat
             return new StatusCodeResult(201);
         }
 
+        [HttpDelete]
+        [Route("Conversations/{conversationId}/Posts")]
+        public async Task<IActionResult> DeleteMessage(
+            Guid conversationId,
+            Guid messageId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            ChatterId currentChatterId = GetCurrentUserId();
+
+            Conversation conversation = await _conversationRepository.GetByIdAsync(
+                currentChatterId,
+                new ConversationId(conversationId));
+            conversation.DeleteMessage(
+                currentChatterId,
+                new MessageId(messageId));
+            await _conversationRepository.SaveAsync(conversation);
+
+            return Ok();
+        }
 
 
         private ChatterId GetCurrentUserId()
