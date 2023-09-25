@@ -41,7 +41,8 @@ namespace Application.Features.Chat
                 .Validate(inputUser);
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors);
+                validationResult.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
+                return BadRequest(ModelState);
             }
 
             Result registerResult = await _registerCommand.Handle(inputUser);
@@ -64,7 +65,8 @@ namespace Application.Features.Chat
             ValidationResult validationResult = _loginValidator.Validate(inputUser);
             if (!validationResult.IsValid)
             {
-                return BadRequest(validationResult.Errors);
+                validationResult.Errors.ForEach(f => ModelState.AddModelError(f.PropertyName, f.ErrorMessage));
+                return BadRequest(ModelState);
             }
 
             Result signInResult = await _signInManager.SignIn(inputUser);

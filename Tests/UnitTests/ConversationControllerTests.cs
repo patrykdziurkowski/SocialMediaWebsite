@@ -242,7 +242,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.PostMessage(Guid.Empty, input);
 
             //Assert
-            ((StatusCodeResult) result).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Fact]
