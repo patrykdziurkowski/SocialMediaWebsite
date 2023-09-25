@@ -12,6 +12,8 @@ namespace Application.Features.Chat.EventHandlers
             IDbConnection connection,
             IDbTransaction transaction)
         {
+            ConversationMemberAddedEvent memberAddedEvent = (ConversationMemberAddedEvent) domainEvent;
+
             await connection.ExecuteAsync(
                 $"""
                 INSERT INTO SocialMediaWebsite.dbo.ConversationUsers
@@ -22,8 +24,8 @@ namespace Application.Features.Chat.EventHandlers
                 new
                 {
                     LinkId = Guid.NewGuid(),
-                    ChatterId = ((ConversationMemberAddedEvent)domainEvent).ChatterId,
-                    ConversationId = ((ConversationMemberAddedEvent) domainEvent).ConversationId
+                    ChatterId = memberAddedEvent.ChatterId,
+                    ConversationId = memberAddedEvent.ConversationId
                 },
                 transaction);
         }

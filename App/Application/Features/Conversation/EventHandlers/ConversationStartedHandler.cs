@@ -13,6 +13,8 @@ namespace Application.Features.Chat.EventHandlers
             IDbConnection connection,
             IDbTransaction transaction)
         {
+            ConversationStartedEvent conversationStartedEvent = (ConversationStartedEvent) domainEvent;
+
             await connection.ExecuteAsync(
                 $"""
                 INSERT INTO SocialMediaWebsite.dbo.Conversations
@@ -23,7 +25,7 @@ namespace Application.Features.Chat.EventHandlers
                 domainEvent,
                 transaction);
 
-            foreach (ChatterId chatterId in ((ConversationStartedEvent) domainEvent).ConversationMemberIds)
+            foreach (ChatterId chatterId in conversationStartedEvent.ConversationMemberIds)
             {
                 await connection.ExecuteAsync(
                     $"""
@@ -36,7 +38,7 @@ namespace Application.Features.Chat.EventHandlers
                     {
                         Id = Guid.NewGuid(),
                         UserId = chatterId,
-                        ConversationId = ((ConversationStartedEvent) domainEvent).ConversationId
+                        ConversationId = conversationStartedEvent.ConversationId
                     },
                     transaction);
             }
