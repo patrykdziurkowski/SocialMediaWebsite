@@ -1,11 +1,11 @@
 ﻿using Application;
 using Application.Features.Chat;
+using Application.Features.Chat.Interfaces;
+using Application.Features.Chatter;
+using Dapper;
 using FluentAssertions;
 using System.Data;
 using Xunit;
-using Dapper;
-using Application.Features.Chat.Interfaces;
-using Application.Features.Chatter;
 
 namespace Tests.IntegrationTests
 {
@@ -27,12 +27,12 @@ namespace Tests.IntegrationTests
             _someOtherChatterId = new ChatterId();
 
             ConversationRepository? subject = (ConversationRepository?) factory.Services.GetService(typeof(IConversationRepository));
-            IConnectionFactory? connectionFactory = (IConnectionFactory?)factory.Services.GetService(typeof(IConnectionFactory));
+            IConnectionFactory? connectionFactory = (IConnectionFactory?) factory.Services.GetService(typeof(IConnectionFactory));
 
             if (subject is null || connectionFactory is null)
             {
                 throw new ApplicationException("Test dependencies not found in DI container");
-            }  
+            }
 
             _subject = subject;
             _connectionFactory = connectionFactory;
@@ -46,8 +46,8 @@ namespace Tests.IntegrationTests
             //Arrange
             ConversationId conversationId = new();
 
-            //Act=
-            Func<Task> get = async () => 
+            //Act
+            Func<Task> get = async () =>
             {
                 await _subject.GetByIdAsync(_currentChatterId, conversationId);
             };
