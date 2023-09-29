@@ -23,5 +23,9 @@ namespace Application.Features.Chatter
         public ChatterId Id { get; private set; }
         public string Name { get; set; }
         public DateTimeOffset JoinDateTime { get; private set; }
+
+
+
+
     }
 }

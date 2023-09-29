@@ -30,7 +30,7 @@ namespace Application.Features.Chat
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegisterModel inputUser)
+        public async Task<IActionResult> Register([FromForm] UserRegisterModel inputUser)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +55,7 @@ namespace Application.Features.Chat
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserLoginModel inputUser)
+        public async Task<IActionResult> Login([FromForm] UserLoginModel inputUser)
         {
             if (!ModelState.IsValid)
             {
