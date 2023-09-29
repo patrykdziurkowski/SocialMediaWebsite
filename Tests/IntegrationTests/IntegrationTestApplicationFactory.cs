@@ -17,7 +17,7 @@ namespace Tests.IntegrationTests
                 .UseImage("smwschemaonly:latest")
                 .WithName("SmwSqlServer")
                 .WaitForHealthy(TimeSpan.FromSeconds(20))
-                .ExposePort(1433, 1433)
+                .ExposePort(14330, 1433)
                 .Build();
 
         public IntegrationTestApplicationFactory()

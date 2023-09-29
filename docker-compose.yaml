@@ -15,4 +15,4 @@ services:
             password: ${SA_PASSWORD}
     container_name: smw-database
     ports:
-      - "1433:1433"
+      - "14331:1433"
