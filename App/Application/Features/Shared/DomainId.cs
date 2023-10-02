@@ -9,9 +9,15 @@
 
         public Guid Value { get; init; }
 
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
         }
+
     }
 }

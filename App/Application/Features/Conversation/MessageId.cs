@@ -12,9 +12,5 @@ namespace Application.Features.Chat
         {
         }
 
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
     }
 }
