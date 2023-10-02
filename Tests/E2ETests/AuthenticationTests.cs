@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Tests.E2ETests.Fixtures;
 using Xunit;
 using Xunit.Priority;
 

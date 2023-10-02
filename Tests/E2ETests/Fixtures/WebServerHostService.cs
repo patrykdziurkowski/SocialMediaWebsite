@@ -2,7 +2,7 @@
 using Ductus.FluentDocker.Services;
 using Xunit;
 
-namespace Tests.E2ETests
+namespace Tests.E2ETests.Fixtures
 {
     public class WebServerHostService : IAsyncLifetime
     {

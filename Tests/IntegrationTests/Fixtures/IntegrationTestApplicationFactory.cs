@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
-namespace Tests.IntegrationTests
+namespace Tests.IntegrationTests.Fixtures
 {
 
     public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime

@@ -5,6 +5,7 @@ using Application.Features.Chatter;
 using Dapper;
 using FluentAssertions;
 using System.Data;
+using Tests.IntegrationTests.Fixtures;
 using Xunit;
 
 namespace Tests.IntegrationTests
