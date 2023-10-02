@@ -9,7 +9,8 @@ using Xunit;
 
 namespace Tests.IntegrationTests
 {
-    public class ConversationRepositoryTests : IClassFixture<IntegrationTestApplicationFactory>
+    [Collection("DockerDatabaseCollection")]
+    public class ConversationRepositoryTests
     {
         private readonly ConversationRepository _subject;
 
