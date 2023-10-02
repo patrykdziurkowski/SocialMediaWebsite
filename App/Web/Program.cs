@@ -8,6 +8,8 @@ using Application.Features.Chat;
 using Application.Features.Chat.Dtos;
 using Application.Features.Chat.Interfaces;
 using Application.Features.Chat.Validators;
+using Application.Features.Chatter;
+using Application.Features.Chatter.Interfaces;
 using Application.Features.Conversation.Dtos;
 using Application.Features.Conversation.Validators;
 using Application.Features.Shared;
@@ -39,6 +41,7 @@ services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();
 services.AddSingleton<IConversationEventHandlerFactory, ConversationEventHandlerFactory>();
 services.AddSingleton<IConversationRepository, ConversationRepository>();
+services.AddSingleton<IChatterRepository, ChatterRepository>();
 
 services.AddSingleton<IValidator<StartConversationModel>, StartConversationModelValidator>();
 services.AddSingleton<IValidator<PostMessageModel>, PostMessageModelValidator>();
