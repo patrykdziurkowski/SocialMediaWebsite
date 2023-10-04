@@ -1,6 +1,6 @@
 ﻿using Application.Features.Chatter;
 
-namespace Application.Features.Chat.Interfaces
+namespace Application.Features.Conversations.Interfaces
 {
     public interface IConversationRepository
     {

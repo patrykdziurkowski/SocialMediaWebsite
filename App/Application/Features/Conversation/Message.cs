@@ -1,6 +1,6 @@
 ﻿using Application.Features.Chatter;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class Message
     {

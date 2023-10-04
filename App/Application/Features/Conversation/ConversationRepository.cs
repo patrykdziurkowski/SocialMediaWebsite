@@ -1,10 +1,10 @@
-﻿using Application.Features.Chat.Interfaces;
+﻿using Application.Features.Conversations.Interfaces;
 using Application.Features.Chatter;
 using Application.Features.Shared;
 using Dapper;
 using System.Data;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class ConversationRepository : IConversationRepository
     {

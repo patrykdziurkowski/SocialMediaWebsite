@@ -1,6 +1,6 @@
 ﻿using Application;
-using Application.Features.Chat;
-using Application.Features.Chat.Interfaces;
+using Application.Features.Conversations;
+using Application.Features.Conversations.Interfaces;
 using Application.Features.Chatter;
 using Dapper;
 using FluentAssertions;

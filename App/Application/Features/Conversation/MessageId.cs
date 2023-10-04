@@ -1,6 +1,6 @@
 ﻿using Application.Features.Shared;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class MessageId : DomainId
     {

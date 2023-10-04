@@ -2,7 +2,7 @@
 using Dapper;
 using System.Data;
 
-namespace Application.Features.Chat.EventHandlers
+namespace Application.Features.Conversations.EventHandlers
 {
     public class MessagePostedHandler : IEventHandler
     {

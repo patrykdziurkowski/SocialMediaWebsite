@@ -1,5 +1,5 @@
-﻿using Application.Features.Chat.Events;
-using Application.Features.Chat;
+﻿using Application.Features.Conversations.Events;
+using Application.Features.Conversations;
 using FluentAssertions;
 using Xunit;
 using Tests.UnitTests.Fakes;

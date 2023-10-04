@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Chat.Dtos
+﻿namespace Application.Features.Conversations.Dtos
 {
     public class StartConversationModel
     {

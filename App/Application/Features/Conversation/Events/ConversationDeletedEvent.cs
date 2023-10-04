@@ -1,6 +1,6 @@
 ﻿using Application.Features.Shared;
 
-namespace Application.Features.Chat.Events
+namespace Application.Features.Conversations.Events
 {
     public class ConversationDeletedEvent : DomainEvent
     {

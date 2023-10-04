@@ -2,7 +2,7 @@
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
-using Application.Features.Chat;
+using Application.Features.Conversations;
 using FluentAssertions;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;

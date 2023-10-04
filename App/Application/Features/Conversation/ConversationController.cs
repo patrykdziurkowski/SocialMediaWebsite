@@ -1,7 +1,7 @@
-﻿using Application.Features.Chat.Dtos;
-using Application.Features.Chat.Interfaces;
-using Application.Features.Chatter;
+﻿using Application.Features.Chatter;
 using Application.Features.Conversation.Dtos;
+using Application.Features.Conversations.Dtos;
+using Application.Features.Conversations.Interfaces;
 using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     [Authorize]
     public class ConversationController : Controller

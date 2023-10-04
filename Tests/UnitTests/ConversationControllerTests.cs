@@ -1,7 +1,7 @@
-﻿using Application.Features.Chat;
-using Application.Features.Chat.Dtos;
-using Application.Features.Chat.Interfaces;
-using Application.Features.Chat.Validators;
+﻿using Application.Features.Conversations;
+using Application.Features.Conversations.Dtos;
+using Application.Features.Conversations.Interfaces;
+using Application.Features.Conversations.Validators;
 using Application.Features.Chatter;
 using Application.Features.Conversation.Dtos;
 using Application.Features.Conversation.Validators;

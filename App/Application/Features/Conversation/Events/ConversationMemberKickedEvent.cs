@@ -1,7 +1,7 @@
 ﻿using Application.Features.Chatter;
 using Application.Features.Shared;
 
-namespace Application.Features.Chat.Events
+namespace Application.Features.Conversations.Events
 {
     public class ConversationMemberKickedEvent : DomainEvent
     {

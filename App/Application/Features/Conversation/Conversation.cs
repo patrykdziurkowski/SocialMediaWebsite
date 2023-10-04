@@ -1,9 +1,9 @@
-﻿using Application.Features.Chat.Events;
-using Application.Features.Chatter;
+﻿using Application.Features.Chatter;
+using Application.Features.Conversations.Events;
 using Application.Features.Shared;
 using FluentResults;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class Conversation : AggreggateRoot
     {

@@ -1,9 +1,9 @@
-﻿using Application.Features.Chat.EventHandlers;
-using Application.Features.Chat.Events;
-using Application.Features.Chat.Interfaces;
+﻿using Application.Features.Conversations.EventHandlers;
+using Application.Features.Conversations.Events;
+using Application.Features.Conversations.Interfaces;
 using Application.Features.Shared;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class ConversationEventHandlerFactory : IConversationEventHandlerFactory
     {

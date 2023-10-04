@@ -7,7 +7,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Application.Features.Chat
+namespace Application.Features.Conversations
 {
     public class AuthenticationController : Controller
     {

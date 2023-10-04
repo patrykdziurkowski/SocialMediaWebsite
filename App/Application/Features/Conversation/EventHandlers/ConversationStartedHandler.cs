@@ -1,10 +1,10 @@
-﻿using Application.Features.Chat.Events;
+﻿using Application.Features.Conversations.Events;
 using Application.Features.Chatter;
 using Application.Features.Shared;
 using Dapper;
 using System.Data;
 
-namespace Application.Features.Chat.EventHandlers
+namespace Application.Features.Conversations.EventHandlers
 {
     public class ConversationStartedHandler : IEventHandler
     {

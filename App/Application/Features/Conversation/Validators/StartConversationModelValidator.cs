@@ -1,7 +1,7 @@
-﻿using Application.Features.Chat.Dtos;
+﻿using Application.Features.Conversations.Dtos;
 using FluentValidation;
 
-namespace Application.Features.Chat.Validators
+namespace Application.Features.Conversations.Validators
 {
     public class StartConversationModelValidator : AbstractValidator<StartConversationModel>
     {

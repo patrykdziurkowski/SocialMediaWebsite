@@ -1,4 +1,4 @@
-﻿using Application.Features.Chat;
+﻿using Application.Features.Conversations;
 using static Dapper.SqlMapper;
 using System.Data;
 
