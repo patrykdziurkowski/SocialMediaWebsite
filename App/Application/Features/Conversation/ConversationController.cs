@@ -50,7 +50,7 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            FluentValidation.Results.ValidationResult result = _conversationCreationValidator
+            ValidationResult result = _conversationCreationValidator
                 .Validate(input);
             if (!result.IsValid)
             {
