@@ -67,7 +67,7 @@ namespace Application.Features.Conversations
                 input.Description);
             await _conversationRepository.SaveAsync(createdConversation);
 
-            return new StatusCodeResult(201);
+            return Created($"Conversations/{createdConversation.Id.Value}", new ConversationDto(createdConversation));
         }
 
         [HttpPatch]
