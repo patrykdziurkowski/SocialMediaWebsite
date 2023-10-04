@@ -1,5 +1,5 @@
-﻿using Application.Features.Conversation.Dtos;
-using Application.Features.Conversation.Validators;
+﻿using Application.Features.Conversations.Dtos;
+using Application.Features.Conversations.Validators;
 using FluentAssertions;
 using FluentValidation.Results;
 using System.Text;

@@ -4,14 +4,13 @@ using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
+using Application.Features.Chatter;
+using Application.Features.Chatter.Interfaces;
 using Application.Features.Conversations;
+using Application.Features.Conversations.Commands;
 using Application.Features.Conversations.Dtos;
 using Application.Features.Conversations.Interfaces;
 using Application.Features.Conversations.Validators;
-using Application.Features.Chatter;
-using Application.Features.Chatter.Interfaces;
-using Application.Features.Conversation.Dtos;
-using Application.Features.Conversation.Validators;
 using Application.Features.Shared;
 using Dapper;
 using FluentValidation;
@@ -36,6 +35,7 @@ services
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 services.AddSingleton<IRegisterCommand, RegisterCommand>();
+services.AddSingleton<IPostMessageCommand, PostMessageCommand>();
 services.AddSingleton<ISecretHasher, SecretHasher>();
 services.AddSingleton<IConnectionFactory, ConnectionFactory>();
 services.AddSingleton<IDbConnection, SqlConnection>();

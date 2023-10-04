@@ -1,7 +1,7 @@
-﻿using Application.Features.Conversation.Dtos;
+﻿using Application.Features.Conversations.Dtos;
 using FluentValidation;
 
-namespace Application.Features.Conversation.Validators
+namespace Application.Features.Conversations.Validators
 {
     public class PostMessageModelValidator : AbstractValidator<PostMessageModel>
     {

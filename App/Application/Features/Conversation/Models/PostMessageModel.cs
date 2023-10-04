@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Conversation.Dtos
+﻿namespace Application.Features.Conversations.Dtos
 {
     public class PostMessageModel
     {

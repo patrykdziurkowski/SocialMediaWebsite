@@ -1,5 +1,5 @@
 ﻿using Application.Features.Chatter;
-using Application.Features.Conversation.Dtos;
+using Application.Features.Conversations.Commands;
 using Application.Features.Conversations.Dtos;
 using Application.Features.Conversations.Interfaces;
 using FluentResults;
@@ -17,15 +17,18 @@ namespace Application.Features.Conversations
         private readonly IConversationRepository _conversationRepository;
         private readonly IValidator<StartConversationModel> _conversationCreationValidator;
         private readonly IValidator<PostMessageModel> _postMessageValidator;
+        private readonly IPostMessageCommand _postMessageCommand;
 
         public ConversationController(
             IConversationRepository conversationRepository,
             IValidator<StartConversationModel> conversationCreationValidator,
-            IValidator<PostMessageModel> postMessageValidator)
+            IValidator<PostMessageModel> postMessageValidator,
+            IPostMessageCommand postMessageCommand)
         {
             _conversationRepository = conversationRepository;
             _conversationCreationValidator = conversationCreationValidator;
             _postMessageValidator = postMessageValidator;
+            _postMessageCommand = postMessageCommand;
         }
 
         [HttpGet]
@@ -161,22 +164,13 @@ namespace Application.Features.Conversations
             }
 
             ChatterId currentChatterId = GetCurrentUserId();
-            MessageId? replyMessageId = null;
-            if (input.ReplyMessageId is not null)
-            {
-                replyMessageId = new MessageId((Guid) input.ReplyMessageId!);
-            }
 
-            Conversation conversation = await _conversationRepository.GetByIdAsync(
+            Message message = await _postMessageCommand.Handle(
                 currentChatterId,
-                new ConversationId(conversationId));
-            conversation.PostMessage(
-                currentChatterId,
-                input.Text!,
-                replyMessageId);
-            await _conversationRepository.SaveAsync(conversation);
+                new ConversationId(conversationId),
+                input);
 
-            return new StatusCodeResult(201);
+            return Created("Conversation/{conversationId}/Posts", message);
         }
 
         [HttpDelete]

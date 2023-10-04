@@ -1,7 +1,6 @@
 ﻿using Application.Features.Chatter;
-using Application.Features.Conversation.Dtos;
-using Application.Features.Conversation.Validators;
 using Application.Features.Conversations;
+using Application.Features.Conversations.Commands;
 using Application.Features.Conversations.Dtos;
 using Application.Features.Conversations.Interfaces;
 using Application.Features.Conversations.Validators;
@@ -21,6 +20,7 @@ namespace Tests.UnitTests
         private readonly IConversationRepository _conversationRepository;
         private readonly StartConversationModelValidator _conversationCreationValidator;
         private readonly PostMessageModelValidator _postMessageValidator;
+        private readonly IPostMessageCommand _postMessageCommand;
 
         private readonly ChatterId _currentChatterId;
         private readonly ChatterId _chatterInConversationId;
@@ -36,11 +36,13 @@ namespace Tests.UnitTests
 
             _conversationCreationValidator = new();
             _postMessageValidator = new();
+            _postMessageCommand = Substitute.For<IPostMessageCommand>();
 
             _subject = new(
                 _conversationRepository,
                 _conversationCreationValidator,
-                _postMessageValidator);
+                _postMessageValidator,
+                _postMessageCommand);
 
             AddUserToHttpContext();
         }
@@ -268,7 +270,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.PostMessage(conversation.Id.Value, input);
 
             //Assert
-            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+            ((CreatedResult) result).StatusCode.Should().Be(201);
         }
 
         [Fact]
