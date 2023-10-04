@@ -82,7 +82,7 @@ namespace Tests.UnitTests
         }
 
         [Fact]
-        public async Task LeaveConversation_GivenExistingConversationId_Returns201()
+        public async Task LeaveConversation_GivenExistingConversationId_Returns200()
         {
             //Arrange
             Conversation conversation = Conversation.Start(
@@ -96,7 +96,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.LeaveConversation(conversation.Id.Value);
 
             //Assert
-            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+            ((StatusCodeResult) result).StatusCode.Should().Be(200);
         }
 
         [Fact]

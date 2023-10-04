@@ -86,7 +86,7 @@ namespace Application.Features.Conversations
             conversationToLeave.Leave(chatterId);
             await _conversationRepository.SaveAsync(conversationToLeave);
 
-            return new StatusCodeResult(201);
+            return Ok();
         }
 
 
