@@ -1,10 +1,10 @@
-﻿using Application.Features.Conversations;
+﻿using Application.Features.Chatter;
+using Application.Features.Conversation.Dtos;
+using Application.Features.Conversation.Validators;
+using Application.Features.Conversations;
 using Application.Features.Conversations.Dtos;
 using Application.Features.Conversations.Interfaces;
 using Application.Features.Conversations.Validators;
-using Application.Features.Chatter;
-using Application.Features.Conversation.Dtos;
-using Application.Features.Conversation.Validators;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -78,7 +78,7 @@ namespace Tests.UnitTests
             IActionResult result = await _subject.StartConversation(validInput);
 
             //Assert
-            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+            ((CreatedResult) result).StatusCode.Should().Be(201);
         }
 
         [Fact]

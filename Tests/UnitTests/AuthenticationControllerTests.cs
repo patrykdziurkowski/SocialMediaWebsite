@@ -1,4 +1,5 @@
-﻿using Application.Features.Authentication.Commands;
+﻿using Application.Features.Authentication;
+using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using Application.Features.Authentication.Validators;
@@ -45,14 +46,18 @@ namespace Tests
                 Email = "john@smith.com",
                 Password = "P@ssword1"
             };
+            User user = new(
+                validUser.UserName,
+                validUser.Email,
+                "somePasswordHash");
 
-            _registerCommand.Handle(validUser).Returns(Result.Ok());
+            _registerCommand.Handle(validUser).Returns(Result.Ok(user));
 
             //Act
-            StatusCodeResult result = (StatusCodeResult) await _subject.Register(validUser);
+            IActionResult result = await _subject.Register(validUser);
 
             //Assert
-            result.StatusCode.Should().Be(201);
+            ((CreatedResult) result).StatusCode.Should().Be(201);
         }
 
         [Fact]

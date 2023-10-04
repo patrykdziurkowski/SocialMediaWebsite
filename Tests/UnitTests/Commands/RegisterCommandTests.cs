@@ -39,7 +39,7 @@ namespace Tests.UnitTests.Commands
             _userRepository.GetUserByUserNameAsync(user.UserName).Returns(Result.Ok());
 
             //Act
-            Result result = await _subject.Handle(user);
+            Result<User> result = await _subject.Handle(user);
 
             //Assert
             result.IsFailed.Should().BeTrue();
@@ -60,7 +60,7 @@ namespace Tests.UnitTests.Commands
             _userRepository.Register(Arg.Any<User>()).Returns(Result.Fail(""));
 
             //Act
-            Result result = await _subject.Handle(user);
+            Result<User> result = await _subject.Handle(user);
 
             //Assert
             result.IsFailed.Should().BeTrue();
@@ -81,7 +81,7 @@ namespace Tests.UnitTests.Commands
             _userRepository.Register(Arg.Any<User>()).Returns(Result.Ok());
 
             //Act
-            Result result = await _subject.Handle(user);
+            Result<User> result = await _subject.Handle(user);
 
             //Assert
             result.IsSuccess.Should().BeTrue();
