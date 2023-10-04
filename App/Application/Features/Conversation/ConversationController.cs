@@ -139,7 +139,7 @@ namespace Application.Features.Conversations
             }
 
             await _conversationRepository.SaveAsync(conversation);
-            return new StatusCodeResult(201);
+            return Ok();
         }
 
         [HttpPost]

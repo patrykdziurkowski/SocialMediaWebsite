@@ -208,7 +208,7 @@ namespace Tests.UnitTests
         }
 
         [Fact]
-        public async Task KickMemberFromConversation_Returns201_WhenSuccessfulyKicked()
+        public async Task KickMemberFromConversation_Returns200_WhenSuccessfulyKicked()
         {
             //Arrange
             Conversation conversation = Conversation.Start(
@@ -225,7 +225,7 @@ namespace Tests.UnitTests
                 .KickMemberFromConversation(conversation.Id.Value, _chatterInConversationId.Value);
 
             //Assert
-            ((StatusCodeResult) result).StatusCode.Should().Be(201);
+            ((StatusCodeResult) result).StatusCode.Should().Be(200);
         }
 
         [Fact]
