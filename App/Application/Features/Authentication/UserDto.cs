@@ -4,7 +4,7 @@
     {
         public UserDto(User user)
         {
-            Id = user.Id;
+            Id = user.Id.Value;
             UserName = user.UserName;
             Email = user.Email;
         }
