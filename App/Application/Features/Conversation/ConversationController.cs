@@ -37,7 +37,7 @@ namespace Application.Features.Conversations
         [Route("Messages")]
         public async Task<IActionResult> Index()
         {
-            ChatterId chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentChatterId();
 
             IEnumerable<Conversation> conversations = await _conversationRepository.GetAllAsync(chatterId);
 
@@ -61,10 +61,8 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId chatterId = GetCurrentUserId();
-
             Conversation createdConversation = Conversation.Start(
-                chatterId,
+                GetCurrentChatterId(),
                 input.ConversationMemberIds!.Select(guid => new ChatterId(guid)).ToList(),
                 input.Title!,
                 input.Description);
@@ -82,7 +80,7 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentChatterId();
             ConversationId conversationToLeaveId = new(conversationId);
 
             Conversation conversationToLeave = await _conversationRepository.GetByIdAsync(chatterId, conversationToLeaveId);
@@ -104,18 +102,17 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentChatterId();
 
             Conversation conversation = await _conversationRepository
                 .GetByIdAsync(chatterId, new ConversationId(conversationId));
-
-            Result result = conversation.AddMember(chatterId, new ChatterId(chatterToAddId));
+            Result result = conversation.AddMember(GetCurrentChatterId(), new ChatterId(chatterToAddId));
             if (result.IsFailed)
             {
                 return new StatusCodeResult(403);
             }
-
             await _conversationRepository.SaveAsync(conversation);
+
             return new StatusCodeResult(201);
         }
 
@@ -130,18 +127,17 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId chatterId = GetCurrentUserId();
+            ChatterId chatterId = GetCurrentChatterId();
 
             Conversation conversation = await _conversationRepository
                 .GetByIdAsync(chatterId, new ConversationId(conversationId));
-
             Result result = conversation.KickMember(chatterId, new ChatterId(chatterToKickId));
             if (result.IsFailed)
             {
                 return new StatusCodeResult(403);
             }
-
             await _conversationRepository.SaveAsync(conversation);
+
             return Ok();
         }
 
@@ -163,10 +159,8 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId currentChatterId = GetCurrentUserId();
-
             Message message = await _postMessageCommand.Handle(
-                currentChatterId,
+                GetCurrentChatterId(),
                 new ConversationId(conversationId),
                 input);
 
@@ -184,7 +178,7 @@ namespace Application.Features.Conversations
                 return ValidationProblem(ModelState);
             }
 
-            ChatterId currentChatterId = GetCurrentUserId();
+            ChatterId currentChatterId = GetCurrentChatterId();
 
             Conversation conversation = await _conversationRepository.GetByIdAsync(
                 currentChatterId,
@@ -198,7 +192,7 @@ namespace Application.Features.Conversations
         }
 
 
-        private ChatterId GetCurrentUserId()
+        private ChatterId GetCurrentChatterId()
         {
             string chatterIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             return new ChatterId(Guid.Parse(chatterIdClaim));
