@@ -5,6 +5,6 @@ namespace Application.Features.Authentication.Commands
 {
     public interface IRegisterCommand
     {
-        Task<Result> Handle(UserRegisterModel inputUser);
+        Task<Result<User>> Handle(UserRegisterModel inputUser);
     }
 }

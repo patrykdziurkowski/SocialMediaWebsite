@@ -17,7 +17,7 @@ namespace Application.Features.Authentication.Commands
             _secretHasher = secretHasher;
         }
 
-        public async Task<Result> Handle(UserRegisterModel inputUser)
+        public async Task<Result<User>> Handle(UserRegisterModel inputUser)
         {
             Result<User> usernameAlreadyExistsResult = await _userRepository.GetUserByUserNameAsync(inputUser.UserName!);
             if (usernameAlreadyExistsResult.IsSuccess)
@@ -31,7 +31,7 @@ namespace Application.Features.Authentication.Commands
                 inputUser.Email!,
                 passwordHash);
 
-            Result result = await _userRepository.Register(user);
+            Result<User> result = await _userRepository.Register(user);
             return result;
         }
 

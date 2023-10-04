@@ -1,4 +1,5 @@
-﻿using Application.Features.Authentication.Commands;
+﻿using Application.Features.Authentication;
+using Application.Features.Authentication.Commands;
 using Application.Features.Authentication.Interfaces;
 using Application.Features.Authentication.Models;
 using FluentResults;
@@ -45,13 +46,13 @@ namespace Application.Features.Chat
                 return ValidationProblem(ModelState);
             }
 
-            Result registerResult = await _registerCommand.Handle(inputUser);
+            Result<User> registerResult = await _registerCommand.Handle(inputUser);
             if (registerResult.IsFailed)
             {
                 return StatusCode(403);
             }
 
-            return StatusCode(201);
+            return Created("Login", new UserDto(registerResult.Value));
         }
 
         [HttpPost]

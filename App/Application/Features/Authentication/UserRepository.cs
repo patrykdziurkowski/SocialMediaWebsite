@@ -38,7 +38,7 @@ namespace Application.Features.Authentication
             return Result.Ok(user);
         }
 
-        public async Task<Result> Register(User user)
+        public async Task<Result<User>> Register(User user)
         {
             using IDbConnection connection = _connectionFactory.GetConnection(ConnectionType.SqlConnection);
             connection.Open();
@@ -60,7 +60,7 @@ namespace Application.Features.Authentication
 
             if (numberOfAffectedRows == 1)
             {
-                return Result.Ok();
+                return Result.Ok(user);
             }
             return Result.Fail($"{numberOfAffectedRows} rows affected");
         }
