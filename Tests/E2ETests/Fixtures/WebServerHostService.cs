@@ -27,7 +27,6 @@ namespace Tests.E2ETests.Fixtures
         {
             Host.Start();
             await Task.Delay(TimeSpan.FromSeconds(5));
-
         }
     }
 }

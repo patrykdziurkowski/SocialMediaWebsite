@@ -6,6 +6,7 @@ using Xunit.Priority;
 namespace Tests.E2ETests
 {
     [TestCaseOrderer(PriorityOrderer.Name, PriorityOrderer.Assembly)]
+    [Collection("WebServerTests")]
     public class AuthenticationTests : IClassFixture<WebServerHostService>
     {
         private static readonly HttpClient _client = new(new HttpClientHandler() { CookieContainer = new System.Net.CookieContainer() });
